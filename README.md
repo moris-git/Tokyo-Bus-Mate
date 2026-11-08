@@ -50,9 +50,9 @@
 例：
 
 ```text
-Add: destination selector
-Fix: stop order validation
-Update: Japanese README
+Add: 行先選択ツールの追加。
+Fix: 行先が表示されないバグの修正
+Update: READMEの文章を変更
 ```
 
 英語の動詞は変更の内容に合わせて選び、コロンの後には変更内容を簡潔に書きます。
