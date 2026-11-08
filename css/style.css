@@ -1,0 +1,392 @@
+/*
+ * 見た目の設定をまとめたファイルです。
+ * JavaScriptの動作やGTFSデータを変更せず、デザインだけを調整できます。
+ */
+:root {
+  color-scheme: light;
+  font-family: system-ui, -apple-system, "Noto Sans JP", "Yu Gothic", sans-serif;
+  color: #17243b;
+  background: #f5f7fa;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --color-primary: #1769aa;
+  --color-border: #d7dee8;
+  --color-muted: #526174;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+}
+
+button,
+select {
+  font: inherit;
+}
+
+.page {
+  /* 横幅を抑え、スマートフォンでは左右に余白を残します。 */
+  width: min(100% - 32px, 640px);
+  margin: 0 auto;
+  padding: 32px 0 48px;
+}
+
+/* ページ上部のタイトルと説明文です。 */
+.page-header {
+  margin-bottom: 24px;
+}
+
+.header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.header-row > div:first-child {
+  min-width: 0;
+}
+
+.language-switch {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.language-button {
+  min-height: 36px;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 6px;
+  color: var(--color-muted);
+  background: transparent;
+  cursor: pointer;
+}
+
+.language-button[aria-pressed="true"] {
+  color: #fff;
+  background: var(--color-primary);
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--color-primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 8px;
+  font-size: clamp(1.8rem, 8vw, 2.4rem);
+}
+
+.intro,
+.section-intro,
+.field-help,
+.prototype-note {
+  color: var(--color-muted);
+  line-height: 1.5;
+}
+
+.intro,
+.section-intro {
+  margin-bottom: 0;
+}
+
+.panel {
+  /* 入力欄や案内内容をカードとしてまとめます。 */
+  margin: 0 0 16px;
+  padding: 20px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: #fff;
+}
+
+/* 目的地・乗車停留所を選ぶ入力欄です。 */
+.field + .field {
+  margin-top: 24px;
+}
+
+label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.step-number {
+  display: inline-grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--color-primary);
+}
+
+select {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  color: inherit;
+  background: #fff;
+}
+
+select:disabled {
+  color: #667085;
+  background: #f1f3f6;
+}
+
+.field-help {
+  margin: 8px 0 0;
+  font-size: 0.9rem;
+}
+
+.primary-button {
+  width: 100%;
+  min-height: 50px;
+  margin-top: 24px;
+  padding: 12px 16px;
+  border: 0;
+  border-radius: 8px;
+  color: #fff;
+  background: var(--color-primary);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primary-button:disabled {
+  background: #8795a7;
+  cursor: not-allowed;
+}
+
+button:focus-visible,
+select:focus-visible {
+  outline: 3px solid #f0ad4e;
+  outline-offset: 2px;
+}
+
+button:focus-visible {
+  outline-offset: 3px;
+}
+
+.status-message {
+  /* エラーや読み込み失敗が発生した場合に、画面内で伝えます。 */
+  min-height: 1.5em;
+  margin: 0 0 16px;
+  color: #9b1c1c;
+  line-height: 1.5;
+}
+
+/* 案内結果は、バス・降車停留所・運賃を分けて表示します。 */
+.guide-result {
+  margin-top: 28px;
+}
+
+.guide-result h2 {
+  margin-bottom: 6px;
+  font-size: 1.5rem;
+}
+
+.section-intro {
+  margin-bottom: 16px;
+}
+
+.photo-placeholder {
+  /* 写真の掲載許可を確認するまで、仮の枠を表示します。 */
+  display: grid;
+  min-height: 180px;
+  place-items: center;
+  border: 1px dashed #9aa8b8;
+  border-radius: 8px;
+  color: var(--color-muted);
+  background: #f1f4f8;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.bus-details {
+  /* 系統番号・行き先表示・乗車停留所を縦に並べます。 */
+  margin: 16px 0 0;
+}
+
+.bus-details div + div {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #e8edf2;
+}
+
+.bus-details dt {
+  margin-bottom: 4px;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.bus-details dd {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.route-card h3 {
+  margin-bottom: 16px;
+}
+
+.route-stop-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.route-stop {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 48px;
+  padding: 8px 0 8px 24px;
+  border-left: 2px solid #c6d3e0;
+}
+
+.route-stop::before {
+  position: absolute;
+  left: -7px;
+  width: 10px;
+  height: 10px;
+  border: 2px solid #8795a7;
+  border-radius: 50%;
+  background: #fff;
+  content: "";
+}
+
+.route-stop:first-child {
+  border-left-color: var(--color-primary);
+}
+
+.route-stop:first-child::before,
+.route-stop:last-child::before {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+}
+
+.route-stop:last-child {
+  border-left-color: transparent;
+}
+
+.route-stop-name {
+  line-height: 1.45;
+}
+
+.route-stop-badge {
+  flex: 0 0 auto;
+  padding: 4px 8px;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--color-primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.alighting-card {
+  /* 降車停留所を他の情報より目立たせます。 */
+  border-color: #b7d5ed;
+  background: #eef6fc;
+  text-align: center;
+}
+
+.alighting-card .eyebrow {
+  margin-bottom: 8px;
+}
+
+.alighting-card h3 {
+  margin-bottom: 4px;
+  font-size: clamp(1.8rem, 8vw, 2.4rem);
+}
+
+.romaji {
+  margin-bottom: 4px;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.english-name {
+  margin-bottom: 0;
+  color: var(--color-muted);
+}
+
+.help-note {
+  margin: 20px 0 0;
+  padding: 12px;
+  border-radius: 8px;
+  background: #fff;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.fare-card h3 {
+  margin-bottom: 8px;
+}
+
+.fare-amount {
+  margin-bottom: 4px;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.fare-card .field-help {
+  margin-bottom: 0;
+}
+
+.page-footer {
+  /* 出典と試作品の注意書きは常にページ末尾に表示します。 */
+  margin-top: 32px;
+  color: var(--color-muted);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.page-footer p {
+  margin-bottom: 8px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* 小さな画面では1列のまま、広い画面では余白を少し増やします。 */
+@media (min-width: 600px) {
+  .page {
+    padding-top: 48px;
+  }
+
+  @media (max-width: 420px) {
+    .header-row {
+      flex-direction: column-reverse;
+    }
+  }
+
+  .panel {
+    padding: 24px;
+  }
+}

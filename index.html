@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f7fa">
+    <title>Tokyo Bus Mate - バス案内</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script type="module" src="./js/main.js"></script>
+  </head>
+  <body>
+    <main class="page">
+      <!--
+        ページの導入部分です。
+        見出しや説明文のデザインを変更するときは、この範囲を編集します。
+        入力フォームとは分けてあるため、画面構成を調整しやすくしています。
+      -->
+      <header class="page-header">
+        <p class="eyebrow">TOKYO BUS MATE</p>
+        <div class="header-row">
+          <div>
+            <h1 data-i18n="pageHeading">乗るバスを探す</h1>
+            <p class="intro" data-i18n="pageIntroduction">
+              行き先と乗車する停留所を選ぶと、乗るバスと降車する停留所を確認できます。
+            </p>
+          </div>
+          <!-- 表示言語だけを切り替えるボタンです。路線・停留所の選択内容は保持します。 -->
+          <div class="language-switch" role="group" aria-label="表示言語" data-i18n-aria-label="languageSelection">
+            <button type="button" class="language-button" data-language="ja" aria-pressed="true" lang="ja">日本語</button>
+            <button type="button" class="language-button" data-language="en" aria-pressed="false" lang="en">English</button>
+          </div>
+        </div>
+      </header>
+
+      <!--
+        目的地と乗車停留所を選ぶフォームです。
+        標準のselect要素を使っているため、特別なライブラリなしで動作します。
+        将来デザインを変更するときは、JavaScriptのIDを保てば見た目だけを置き換えられます。
+      -->
+      <form id="bus-guide-form" class="panel">
+        <div class="field">
+          <label for="destination-select">
+            <span class="step-number">1</span>
+            <span data-i18n="destinationLabel">行きたい場所を選ぶ</span>
+          </label>
+          <select id="destination-select" name="destination" required>
+            <option value="" data-i18n="destinationPlaceholder">目的地を選択してください</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="boarding-stop-select">
+            <span class="step-number">2</span>
+            <span data-i18n="boardingStopLabel">乗車する停留所を選ぶ</span>
+          </label>
+          <select id="boarding-stop-select" name="boardingStop" required disabled>
+            <option value="" data-i18n="chooseDestinationFirst">先に目的地を選択してください</option>
+          </select>
+          <p class="field-help" data-i18n="boardingStopHelp">実際に乗る予定の停留所を選択してください。</p>
+        </div>
+
+        <button id="show-guide-button" class="primary-button" type="submit" disabled>
+          <span data-i18n="showBusGuide">バスの案内を見る</span>
+        </button>
+      </form>
+
+      <!-- 読み込みや選択で問題が起きたとき、原因を利用者に伝える領域です。 -->
+      <p id="status-message" class="status-message" role="status" aria-live="polite"></p>
+
+      <!--
+        目的地と乗車停留所を選択した後に表示する案内です。
+        バスの識別情報、降車停留所、運賃を独立したカードに分けています。
+      -->
+      <section id="guide-result" class="guide-result" aria-labelledby="guide-title" hidden>
+        <h2 id="guide-title" data-i18n="guideHeading">乗るバスを確認</h2>
+        <p class="section-intro" data-i18n="busComparisonHelp">系統番号と行き先表示を、実際のバスと照らし合わせてください。</p>
+
+        <article class="panel bus-card">
+          <div class="photo-placeholder" role="img" aria-label="バスの写真は後で追加します" data-i18n-aria-label="busPhotoDescription">
+            <span data-i18n="busPhotoLineOne">バスの写真</span>
+            <br>
+            <span data-i18n="busPhotoLineTwo">準備中</span>
+          </div>
+          <dl class="bus-details">
+            <div>
+              <dt data-i18n="routeNumber">系統番号</dt>
+              <dd id="route-number" lang="ja"></dd>
+            </div>
+            <div>
+              <dt data-i18n="destinationDisplay">行き先表示</dt>
+              <dd id="bus-headsign" lang="ja"></dd>
+            </div>
+            <div>
+              <dt data-i18n="boardingStop">乗車する停留所</dt>
+              <dd id="selected-boarding-stop"></dd>
+            </div>
+          </dl>
+        </article>
+
+        <!-- GTFSのstop_sequence順に、選択した乗車停留所から降車停留所までを表示します。 -->
+        <article class="panel route-card">
+          <h3 data-i18n="routeStopsHeading">乗車停留所から降車停留所まで</h3>
+          <ol id="route-stop-list" class="route-stop-list"></ol>
+        </article>
+
+        <article class="panel alighting-card">
+          <p class="eyebrow" data-i18n="getOffAt">ここで降ります</p>
+          <h3 id="alighting-name-ja" lang="ja"></h3>
+          <p id="alighting-name-romaji" class="romaji" lang="en"></p>
+          <p id="alighting-name-en" class="english-name" lang="en"></p>
+          <p class="help-note" data-i18n="alightingHelp">
+            車内表示の日本語名、または車内アナウンスと照らし合わせてください。
+          </p>
+        </article>
+
+        <article class="panel fare-card">
+          <h3 data-i18n="fareInformation">運賃情報</h3>
+          <p id="fare-amount" class="fare-amount"></p>
+          <p id="fare-note" class="field-help"></p>
+        </article>
+      </section>
+
+      <!-- データの出典と、リアルタイム情報ではないことを常に表示します。 -->
+      <footer class="page-footer">
+        <p data-i18n="dataSource">データ出典：東京都交通局、公共交通オープンデータ協議会の都営バスGTFS</p>
+        <p class="prototype-note" data-i18n="prototypeNotice">試作品です。路線・停留所情報は同梱GTFSに基づき、リアルタイム運行情報ではありません。</p>
+      </footer>
+    </main>
+  </body>
+</html>

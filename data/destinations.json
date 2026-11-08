@@ -1,0 +1,64 @@
+{
+  "destinations": [
+    {
+      "id": "ueno-zoo",
+      "nameJa": "上野動物園",
+      "nameEn": "Ueno Zoo",
+      "routeId": "070",
+      "headsignJa": "上野松坂屋前",
+      "alightingStopId": "0133-09",
+      "alightingNameJa": "上野公園山下",
+      "alightingNameRomanized": "Ueno-Koen-Yamashita",
+      "boardingStopIds": [
+        "0032-04",
+        "0038-03",
+        "0035-10"
+      ]
+    },
+    {
+      "id": "ueno-park",
+      "nameJa": "上野公園",
+      "nameEn": "Ueno Park",
+      "routeId": "070",
+      "headsignJa": "上野松坂屋前",
+      "alightingStopId": "0133-09",
+      "alightingNameJa": "上野公園山下",
+      "alightingNameRomanized": "Ueno-Koen-Yamashita",
+      "boardingStopIds": [
+        "0032-04",
+        "0038-03",
+        "0035-10"
+      ]
+    },
+    {
+      "id": "ueno-station",
+      "nameJa": "上野駅",
+      "nameEn": "Ueno Station",
+      "routeId": "070",
+      "headsignJa": "上野松坂屋前",
+      "alightingStopId": "0131-05",
+      "alightingNameJa": "上野駅前",
+      "alightingNameRomanized": "Ueno-Ekimae",
+      "boardingStopIds": [
+        "0032-04",
+        "0038-03",
+        "0035-10"
+      ]
+    },
+    {
+      "id": "ueno-matsuzakaya",
+      "nameJa": "上野松坂屋",
+      "nameEn": "Ueno Matsuzakaya Department Store",
+      "routeId": "070",
+      "headsignJa": "上野松坂屋前",
+      "alightingStopId": "2000-10",
+      "alightingNameJa": "上野松坂屋前",
+      "alightingNameRomanized": "Ueno-Matsuzakaya-mae",
+      "boardingStopIds": [
+        "0032-04",
+        "0038-03",
+        "0035-10"
+      ]
+    }
+  ]
+}

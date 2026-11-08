@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "process:gtfs": "node scripts/process-gtfs.js",
+    "test": "node --test"
+  }
+}
