@@ -135,3 +135,14 @@ test("HTMLで使うすべての翻訳キーが日本語と英語に登録され�
     }
   }
 });
+
+test("共通レイアウトと各機能画面はHTMLに定義する", () => {
+  for (const screenName of ["home", "destination", "boarding", "guide"]) {
+    assert.ok(
+      htmlFile.includes(`id="screen-${screenName}"`),
+      `${screenName}画面のテンプレートが必要です`
+    );
+  }
+  assert.match(htmlFile, /id="screen-progress"/);
+  assert.match(htmlFile, /id="header-home-button"/);
+});

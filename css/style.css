@@ -61,6 +61,18 @@ select {
   background: #fff;
 }
 
+.header-controls {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.header-home-button {
+  min-height: 44px;
+  padding: 8px 12px;
+  white-space: nowrap;
+}
+
 .language-button {
   min-height: 36px;
   padding: 6px 10px;
@@ -374,6 +386,130 @@ button:focus-visible {
   display: none !important;
 }
 
+/* 現在どの操作段階にいるか、全画面で共通の進捗表示にします。 */
+.screen-progress {
+  margin: 0 0 24px;
+}
+
+.screen-progress ol {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.screen-progress li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 10px 6px;
+  border-bottom: 3px solid var(--color-border);
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.screen-progress li[aria-current="step"] {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.progress-number {
+  display: inline-grid;
+  width: 26px;
+  height: 26px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+
+.screen {
+  margin-top: 8px;
+}
+
+.screen-heading {
+  margin-bottom: 8px;
+  font-size: 1.5rem;
+}
+
+.screen-heading:focus {
+  outline: none;
+}
+
+.screen-intro {
+  margin-bottom: 24px;
+  color: var(--color-muted);
+  line-height: 1.5;
+}
+
+.home-panel {
+  padding: 24px;
+}
+
+.home-steps {
+  display: grid;
+  gap: 14px;
+  margin: 24px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home-steps li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  line-height: 1.5;
+}
+
+.home-note {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.screen-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.screen-actions .primary-button,
+.screen-actions .secondary-button {
+  width: auto;
+  flex: 1 1 0;
+  margin-top: 0;
+}
+
+.secondary-button {
+  min-height: 50px;
+  padding: 12px 16px;
+  border: 1px solid var(--color-primary);
+  border-radius: 8px;
+  color: var(--color-primary);
+  background: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.secondary-button:hover:not(:disabled) {
+  background: #eef6fc;
+}
+
+.secondary-button:disabled {
+  color: #667085;
+  border-color: var(--color-border);
+  cursor: not-allowed;
+}
+
+.guide-actions {
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
 /* 小さな画面では1列のまま、広い画面では余白を少し増やします。 */
 @media (min-width: 600px) {
   .page {
@@ -388,5 +524,27 @@ button:focus-visible {
 
   .panel {
     padding: 24px;
+  }
+}
+
+/* 狭い画面では操作ボタンを縦に並べ、タップしやすい幅を確保します。 */
+@media (max-width: 420px) {
+  .header-row {
+    flex-direction: column-reverse;
+  }
+
+  .header-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .screen-actions {
+    flex-direction: column-reverse;
+  }
+
+  .screen-progress li {
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.78rem;
   }
 }
