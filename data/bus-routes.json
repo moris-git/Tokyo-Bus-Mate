@@ -20,8 +20,6 @@
         {
           "destinationId": "ueno-zoo",
           "alightingStopId": "0133-09",
-          "headsignJa": "上野松坂屋前",
-          "headsignEn": "",
           "alightingStop": {
             "nameJa": "上野公園山下",
             "nameEn": "Ueno-Kōen-Yamashita (Ueno Park)",
@@ -84,6 +82,12 @@
                   "nameEn": "Ueno-Kōen-Yamashita (Ueno Park)"
                 }
               ],
+              "headsigns": [
+                {
+                  "headsignJa": "上野松坂屋前",
+                  "tripCount": 114
+                }
+              ],
               "orderedTripCount": 114
             },
             {
@@ -136,6 +140,12 @@
                   "nameEn": "Ueno-Kōen-Yamashita (Ueno Park)"
                 }
               ],
+              "headsigns": [
+                {
+                  "headsignJa": "上野松坂屋前",
+                  "tripCount": 114
+                }
+              ],
               "orderedTripCount": 114
             },
             {
@@ -180,6 +190,12 @@
                   "stopSequence": 28,
                   "nameJa": "上野公園山下",
                   "nameEn": "Ueno-Kōen-Yamashita (Ueno Park)"
+                }
+              ],
+              "headsigns": [
+                {
+                  "headsignJa": "上野松坂屋前",
+                  "tripCount": 114
                 }
               ],
               "orderedTripCount": 114
@@ -195,8 +211,6 @@
         {
           "destinationId": "ueno-park",
           "alightingStopId": "0133-09",
-          "headsignJa": "上野松坂屋前",
-          "headsignEn": "",
           "alightingStop": {
             "nameJa": "上野公園山下",
             "nameEn": "Ueno-Kōen-Yamashita (Ueno Park)",
@@ -259,6 +273,12 @@
                   "nameEn": "Ueno-Kōen-Yamashita (Ueno Park)"
                 }
               ],
+              "headsigns": [
+                {
+                  "headsignJa": "上野松坂屋前",
+                  "tripCount": 114
+                }
+              ],
               "orderedTripCount": 114
             },
             {
@@ -311,6 +331,12 @@
                   "nameEn": "Ueno-Kōen-Yamashita (Ueno Park)"
                 }
               ],
+              "headsigns": [
+                {
+                  "headsignJa": "上野松坂屋前",
+                  "tripCount": 114
+                }
+              ],
               "orderedTripCount": 114
             },
             {
@@ -357,6 +383,12 @@
                   "nameEn": "Ueno-Kōen-Yamashita (Ueno Park)"
                 }
               ],
+              "headsigns": [
+                {
+                  "headsignJa": "上野松坂屋前",
+                  "tripCount": 114
+                }
+              ],
               "orderedTripCount": 114
             }
           ],
@@ -370,8 +402,6 @@
         {
           "destinationId": "ueno-station",
           "alightingStopId": "0131-05",
-          "headsignJa": "上野松坂屋前",
-          "headsignEn": "",
           "alightingStop": {
             "nameJa": "上野駅前",
             "nameEn": "Ueno Sta.",
@@ -428,6 +458,12 @@
                   "nameEn": "Ueno Sta."
                 }
               ],
+              "headsigns": [
+                {
+                  "headsignJa": "上野松坂屋前",
+                  "tripCount": 114
+                }
+              ],
               "orderedTripCount": 114
             },
             {
@@ -474,6 +510,12 @@
                   "nameEn": "Ueno Sta."
                 }
               ],
+              "headsigns": [
+                {
+                  "headsignJa": "上野松坂屋前",
+                  "tripCount": 114
+                }
+              ],
               "orderedTripCount": 114
             },
             {
@@ -514,6 +556,12 @@
                   "nameEn": "Ueno Sta."
                 }
               ],
+              "headsigns": [
+                {
+                  "headsignJa": "上野松坂屋前",
+                  "tripCount": 114
+                }
+              ],
               "orderedTripCount": 114
             }
           ],
@@ -527,8 +575,6 @@
         {
           "destinationId": "ueno-matsuzakaya",
           "alightingStopId": "2000-10",
-          "headsignJa": "上野松坂屋前",
-          "headsignEn": "",
           "alightingStop": {
             "nameJa": "上野松坂屋前",
             "nameEn": "Ueno-Matsuzakaya (Ueno-Matsuzakaya Department Store)",
@@ -597,6 +643,12 @@
                   "nameEn": "Ueno-Matsuzakaya (Ueno-Matsuzakaya Department Store)"
                 }
               ],
+              "headsigns": [
+                {
+                  "headsignJa": "上野松坂屋前",
+                  "tripCount": 114
+                }
+              ],
               "orderedTripCount": 114
             },
             {
@@ -655,6 +707,12 @@
                   "nameEn": "Ueno-Matsuzakaya (Ueno-Matsuzakaya Department Store)"
                 }
               ],
+              "headsigns": [
+                {
+                  "headsignJa": "上野松坂屋前",
+                  "tripCount": 114
+                }
+              ],
               "orderedTripCount": 114
             },
             {
@@ -705,6 +763,12 @@
                   "stopSequence": 29,
                   "nameJa": "上野松坂屋前",
                   "nameEn": "Ueno-Matsuzakaya (Ueno-Matsuzakaya Department Store)"
+                }
+              ],
+              "headsigns": [
+                {
+                  "headsignJa": "上野松坂屋前",
+                  "tripCount": 114
                 }
               ],
               "orderedTripCount": 114
