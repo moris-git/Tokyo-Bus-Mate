@@ -1,182 +1,368 @@
 import { getBusGuide, loadBusData } from "./busService.js";
 import { getTranslation } from "./translations.js";
 
-// HTMLに定義した画面要素を取得し、画面遷移と案内表示から再利用します。
-const destinationSelect = document.querySelector("#destination-select");
-const boardingStopSelect = document.querySelector("#boarding-stop-select");
-const startGuideButton = document.querySelector("#start-guide-button");
-const destinationNextButton = document.querySelector("#destination-next-button");
-const boardingSubmitButton = document.querySelector("#boarding-submit-button");
+// HTMLに定義した要素を取得し、画面更新とユーザー操作で共有します。
+const page = document.querySelector(".page");
+const homeBranding = document.querySelector("#home-branding");
+const flowHeader = document.querySelector("#flow-header");
+const welcomeActionButton = document.querySelector("#welcome-action-button");
+const destinationSearch = document.querySelector("#destination-search");
+const destinationList = document.querySelector("#destination-list");
+const destinationCount = document.querySelector("#destination-count");
+const emptyDestinations = document.querySelector("#empty-destinations");
+const boardingStopList = document.querySelector("#boarding-stop-list");
 const statusMessage = document.querySelector("#status-message");
-const progressNavigation = document.querySelector("#screen-progress");
-const headerHomeButton = document.querySelector("#header-home-button");
-const languageButtons = document.querySelectorAll("[data-language]");
-const screenNames = ["home", "destination", "boarding", "guide"];
+const homeActionButton = document.querySelector("#home-action-button");
+const flowActionButton = document.querySelector("#flow-action-button");
+const flowActionLabel = document.querySelector("#flow-action-label");
+const busMatchCheckbox = document.querySelector("#bus-match-checkbox");
+const screenNames = ["welcome", "home", "boarding", "check", "aboard", "complete"];
+const stepByScreen = { boarding: 2, check: 3, aboard: 4, complete: 5 };
+const destinationArt = {
+  "ueno-zoo": "🐼",
+  "ueno-park": "🌸",
+  "ueno-station": "🚉",
+  "ueno-matsuzakaya": "🏬"
+};
+const actionLabels = {
+  boarding: "confirmBoardingStop",
+  check: "foundMyBus",
+  aboard: "gotIt",
+  complete: "returnHome"
+};
 
-// 読み込んだデータ、選択中の言語、現在の画面と案内情報を保持します。
+// 読み込み済みデータ、選択内容、現在の案内画面を保持します。
 let busData;
 let currentLanguage = "ja";
-let currentScreen = "home";
+let currentScreen = "welcome";
+let currentDestinationId = "";
+let currentBoardingStopId = "";
 let currentGuide = null;
 let currentError = null;
 let currentErrorIncludesServerHint = false;
 
-/**
- * 選択中の言語で文章を取得します。
- *
- * @param {string} key translations.jsに登録した文言のキー
- * @param {Record<string, string | number>} [values] 文中に埋め込む値
- * @returns {string} 選択中の言語に対応する文章
- */
+// 選択中の言語で翻訳文を取得します。
 function text(key, values = {}) {
   return getTranslation(currentLanguage, key, values);
 }
 
-/**
- * HTMLの翻訳キーを選択中の言語の文章へ置き換えます。
- *
- * @param {"ja" | "en"} language 表示言語
- */
+// HTMLの翻訳対象、入力ヒント、アクセシビリティラベルを選択言語に更新します。
 function updateStaticText(language) {
   currentLanguage = language;
   document.documentElement.lang = language;
   document.title = text("pageTitle");
 
-  // テンプレート内に置いた翻訳キーをすべて更新します。
   document.querySelectorAll("[data-i18n]").forEach((element) => {
     element.textContent = text(element.dataset.i18n);
   });
-
-  // スクリーンリーダーが使うラベルも、画面の表示言語とそろえます。
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
+    element.setAttribute("placeholder", text(element.dataset.i18nPlaceholder));
+  });
   document.querySelectorAll("[data-i18n-aria-label]").forEach((element) => {
     element.setAttribute("aria-label", text(element.dataset.i18nAriaLabel));
   });
-
-  // 押下状態を更新して、現在の言語を支援技術にも知らせます。
-  languageButtons.forEach((button) => {
-    button.setAttribute(
-      "aria-pressed",
-      String(button.dataset.language === currentLanguage)
-    );
+  document.querySelectorAll("[data-language]").forEach((button) => {
+    button.setAttribute("aria-pressed", String(button.dataset.language === language));
   });
 
+  renderDestinations();
   renderStatusMessage();
   renderCurrentScreen();
 }
 
-/**
- * 停留所名を日本語または英語を先にした表示に整えます。
- *
- * @param {string} nameJa GTFSの日本語停留所名
- * @param {string} nameEn GTFSの英語停留所名。未登録なら空文字列
- * @returns {string} 選択中の言語に合わせた停留所名
- */
-function getPlaceLabel(nameJa, nameEn) {
-  if (!nameEn) {
-    return nameJa;
-  }
-
-  return currentLanguage === "en"
-    ? `${nameEn} — ${nameJa}`
-    : `${nameJa}（${nameEn}）`;
+// 停留所名は、画面言語に応じて日本語または英語を優先して表示します。
+function displayStopName(stop) {
+  return currentLanguage === "en" && stop.nameEn ? stop.nameEn : stop.nameJa;
 }
 
-/**
- * select要素へ、HTMLとして解釈されない安全な選択肢を追加します。
- *
- * @param {HTMLSelectElement} select 選択肢を追加する要素
- * @param {string} value 選択値として使う識別子
- * @param {string} label 画面に表示する文章
- */
-function addOption(select, value, label) {
-  const option = document.createElement("option");
-  option.value = value;
-  option.textContent = label;
-  select.append(option);
-}
-
-/**
- * 目的地一覧を表示し、指定された目的地の選択状態を保ちます。
- *
- * @param {string} [selectedId] 選択状態を維持する目的地ID
- */
-function populateDestinations(selectedId = "") {
-  // 先頭の案内用選択肢は残し、以前作った目的地だけを入れ替えます。
-  while (destinationSelect.options.length > 1) {
-    destinationSelect.remove(1);
-  }
-
-  for (const destination of busData.destinations) {
-    addOption(
-      destinationSelect,
-      destination.id,
-      getPlaceLabel(destination.nameJa, destination.nameEn)
-    );
-  }
-
-  destinationSelect.value = selectedId;
-}
-
-/**
- * 選択した目的地に対応する、GTFSで検証済みの乗車停留所を表示します。
- *
- * @param {string} [selectedId] 選択状態を維持する乗車停留所ID
- * @throws {Error} 選択目的地の路線データが存在しない場合
- */
-function populateBoardingStops(selectedId = "") {
-  const destination = busData.destinations.find(
-    (item) => item.id === destinationSelect.value
-  );
-
-  // 目的地を変更した場合に、古い停留所候補が残らないようにします。
-  while (boardingStopSelect.options.length > 1) {
-    boardingStopSelect.remove(1);
-  }
-  boardingStopSelect.options[0].textContent = text(
-    destination ? "boardingStopPlaceholder" : "chooseDestinationFirst"
-  );
-  boardingStopSelect.disabled = !destination;
-
-  if (!destination) {
-    boardingStopSelect.value = "";
-    boardingSubmitButton.disabled = true;
+// 検索文字列で目的地を絞り込み、選択可能なカードとして描画します。
+function renderDestinations() {
+  if (!busData) {
     return;
   }
 
-  const route = busData.routes.find((item) => item.routeId === destination.routeId);
-  const routeDestination = route?.destinations.find(
-    (item) => item.destinationId === destination.id
+  const query = destinationSearch.value.trim().toLocaleLowerCase();
+  const destinations = busData.destinations.filter((destination) =>
+    `${destination.nameJa} ${destination.nameEn}`.toLocaleLowerCase().includes(query)
   );
+  destinationList.replaceChildren();
 
-  if (!routeDestination) {
+  for (const destination of destinations) {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "destination-card";
+    card.setAttribute("aria-pressed", String(destination.id === currentDestinationId));
+    card.setAttribute(
+      "aria-label",
+      `${destination.nameEn || destination.nameJa}, ${destination.nameJa}, ${
+        destination.id === currentDestinationId ? text("selected") : text("choose")
+      }`
+    );
+    card.addEventListener("click", () => {
+      currentDestinationId = destination.id;
+      currentGuide = null;
+      renderDestinations();
+      updateActionState();
+    });
+
+    const art = document.createElement("span");
+    art.className = `destination-art destination-art--${destination.id}`;
+    art.setAttribute("aria-hidden", "true");
+    const subject = document.createElement("span");
+    subject.className = "art-subject";
+    subject.textContent = destinationArt[destination.id] ?? "📍";
+    art.append(subject);
+
+    const content = document.createElement("span");
+    content.className = "destination-card-content";
+    const japaneseName = document.createElement("span");
+    japaneseName.className = "destination-name-ja";
+    japaneseName.textContent = destination.nameJa;
+    const englishName = document.createElement("span");
+    englishName.className = "destination-name-en";
+    englishName.textContent = destination.nameEn || destination.nameJa;
+    const selection = document.createElement("span");
+    selection.className = "destination-selection";
+    selection.textContent = destination.id === currentDestinationId
+      ? text("selected")
+      : text("choose");
+    content.append(japaneseName, englishName, selection);
+    card.append(art, content);
+    destinationList.append(card);
+  }
+
+  destinationCount.textContent = text("placeCount", { count: destinations.length });
+  emptyDestinations.hidden = destinations.length > 0;
+  updateActionState();
+}
+
+// 選択中の目的地と、それに対応する検証済み路線情報を取得します。
+function getSelectedDestination() {
+  return busData?.destinations.find((destination) => destination.id === currentDestinationId);
+}
+
+function getRouteDestination(destination) {
+  const route = busData?.routes.find((item) => item.routeId === destination?.routeId);
+  const routeDestination = route?.destinations.find(
+    (item) => item.destinationId === destination?.id
+  );
+  return { route, routeDestination };
+}
+
+// 選択目的地の停留所候補を表示し、前回選んだ停留所があれば維持します。
+function populateBoardingStops(selectedStopId = "") {
+  const destination = getSelectedDestination();
+  const { routeDestination } = getRouteDestination(destination);
+  if (!destination || !routeDestination) {
     const error = new Error("destinationRouteMissing");
     error.code = "destinationRouteMissing";
     throw error;
   }
 
+  document.querySelector("#boarding-destination-name").textContent =
+    currentLanguage === "en" ? destination.nameEn : destination.nameJa;
+  const destinationArtElement = document.querySelector("#boarding-destination-art");
+  destinationArtElement.className = `mini-art destination-art--${destination.id}`;
+  destinationArtElement.textContent = destinationArt[destination.id] ?? "📍";
+  boardingStopList.replaceChildren();
   for (const stop of routeDestination.boardingStops) {
-    addOption(
-      boardingStopSelect,
-      stop.stopId,
-      getPlaceLabel(stop.nameJa, stop.nameEn)
-    );
+    const option = document.createElement("button");
+    option.type = "button";
+    option.className = "boarding-stop-option";
+    option.setAttribute("aria-pressed", String(stop.stopId === selectedStopId));
+    option.addEventListener("click", () => {
+      currentBoardingStopId = stop.stopId;
+      currentGuide = null;
+      renderBoardingStops();
+      updateActionState();
+    });
+
+    const icon = document.createElement("span");
+    icon.className = "stop-icon";
+    icon.setAttribute("aria-hidden", "true");
+    icon.textContent = "⌖";
+    const copy = document.createElement("span");
+    copy.className = "stop-copy";
+    const englishName = document.createElement("strong");
+    englishName.textContent = stop.nameEn || stop.nameJa;
+    const japaneseName = document.createElement("small");
+    japaneseName.textContent = stop.nameJa;
+    const radio = document.createElement("span");
+    radio.className = "radio-mark";
+    radio.setAttribute("aria-hidden", "true");
+    copy.append(englishName, japaneseName);
+    option.append(icon, copy, radio);
+    boardingStopList.append(option);
   }
 
-  // 言語を切り替えても、選択済みの停留所を保ちます。
-  boardingStopSelect.value = selectedId;
-  boardingSubmitButton.disabled = boardingStopSelect.value === "";
+  currentBoardingStopId = routeDestination.boardingStops.some(
+    (stop) => stop.stopId === selectedStopId
+  ) ? selectedStopId : "";
+  renderBoardingStops();
 }
 
-/**
- * 現在のエラーを、選択中の言語で利用者に伝えます。
- */
+// 停留所候補の選択状態を、現在選ばれているIDに合わせて表示します。
+function renderBoardingStops() {
+  const buttons = boardingStopList.querySelectorAll(".boarding-stop-option");
+  buttons.forEach((button, index) => {
+    const destination = getSelectedDestination();
+    const { routeDestination } = getRouteDestination(destination);
+    const stop = routeDestination?.boardingStops[index];
+    button.setAttribute("aria-pressed", String(stop?.stopId === currentBoardingStopId));
+  });
+}
+
+// 選択内容から案内を組み立て、バス確認・降車案内・旅程画面へ反映します。
+function renderGuide() {
+  if (!currentGuide) {
+    return;
+  }
+
+  const { destination, route, headsignJa, boardingStop, alightingStop } = currentGuide;
+  document.querySelector("#boarding-destination-name").textContent =
+    currentLanguage === "en" ? destination.nameEn : destination.nameJa;
+  const boardingArt = document.querySelector("#boarding-destination-art");
+  boardingArt.className = `mini-art destination-art--${destination.id}`;
+  boardingArt.textContent =
+    destinationArt[destination.id] ?? "📍";
+  document.querySelector("#route-number").textContent = route.routeShortName;
+  document.querySelector("#bus-headsign").textContent = headsignJa;
+  document.querySelector("#bus-headsign-translation").textContent = text("japaneseDisplay");
+  document.querySelector("#check-boarding-stop").textContent = displayStopName(boardingStop);
+  document.querySelector("#check-boarding-stop-en").textContent =
+    currentLanguage === "en" ? boardingStop.nameJa : boardingStop.nameEn || "";
+  document.querySelector("#check-alighting-stop").textContent = displayStopName(alightingStop);
+  document.querySelector("#check-alighting-stop-en").textContent =
+    currentLanguage === "en" ? alightingStop.nameJa : alightingStop.nameEn || "";
+
+  const art = document.querySelector("#aboard-destination-art");
+  art.className = `destination-photo destination-art--${destination.id}`;
+  art.replaceChildren();
+  const subject = document.createElement("span");
+  subject.className = "art-subject";
+  subject.setAttribute("aria-hidden", "true");
+  subject.textContent = destinationArt[destination.id] ?? "📍";
+  art.append(subject);
+  art.setAttribute(
+    "aria-label",
+    currentLanguage === "en" ? `${destination.nameEn} illustration` : `${destination.nameJa}のイメージ`
+  );
+  document.querySelector("#aboard-heading").textContent = alightingStop.nameJa;
+  document.querySelector("#alighting-name-romaji").textContent =
+    alightingStop.nameRomanized || alightingStop.nameEn;
+
+  const fare = currentGuide.fare.price.toLocaleString(
+    currentLanguage === "ja" ? "ja-JP" : "en-US"
+  );
+  document.querySelector("#fare-amount").textContent = currentLanguage === "ja"
+    ? `${fare}円`
+    : `${currentGuide.fare.currency} ${fare}`;
+  document.querySelector("#fare-note").textContent =
+    currentGuide.fare.icPrice === null
+      ? text("fareNotSpecified")
+      : text("icFare", {
+        fare: currentGuide.fare.icPrice.toLocaleString(
+          currentLanguage === "ja" ? "ja-JP" : "en-US"
+        )
+      });
+
+  document.querySelector("#summary-boarding-stop").textContent = displayStopName(boardingStop);
+  document.querySelector("#summary-boarding-stop-en").textContent =
+    currentLanguage === "en" ? boardingStop.nameJa : boardingStop.nameEn || "";
+  document.querySelector("#summary-route").textContent = route.routeShortName;
+  document.querySelector("#summary-direction").textContent = headsignJa;
+  document.querySelector("#summary-alighting-stop").textContent = alightingStop.nameJa;
+  document.querySelector("#summary-alighting-stop-en").textContent =
+    alightingStop.nameRomanized || alightingStop.nameEn;
+  document.querySelector("#summary-destination").textContent =
+    currentLanguage === "en" ? destination.nameEn : destination.nameJa;
+  document.querySelector("#summary-destination-ja").textContent =
+    currentLanguage === "en" ? destination.nameJa : destination.nameEn || "";
+  const summaryArt = document.querySelector("#summary-destination-art");
+  summaryArt.className = `mini-art destination-art--${destination.id}`;
+  summaryArt.textContent =
+    destinationArt[destination.id] ?? "📍";
+  renderRouteStops();
+}
+
+// 乗車停留所から降車停留所までの経路を、停車順に一覧表示します。
+function renderRouteStops() {
+  const routeStops = document.querySelector("#route-stop-list");
+  routeStops.replaceChildren();
+  currentGuide.boardingStop.itineraryStops.forEach((stop, index, stops) => {
+    const item = document.createElement("li");
+    item.className = "route-stop";
+    const name = document.createElement("span");
+    name.textContent = displayStopName(stop);
+    item.append(name);
+
+    if (index === 0 || index === stops.length - 1) {
+      const badge = document.createElement("strong");
+      badge.textContent = text(index === 0 ? "boardingStop" : "getOffAt");
+      item.append(badge);
+    }
+
+    routeStops.append(item);
+  });
+}
+
+// 必須の選択やバス一致確認の状態に応じて、次へ進むボタンを有効化します。
+function updateActionState() {
+  const selectedDestinationIsVisible =
+    destinationList.querySelector('.destination-card[aria-pressed="true"]') !== null;
+  homeActionButton.disabled = !busData || !currentDestinationId ||
+    (currentScreen === "home" && !selectedDestinationIsVisible);
+  welcomeActionButton.disabled = !busData;
+  const enabled = currentScreen === "boarding"
+    ? Boolean(currentBoardingStopId)
+    : currentScreen === "check"
+      ? busMatchCheckbox.checked
+      : true;
+  flowActionButton.disabled = !enabled;
+}
+
+// 画面表示、進捗、次の操作ボタンを現在のステップに合わせて更新します。
+function renderCurrentScreen() {
+  const isLandingScreen = currentScreen === "welcome" || currentScreen === "home";
+  page.classList.toggle("is-welcome", currentScreen === "welcome");
+  page.classList.toggle("is-home", currentScreen === "home");
+  page.classList.toggle("is-aboard", currentScreen === "aboard");
+  page.classList.toggle("is-complete", currentScreen === "complete");
+  homeBranding.hidden = !isLandingScreen;
+  flowHeader.hidden = isLandingScreen;
+  welcomeActionButton.hidden = currentScreen !== "welcome";
+  homeActionButton.hidden = currentScreen !== "home";
+  flowActionButton.hidden = isLandingScreen;
+
+  for (const screenName of screenNames) {
+    document.querySelector(`#screen-${screenName}`).hidden = screenName !== currentScreen;
+  }
+
+  if (currentScreen === "home") {
+    document.querySelector("#home-note").textContent =
+      text(busData ? "homeReady" : "homeNote");
+  } else if (!isLandingScreen) {
+    const step = stepByScreen[currentScreen];
+    document.querySelector("#step-count").textContent = `${step}/5`;
+    document.querySelectorAll("[data-progress-bar]").forEach((bar) => {
+      bar.classList.toggle("is-complete", Number(bar.dataset.progressBar) <= step);
+    });
+    flowActionLabel.textContent = text(actionLabels[currentScreen]);
+    if (currentGuide) {
+      renderGuide();
+    }
+  }
+
+  updateActionState();
+}
+
+// 既知のエラーだけを翻訳して表示し、内部情報を画面へ出さないようにします。
 function renderStatusMessage() {
   if (!currentError) {
     statusMessage.textContent = "";
     return;
   }
 
-  // 翻訳辞書にない内部エラー名を画面へ出さないよう、既知のコードに限定します。
   const knownErrorCodes = [
     "destinationLoadError",
     "routeDataLoadError",
@@ -191,31 +377,20 @@ function renderStatusMessage() {
   const errorCode = knownErrorCodes.includes(currentError.code)
     ? currentError.code
     : "unexpectedError";
-
   statusMessage.textContent = text(errorCode, currentError.details ?? {});
   if (currentErrorIncludesServerHint) {
     statusMessage.textContent += ` ${text("localServerHint")}`;
   }
 }
 
-/**
- * エラー情報を保持し、現在の言語で画面に表示します。
- *
- * @param {Error} error 発生したエラー
- * @param {boolean} [includeLocalServerHint] サーバー起動案内を追加する場合はtrue
- */
+// エラーを保持し、必要ならローカルサーバー起動の案内も添えて表示します。
 function showError(error, includeLocalServerHint = false) {
   currentError = error;
   currentErrorIncludesServerHint = includeLocalServerHint;
   renderStatusMessage();
 }
 
-/**
- * 画面を切り替え、進捗表示と見出しフォーカスを更新します。
- *
- * @param {"home" | "destination" | "boarding" | "guide"} screenName 移動先画面
- * @param {boolean} [moveFocus] 画面見出しへフォーカスを移す場合はtrue
- */
+// 指定画面へ移動し、進捗表示を更新して見出しへフォーカスを移します。
 function setScreen(screenName, moveFocus = true) {
   if (!screenNames.includes(screenName)) {
     throw new Error(`画面が見つかりません: ${screenName}`);
@@ -223,266 +398,104 @@ function setScreen(screenName, moveFocus = true) {
 
   currentScreen = screenName;
   renderCurrentScreen();
-
-  if (screenName === "home") {
-    progressNavigation.hidden = true;
-  } else {
-    progressNavigation.hidden = false;
-    const activeStep = screenName === "destination" ? "destination"
-      : screenName === "boarding" ? "boarding"
-        : "guide";
-
-    document.querySelectorAll("[data-progress-step]").forEach((step) => {
-      if (step.dataset.progressStep === activeStep) {
-        step.setAttribute("aria-current", "step");
-      } else {
-        step.removeAttribute("aria-current");
-      }
-    });
-  }
-
-  // 画面遷移後は見出しへ移動し、キーボード利用者にも変化を伝えます。
   if (moveFocus) {
-    document.querySelector(`#screen-${screenName} .screen-heading`)?.focus();
-    // 画面切り替えのたびにスクロール位置を即時に戻し、操作対象を安定させます。
+    document.querySelector(`#screen-${screenName} .screen-heading, #screen-${screenName} .home-heading`)
+      ?.focus();
     window.scrollTo(0, 0);
   }
 }
 
-/**
- * 選択中の画面に必要な説明と案内内容を更新します。
- */
-function renderCurrentScreen() {
-  const introductionKeys = {
-    home: "pageIntroduction",
-    destination: "destinationScreenIntro",
-    boarding: "boardingScreenIntro",
-    guide: "busComparisonHelp"
-  };
-  document.querySelector("#page-introduction").textContent =
-    text(introductionKeys[currentScreen]);
-
-  screenNames.forEach((screenName) => {
-    document.querySelector(`#screen-${screenName}`).hidden =
-      screenName !== currentScreen;
-  });
-  headerHomeButton.hidden = currentScreen === "home";
-  document.querySelector("#home-note").textContent =
-    text(busData ? "homeReady" : "homeNote");
-
-  if (currentScreen === "guide" && currentGuide) {
-    renderGuide();
-  }
-}
-
-/**
- * 選択済みのバス情報、経路、降車場所、運賃を案内画面へ反映します。
- */
-function renderGuide() {
-  if (!currentGuide) {
-    return;
-  }
-
-  document.querySelector("#route-number").textContent =
-    currentGuide.route.routeShortName;
-  document.querySelector("#bus-headsign").textContent =
-    currentGuide.headsignJa;
-  document.querySelector("#selected-boarding-stop").textContent =
-    getPlaceLabel(currentGuide.boardingStop.nameJa, currentGuide.boardingStop.nameEn);
-
-  // 停車順が変わらないよう、検証済み経路をそのまま順番に表示します。
-  const routeStopList = document.querySelector("#route-stop-list");
-  routeStopList.replaceChildren();
-  currentGuide.boardingStop.itineraryStops.forEach((stop, index, stops) => {
-    const item = document.createElement("li");
-    item.className = "route-stop";
-    item.setAttribute(
-      "aria-current",
-      index === 0 || index === stops.length - 1 ? "step" : "false"
-    );
-
-    const name = document.createElement("span");
-    name.className = "route-stop-name";
-    name.textContent = getPlaceLabel(stop.nameJa, stop.nameEn);
-    item.append(name);
-
-    if (index === 0 || index === stops.length - 1) {
-      const badge = document.createElement("span");
-      badge.className = "route-stop-badge";
-      badge.textContent = text(index === 0 ? "boardingStopBadge" : "alightingStopBadge");
-      item.append(badge);
-    }
-
-    routeStopList.append(item);
-  });
-
-  document.querySelector("#alighting-name-ja").textContent =
-    currentGuide.alightingStop.nameJa;
-  document.querySelector("#alighting-name-romaji").textContent =
-    currentGuide.alightingStop.nameRomanized;
-  document.querySelector("#alighting-name-en").textContent =
-    currentGuide.alightingStop.nameEn;
-
-  const fare = currentGuide.fare.price.toLocaleString(
-    currentLanguage === "ja" ? "ja-JP" : "en-US"
-  );
-  document.querySelector("#fare-amount").textContent = currentLanguage === "ja"
-    ? `${fare}円`
-    : `${currentGuide.fare.currency} ${fare}`;
-
-  document.querySelector("#fare-note").textContent =
-    currentGuide.fare.icPrice === null
-      ? text("fareNotSpecified")
-      : text("icFare", {
-        fare: currentGuide.fare.icPrice.toLocaleString(
-          currentLanguage === "ja" ? "ja-JP" : "en-US"
-        )
-      });
-}
-
-/**
- * 選択中の目的地と停留所から案内データを作り、案内画面へ移動します。
- */
-function openGuide() {
+// 目的地に紐づく停留所候補を用意して、乗車地点選択へ進みます。
+function openBoardingScreen() {
   try {
-    currentGuide = getBusGuide(
-      busData,
-      destinationSelect.value,
-      boardingStopSelect.value
-    );
+    const { routeDestination } = getRouteDestination(getSelectedDestination());
+    if (!routeDestination) {
+      const error = new Error("destinationRouteMissing");
+      error.code = "destinationRouteMissing";
+      throw error;
+    }
     currentError = null;
-    currentErrorIncludesServerHint = false;
+    currentBoardingStopId = routeDestination.boardingStops[0]?.stopId ?? "";
+    populateBoardingStops(currentBoardingStopId);
+    setScreen("boarding");
+  } catch (error) {
+    showError(error);
+  }
+}
+
+// 選択済みの目的地と停留所を検証し、バス確認画面を開きます。
+function openBusCheck() {
+  try {
+    currentGuide = getBusGuide(busData, currentDestinationId, currentBoardingStopId);
+    currentError = null;
+    busMatchCheckbox.checked = false;
     renderStatusMessage();
-    setScreen("guide");
+    setScreen("check");
   } catch (error) {
     currentGuide = null;
     showError(error);
   }
 }
 
-/**
- * 言語を切り替え、選択内容を維持したまま画面内の表示を更新します。
- *
- * @param {"ja" | "en"} language 切り替え先の言語
- */
-function changeLanguage(language) {
-  if (language !== "ja" && language !== "en") {
-    return;
-  }
-
-  const selectedDestinationId = destinationSelect.value;
-  const selectedBoardingStopId = boardingStopSelect.value;
-
-  updateStaticText(language);
-
-  if (busData) {
-    populateDestinations(selectedDestinationId);
-    populateBoardingStops(selectedBoardingStopId);
-  }
-
-  // 言語切り替え後も進捗表示の選択状態を現在画面に合わせます。
-  if (currentScreen !== "home") {
-    setScreen(currentScreen, false);
+// 現在の案内ステップに応じて、前の画面へ戻ります。
+function goBack() {
+  const previousScreen = {
+    boarding: "home",
+    check: "boarding",
+    aboard: "check",
+    complete: "welcome"
+  }[currentScreen];
+  if (previousScreen) {
+    setScreen(previousScreen);
   }
 }
 
-/**
- * JSONを読み込んで検証し、目的地選択を利用可能にします。
- *
- * @returns {Promise<void>}
- */
+// 目的地・路線データを読み込み、利用可能になったらホームを更新します。
 async function initialize() {
   try {
     busData = await loadBusData();
-    populateDestinations();
-    destinationSelect.disabled = false;
-    startGuideButton.disabled = false;
-    document.querySelector("#home-note").textContent = text("homeReady");
+    currentDestinationId = busData.destinations[0]?.id ?? "";
+    renderDestinations();
+    renderCurrentScreen();
   } catch (error) {
     showError(error, true);
   }
 }
 
-// HTMLの初期画面を、既定の日本語で表示します。
+// 初期表示は日本語にし、データ読み込み中は開始ボタンを無効にします。
 updateStaticText(currentLanguage);
-destinationSelect.disabled = true;
-startGuideButton.disabled = true;
+renderCurrentScreen();
 
-// 言語ボタンは、どの画面からでも現在の選択状態を保ったまま動作します。
-languageButtons.forEach((button) => {
+// 言語を切り替えても、選択内容と現在の案内画面を維持します。
+document.querySelectorAll("[data-language]").forEach((button) => {
   button.addEventListener("click", () => {
-    changeLanguage(button.dataset.language);
+    if (button.dataset.language !== currentLanguage) {
+      updateStaticText(button.dataset.language);
+    }
   });
 });
 
-// ホームから案内を開始するときは、目的地選択画面へ進みます。
-startGuideButton.addEventListener("click", () => {
+// 検索、画面遷移、バス一致確認などのユーザー操作を登録します。
+destinationSearch.addEventListener("input", renderDestinations);
+welcomeActionButton.addEventListener("click", () => {
   currentError = null;
-  currentErrorIncludesServerHint = false;
   renderStatusMessage();
-  setScreen("destination");
-});
-
-// 目的地が変わったら停留所候補を作り直し、以前の案内を無効にします。
-destinationSelect.addEventListener("change", () => {
-  currentGuide = null;
-  currentError = null;
-  currentErrorIncludesServerHint = false;
-  destinationNextButton.disabled = destinationSelect.value === "";
-  boardingSubmitButton.disabled = true;
-
-  try {
-    populateBoardingStops();
-  } catch (error) {
-    showError(error);
-  }
-
-  renderStatusMessage();
-});
-
-// 次へ進む前に、目的地に対応した乗車停留所を画面へ用意します。
-destinationNextButton.addEventListener("click", () => {
-  if (!destinationSelect.value) {
-    return;
-  }
-
-  currentError = null;
-  currentErrorIncludesServerHint = false;
-  populateBoardingStops(boardingStopSelect.value);
-  setScreen("boarding");
-});
-
-// 停留所が選ばれている場合だけ、案内画面へ進む操作を有効にします。
-boardingStopSelect.addEventListener("change", () => {
-  currentGuide = null;
-  currentError = null;
-  currentErrorIncludesServerHint = false;
-  boardingSubmitButton.disabled = boardingStopSelect.value === "";
-  renderStatusMessage();
-});
-
-// 選択内容を検証して、バスの情報を案内画面に表示します。
-boardingSubmitButton.addEventListener("click", openGuide);
-
-// 各戻る操作は、選択済みの内容を保ったまま対応する画面へ移動します。
-document.querySelector("#destination-back-button").addEventListener("click", () => {
   setScreen("home");
 });
-document.querySelector("#boarding-back-button").addEventListener("click", () => {
-  setScreen("destination");
+homeActionButton.addEventListener("click", openBoardingScreen);
+flowActionButton.addEventListener("click", () => {
+  if (currentScreen === "boarding") {
+    openBusCheck();
+  } else if (currentScreen === "check") {
+    setScreen("aboard");
+  } else if (currentScreen === "aboard") {
+    setScreen("complete");
+  } else if (currentScreen === "complete") {
+    setScreen("welcome");
+  }
 });
-document.querySelector("#guide-back-button").addEventListener("click", () => {
-  currentGuide = null;
-  setScreen("boarding");
-});
-document.querySelector("#guide-destination-button").addEventListener("click", () => {
-  currentGuide = null;
-  setScreen("destination");
-});
-headerHomeButton.addEventListener("click", () => {
-  currentGuide = null;
-  setScreen("home");
-});
+document.querySelector("#back-button").addEventListener("click", goBack);
+busMatchCheckbox.addEventListener("change", updateActionState);
 
-// データ読み込みが完了するまではホームの開始ボタンを無効にします。
+// アプリ起動時に、目的地と路線のデータを読み込みます。
 initialize();

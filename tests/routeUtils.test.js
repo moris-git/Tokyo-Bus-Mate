@@ -11,7 +11,7 @@ const [destinationsFile, routesFile, htmlFile] = await Promise.all([
   readFile(new URL("../data/bus-routes.json", import.meta.url), "utf8"),
   readFile(new URL("../index.html", import.meta.url), "utf8")
 ]);
-const htmlTranslationKeys = [...htmlFile.matchAll(/data-i18n(?:-aria-label)?="([^"]+)"/g)]
+const htmlTranslationKeys = [...htmlFile.matchAll(/data-i18n(?:-aria-label|-placeholder)?="([^"]+)"/g)]
   .map((match) => match[1]);
 const generatedData = {
   destinations: JSON.parse(destinationsFile).destinations,
@@ -112,8 +112,10 @@ test("生成したGTFSデータで設定済みの全目的地と乗車停留所�
 });
 
 test("画面文言を日本語と英語で取得できる", () => {
-  assert.equal(getTranslation("ja", "guideHeading"), "乗るバスを確認");
-  assert.equal(getTranslation("en", "guideHeading"), "Check your bus");
+  assert.equal(getTranslation("ja", "welcomeHeading"), "はじめてでも、バスの乗り方がわかる。");
+  assert.equal(getTranslation("en", "welcomeHeading"), "Ride the bus with confidence.");
+  assert.equal(getTranslation("ja", "guideHeading"), "バスを見つける");
+  assert.equal(getTranslation("en", "guideHeading"), "Find Your Bus");
   assert.equal(
     getTranslation("ja", "routeMissing", { routeId: "070" }),
     "系統 070 のデータがありません。"
@@ -136,13 +138,16 @@ test("HTMLで使うすべての翻訳キーが日本語と英語に登録され�
   }
 });
 
-test("共通レイアウトと各機能画面はHTMLに定義する", () => {
-  for (const screenName of ["home", "destination", "boarding", "guide"]) {
+test("説明用ホームと5段階の案内画面はHTMLに定義する", () => {
+  for (const screenName of ["welcome", "home", "boarding", "check", "aboard", "complete"]) {
     assert.ok(
       htmlFile.includes(`id="screen-${screenName}"`),
       `${screenName}画面のテンプレートが必要です`
     );
   }
-  assert.match(htmlFile, /id="screen-progress"/);
-  assert.match(htmlFile, /id="header-home-button"/);
+  assert.match(htmlFile, /id="flow-progress"/);
+  assert.match(htmlFile, /id="destination-list"/);
+  assert.match(htmlFile, /id="bus-match-checkbox"/);
+  assert.match(htmlFile, /id="welcome-action-button"/);
+  assert.match(htmlFile, /class="welcome-steps"/);
 });

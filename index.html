@@ -3,187 +3,220 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#f5f7fa">
+    <meta name="theme-color" content="#183d59">
     <title>Tokyo Bus Mate - バス案内</title>
     <link rel="stylesheet" href="./css/style.css">
     <script type="module" src="./js/main.js"></script>
   </head>
   <body>
-    <div class="page">
-      <!-- 全画面で共通するページタイトルと言語切り替えです。 -->
+    <div class="page is-home">
+      <!-- ホームではブランドと言語切り替えを表示し、案内中は進捗ヘッダーに切り替えます。 -->
       <header class="page-header">
-        <p class="eyebrow">TOKYO BUS MATE</p>
-        <div class="header-row">
-          <div>
-            <h1 data-i18n="pageHeading">乗るバスを探す</h1>
-            <p id="page-introduction" class="intro" data-i18n="pageIntroduction">
-              行き先と乗車する停留所を選ぶと、乗るバスと降車する停留所を確認できます。
-            </p>
+        <div id="home-branding" class="home-branding">
+          <div class="brand-mark" aria-hidden="true">▤</div>
+          <div class="brand-copy">
+            <p class="brand-eyebrow">TOKYO TRAVEL COMPANION</p>
+            <p class="brand-name">Tokyo Bus Mate</p>
           </div>
-          <!-- ホームへの移動と言語切り替えを、どの画面からでも使えるようにします。 -->
-          <div class="header-controls">
-            <button id="header-home-button" class="secondary-button header-home-button" type="button" hidden>
-              <span data-i18n="goHome">ホームに戻る</span>
-            </button>
-            <div class="language-switch" role="group" aria-label="表示言語" data-i18n-aria-label="languageSelection">
-              <button type="button" class="language-button" data-language="ja" aria-pressed="true" lang="ja">日本語</button>
-              <button type="button" class="language-button" data-language="en" aria-pressed="false" lang="en">English</button>
-            </div>
+          <div class="language-switch" role="group" aria-label="表示言語" data-i18n-aria-label="languageSelection">
+            <button type="button" class="language-button" data-language="ja" aria-pressed="true" lang="ja">日本語</button>
+            <button type="button" class="language-button" data-language="en" aria-pressed="false" lang="en">EN</button>
+          </div>
+        </div>
+
+        <div id="flow-header" class="flow-header" hidden>
+          <button id="back-button" class="back-button" type="button" aria-label="戻る" data-i18n-aria-label="goBack">‹</button>
+          <p class="flow-brand">Tokyo Bus Mate</p>
+          <span id="step-count" class="step-count">2/5</span>
+          <div id="flow-progress" class="flow-progress" aria-label="案内の進み具合" data-i18n-aria-label="progressLabel">
+            <span data-progress-bar="1"></span>
+            <span data-progress-bar="2"></span>
+            <span data-progress-bar="3"></span>
+            <span data-progress-bar="4"></span>
+            <span data-progress-bar="5"></span>
+          </div>
+          <div class="flow-language-switch language-switch" role="group" aria-label="表示言語" data-i18n-aria-label="languageSelection">
+            <button type="button" class="language-button" data-language="ja" aria-pressed="true" lang="ja">日本語</button>
+            <button type="button" class="language-button" data-language="en" aria-pressed="false" lang="en">EN</button>
           </div>
         </div>
       </header>
 
-      <!-- 現在地を示し、画面を順番に進めやすくするステップ表示です。 -->
-      <nav id="screen-progress" class="screen-progress" aria-label="案内の進み具合" data-i18n-aria-label="progressLabel" hidden>
-        <ol>
-          <li data-progress-step="destination"><span class="progress-number">1</span><span data-i18n="stepDestination">行先</span></li>
-          <li data-progress-step="boarding"><span class="progress-number">2</span><span data-i18n="stepBoarding">乗車停留所</span></li>
-          <li data-progress-step="guide"><span class="progress-number">3</span><span data-i18n="stepGuide">バス案内</span></li>
-        </ol>
-      </nav>
-
-      <!-- 読み込みや選択で問題が起きたとき、画面内で原因を伝えます。 -->
+      <!-- データ読み込みや選択内容に問題がある場合のメッセージを表示します。 -->
       <p id="status-message" class="status-message" role="status" aria-live="polite"></p>
 
       <main id="screen-container">
-        <!-- はじめにサービスの使い方を簡潔に示すホーム画面です。 -->
-        <section id="screen-home" class="screen" aria-labelledby="home-heading">
-          <div class="panel home-panel">
-            <h2 id="home-heading" class="screen-heading" tabindex="-1" data-i18n="homeHeading">行き先までのバスを、順番に確認</h2>
-            <p class="screen-intro" data-i18n="homeIntroduction">
-              行き先と乗る停留所を選ぶだけで、乗るバスと降りる場所がわかります。
-            </p>
-            <ol class="home-steps">
-              <li><span class="step-number">1</span><span data-i18n="homeStepDestination">行きたい場所を選びます</span></li>
-              <li><span class="step-number">2</span><span data-i18n="homeStepBoarding">近くの乗車停留所を選びます</span></li>
-              <li><span class="step-number">3</span><span data-i18n="homeStepGuide">バスの表示と降車場所を確認します</span></li>
+        <!-- アプリの目的と案内の流れを説明する最初のホーム画面です。 -->
+        <section id="screen-welcome" class="screen welcome-screen" aria-labelledby="welcome-heading">
+          <div class="welcome-hero">
+            <p class="route-pill"><span class="route-dot"></span><span data-i18n="supportedRoute">都営バスの対象路線</span><strong>上23</strong></p>
+            <h1 id="welcome-heading" class="welcome-heading" tabindex="-1" data-i18n="welcomeHeading">はじめてでも、バスの乗り方がわかる。</h1>
+            <p class="welcome-intro" data-i18n="welcomeIntroduction">行き先に合わせて、乗る停留所から降りる場所まで順番にご案内します。</p>
+          </div>
+
+          <section class="welcome-guide" aria-labelledby="welcome-guide-heading">
+            <p class="eyebrow" data-i18n="howToUse">使い方</p>
+            <h2 id="welcome-guide-heading" data-i18n="welcomeGuideHeading">3つのステップで、安心して出発</h2>
+            <ol class="welcome-steps">
+              <li class="welcome-step">
+                <span class="welcome-step-icon" aria-hidden="true">⌖</span>
+                <div><span class="welcome-step-number" data-i18n="welcomeStepOne">STEP 1</span><h3 data-i18n="welcomeStepOneTitle">行き先と乗り場を選ぶ</h3><p data-i18n="welcomeStepOneDescription">行きたい場所と、近くの乗車停留所を選びます。</p></div>
+              </li>
+              <li class="welcome-step">
+                <span class="welcome-step-icon" aria-hidden="true">▤</span>
+                <div><span class="welcome-step-number" data-i18n="welcomeStepTwo">STEP 2</span><h3 data-i18n="welcomeStepTwoTitle">乗るバスを確認する</h3><p data-i18n="welcomeStepTwoDescription">系統番号と行き先表示を、目の前のバスと照らし合わせます。</p></div>
+              </li>
+              <li class="welcome-step">
+                <span class="welcome-step-icon" aria-hidden="true">⚑</span>
+                <div><span class="welcome-step-number" data-i18n="welcomeStepThree">STEP 3</span><h3 data-i18n="welcomeStepThreeTitle">降りる停留所を確認する</h3><p data-i18n="welcomeStepThreeDescription">降車停留所の日本語名を確認し、旅程を手元に表示します。</p></div>
+              </li>
             </ol>
-            <button id="start-guide-button" class="primary-button" type="button" disabled>
-              <span data-i18n="startGuide">案内をはじめる</span>
-            </button>
-            <p id="home-note" class="field-help home-note" data-i18n="homeNote">
-              路線・停留所の情報を読み込んでいます。
-            </p>
-          </div>
+          </section>
+
+          <aside class="welcome-notice">
+            <span class="info-icon" aria-hidden="true">i</span>
+            <p data-i18n="welcomeNotice">現在は都営バス上23系統の案内に対応しています。リアルタイムの運行情報ではありません。</p>
+          </aside>
         </section>
 
-        <!-- 行き先だけを選ぶ画面です。停留所選択と分けて迷いにくくします。 -->
-        <section id="screen-destination" class="screen" aria-labelledby="destination-heading" hidden>
-          <div class="panel">
-            <h2 id="destination-heading" class="screen-heading" tabindex="-1" data-i18n="destinationScreenHeading">行きたい場所を選ぶ</h2>
-            <p class="screen-intro" data-i18n="destinationScreenIntro">目的地を選ぶと、利用できる乗車停留所を案内します。</p>
-            <div class="field">
-              <label for="destination-select">
-                <span class="step-number">1</span>
-                <span data-i18n="destinationLabel">行きたい場所を選ぶ</span>
-              </label>
-              <select id="destination-select" name="destination" required disabled>
-                <option value="" data-i18n="destinationPlaceholder">目的地を選択してください</option>
-              </select>
-            </div>
-            <div class="screen-actions">
-              <button id="destination-back-button" class="secondary-button" type="button">
-                <span data-i18n="goHome">ホームに戻る</span>
-              </button>
-              <button id="destination-next-button" class="primary-button" type="button" disabled>
-                <span data-i18n="nextToBoarding">乗車停留所を選ぶ</span>
-              </button>
-            </div>
+        <!-- ホームから案内を始めた後、目的地を検索して選ぶ画面です。 -->
+        <section id="screen-home" class="screen home-screen" aria-labelledby="home-heading">
+          <div class="home-hero">
+            <p class="route-pill"><span class="route-dot"></span><span data-i18n="supportedRoute">都営バスの対象路線</span><strong>上23</strong></p>
+            <h1 id="home-heading" class="home-heading" tabindex="-1" data-i18n="homeHeading">Where would you like to go?</h1>
+            <p class="home-intro" data-i18n="homeIntroduction">行き先を選べば、バスの乗り方を順番にご案内します。</p>
+            <label class="search-box">
+              <span class="search-icon" aria-hidden="true"></span>
+              <span class="visually-hidden" data-i18n="searchLabel">目的地を検索</span>
+              <input id="destination-search" type="search" autocomplete="off" placeholder="対応する行き先を検索" data-i18n-placeholder="searchPlaceholder">
+            </label>
           </div>
-        </section>
 
-        <!-- 選択された目的地に対応する乗車停留所だけを表示します。 -->
-        <section id="screen-boarding" class="screen" aria-labelledby="boarding-heading" hidden>
-          <div class="panel">
-            <h2 id="boarding-heading" class="screen-heading" tabindex="-1" data-i18n="boardingScreenHeading">乗車する停留所を選ぶ</h2>
-            <p class="screen-intro" data-i18n="boardingScreenIntro">実際に乗る予定の停留所を選択してください。</p>
-            <div class="field">
-              <label for="boarding-stop-select">
-                <span class="step-number">2</span>
-                <span data-i18n="boardingStopLabel">乗車する停留所を選ぶ</span>
-              </label>
-              <select id="boarding-stop-select" name="boardingStop" required disabled>
-                <option value="" data-i18n="chooseDestinationFirst">先に目的地を選択してください</option>
-              </select>
-              <p class="field-help" data-i18n="boardingStopHelp">実際に乗る予定の停留所を選択してください。</p>
-            </div>
-            <div class="screen-actions">
-              <button id="boarding-back-button" class="secondary-button" type="button">
-                <span data-i18n="backToDestination">行き先に戻る</span>
-              </button>
-              <button id="boarding-submit-button" class="primary-button" type="button" disabled>
-                <span data-i18n="showBusGuide">バスの案内を見る</span>
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <!-- バス情報・経路・降車場所・運賃をひとまとまりで確認する画面です。 -->
-        <section id="screen-guide" class="screen" aria-labelledby="guide-title" hidden>
-          <div class="guide-result">
-            <h2 id="guide-title" class="screen-heading" tabindex="-1" data-i18n="guideHeading">乗るバスを確認</h2>
-            <p class="section-intro" data-i18n="busComparisonHelp">系統番号と行き先表示を、実際のバスと照らし合わせてください。</p>
-
-            <article class="panel bus-card">
-              <div class="photo-placeholder" role="img" aria-label="バスの写真は後で追加します" data-i18n-aria-label="busPhotoDescription">
-                <span data-i18n="busPhotoLineOne">バスの写真</span>
-                <br>
-                <span data-i18n="busPhotoLineTwo">準備中</span>
+          <div class="destination-section">
+            <div class="section-title-row">
+              <div>
+                <p class="eyebrow" data-i18n="exploreNearby">近くのスポット</p>
+                <h2 data-i18n="popularDestinations">人気の行き先</h2>
               </div>
-              <dl class="bus-details">
-                <div>
-                  <dt data-i18n="routeNumber">系統番号</dt>
-                  <dd id="route-number" lang="ja"></dd>
-                </div>
-                <div>
-                  <dt data-i18n="destinationDisplay">行き先表示</dt>
-                  <dd id="bus-headsign" lang="ja"></dd>
-                </div>
-                <div>
-                  <dt data-i18n="boardingStop">乗車する停留所</dt>
-                  <dd id="selected-boarding-stop"></dd>
-                </div>
-              </dl>
-            </article>
+              <span id="destination-count" class="place-count"></span>
+            </div>
+            <div id="destination-list" class="destination-list" aria-label="目的地一覧" data-i18n-aria-label="destinationListLabel"></div>
+            <p id="empty-destinations" class="empty-message" hidden data-i18n="noDestinations">一致する行き先がありません。</p>
+          </div>
+          <p id="home-note" class="home-note field-help" data-i18n="homeNote">路線・停留所の情報を読み込んでいます。</p>
+        </section>
 
-            <!-- GTFSの停車順に、乗車地点から降車地点までを示します。 -->
-            <article class="panel route-card">
-              <h3 data-i18n="routeStopsHeading">乗車停留所から降車停留所まで</h3>
-              <ol id="route-stop-list" class="route-stop-list"></ol>
-            </article>
+        <!-- 選択した目的地に対応する乗車停留所を選びます。 -->
+        <section id="screen-boarding" class="screen flow-screen" aria-labelledby="boarding-heading" hidden>
+          <p class="eyebrow" data-i18n="startingPoint">乗車地点</p>
+          <h1 id="boarding-heading" class="screen-heading" tabindex="-1" data-i18n="boardingScreenHeading">Choose Your Boarding Stop</h1>
+          <div class="destination-summary">
+            <div id="boarding-destination-art" class="mini-art destination-art--ueno-zoo" aria-hidden="true">🐼</div>
+            <div>
+              <p class="small-label" data-i18n="goingTo">行き先</p>
+              <strong id="boarding-destination-name"></strong>
+            </div>
+            <span class="destination-flag" aria-hidden="true">⚑</span>
+          </div>
+          <p class="screen-intro" data-i18n="boardingScreenIntro">案内表示と同じ停留所名を選んでください。</p>
+          <div id="boarding-stop-list" class="boarding-stop-list" role="group" aria-label="乗車停留所一覧" data-i18n-aria-label="boardingStopListLabel"></div>
+          <aside class="info-note"><span class="info-icon" aria-hidden="true">i</span><p data-i18n="boardingStopHelp">停留所の標識には日本語名と停留所番号が表示されています。</p></aside>
+        </section>
 
-            <article class="panel alighting-card">
-              <p class="eyebrow" data-i18n="getOffAt">ここで降ります</p>
-              <h3 id="alighting-name-ja" lang="ja"></h3>
-              <p id="alighting-name-romaji" class="romaji" lang="en"></p>
-              <p id="alighting-name-en" class="english-name" lang="en"></p>
-              <p class="help-note" data-i18n="alightingHelp">
-                車内表示の日本語名、または車内アナウンスと照らし合わせてください。
-              </p>
-            </article>
-
-            <article class="panel fare-card">
-              <h3 data-i18n="fareInformation">運賃情報</h3>
-              <p id="fare-amount" class="fare-amount"></p>
-              <p id="fare-note" class="field-help"></p>
-            </article>
-
-            <div class="screen-actions guide-actions">
-              <button id="guide-back-button" class="secondary-button" type="button">
-                <span data-i18n="changeBoardingStop">乗車停留所を変更する</span>
-              </button>
-              <button id="guide-destination-button" class="secondary-button" type="button">
-                <span data-i18n="changeDestination">行き先を変更する</span>
-              </button>
+        <!-- 路線番号・行き先表示・乗降停留所を確認してから乗車します。 -->
+        <section id="screen-check" class="screen flow-screen" aria-labelledby="check-heading" hidden>
+          <p class="eyebrow" data-i18n="boardingCheck">乗車前の確認</p>
+          <h1 id="check-heading" class="screen-heading" tabindex="-1" data-i18n="guideHeading">Find Your Bus</h1>
+          <p class="screen-intro" data-i18n="busComparisonHelp">乗車前に、次の2つを確認してください。</p>
+          <div class="bus-route-card">
+            <div class="route-number-panel">
+              <span class="small-label" data-i18n="routeNumber">系統</span>
+              <strong id="route-number"></strong>
+            </div>
+            <div class="route-direction">
+              <span class="small-label" data-i18n="destinationDisplay">行き先表示</span>
+              <strong id="bus-headsign" lang="ja"></strong>
+              <span id="bus-headsign-translation" class="translation-line"></span>
             </div>
           </div>
+          <div class="bus-illustration" role="img" aria-label="都内を走るバスのイメージ" data-i18n-aria-label="busPhotoDescription">
+            <div class="city-skyline" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+            <div class="illustration-sun" aria-hidden="true"></div>
+            <div class="illustration-bus" aria-hidden="true"><span class="bus-route-sign">上23</span><span class="bus-window"></span><span class="bus-wheel bus-wheel--one"></span><span class="bus-wheel bus-wheel--two"></span></div>
+            <span class="image-caption" data-i18n="photoPlaceholder">写真は差し替え可能です</span>
+          </div>
+          <label class="match-confirmation">
+            <input id="bus-match-checkbox" type="checkbox">
+            <span class="checkmark" aria-hidden="true">✓</span>
+            <span><strong data-i18n="busMatchQuestion">目の前のバスは一致していますか？</strong><small data-i18n="busMatchHelp">系統番号と行き先表示を確認してください。</small></span>
+          </label>
+          <div class="trip-endpoints">
+            <div><p class="small-label" data-i18n="boardAt">乗車</p><strong id="check-boarding-stop"></strong><span id="check-boarding-stop-en"></span></div>
+            <span class="endpoint-arrow" aria-hidden="true">→</span>
+            <div><p class="small-label" data-i18n="getOffAt">降車</p><strong id="check-alighting-stop"></strong><span id="check-alighting-stop-en"></span></div>
+          </div>
+          <details class="route-details">
+            <summary data-i18n="routeStopsHeading">乗車停留所から降車停留所まで</summary>
+            <ol id="route-stop-list" class="route-stop-list"></ol>
+          </details>
+        </section>
+
+        <!-- バスに乗った後、降車停留所名と運賃を確認する画面です。 -->
+        <section id="screen-aboard" class="screen flow-screen aboard-screen" aria-labelledby="aboard-heading" hidden>
+          <div id="aboard-destination-art" class="destination-photo destination-art--ueno-zoo" role="img" aria-label="上野動物園のイメージ"></div>
+          <p class="eyebrow centered" data-i18n="yourDestinationStop">降車する停留所</p>
+          <h1 id="aboard-heading" class="alighting-japanese screen-heading" tabindex="-1"></h1>
+          <p id="alighting-name-romaji" class="alighting-romaji" lang="en"></p>
+          <div class="soundwave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <aside class="listen-note"><span class="info-icon">i</span><p><strong data-i18n="listenForName">この停留所名を目印に</strong><small data-i18n="alightingHelp">車内表示やアナウンスと照らし合わせてください。</small></p></aside>
+          <p class="privacy-note" data-i18n="privacyNotice">位置情報は追跡しません。降車前に表示とアナウンスをご確認ください。</p>
+          <div class="fare-summary"><span data-i18n="fareInformation">運賃情報</span><strong id="fare-amount"></strong><small id="fare-note"></small></div>
+        </section>
+
+        <!-- 乗車から目的地までの旅程をまとめて確認します。 -->
+        <section id="screen-complete" class="screen flow-screen complete-screen" aria-labelledby="complete-heading" hidden>
+          <div class="complete-mark" aria-hidden="true">✓</div>
+          <p class="eyebrow centered" data-i18n="allSet">準備完了</p>
+          <h1 id="complete-heading" class="complete-heading" tabindex="-1" data-i18n="completeHeading">Your Bus Trip Is Ready!</h1>
+          <p class="complete-intro" data-i18n="completeIntroduction">旅行中はこの画面を確認してください。</p>
+          <article class="trip-card">
+            <div class="trip-timeline">
+              <div class="timeline-icon boarding-icon" aria-hidden="true">⌖</div>
+              <div class="timeline-icon bus-icon" aria-hidden="true">▤</div>
+              <div class="timeline-icon destination-icon" aria-hidden="true">⚑</div>
+            </div>
+            <div class="trip-details">
+              <div><p class="small-label" data-i18n="boardingStop">乗車停留所</p><strong id="summary-boarding-stop"></strong><span id="summary-boarding-stop-en"></span></div>
+              <div class="trip-route"><p class="small-label" data-i18n="routeNumber">都営バス</p><strong id="summary-route"></strong><span id="summary-direction"></span></div>
+              <div><p class="small-label" data-i18n="yourDestinationStop">降車停留所</p><strong id="summary-alighting-stop"></strong><span id="summary-alighting-stop-en"></span></div>
+            </div>
+            <div class="walk-destination">
+              <div id="summary-destination-art" class="mini-art destination-art--ueno-zoo" aria-hidden="true">🐼</div>
+              <div><p class="small-label" data-i18n="thenWalkTo">その後、徒歩で</p><strong id="summary-destination"></strong><span id="summary-destination-ja"></span></div>
+              <span class="destination-flag" aria-hidden="true">⚑</span>
+            </div>
+          </article>
+          <p class="prototype-note" data-i18n="prototypeNotice">路線・停留所情報はGTFSに基づく案内です。リアルタイム情報ではありません。</p>
         </section>
       </main>
 
-      <!-- データ出典とリアルタイム情報ではないことを全画面で表示します。 -->
+      <!-- 現在の画面に応じた次の操作を、下部の共通ボタンから実行します。 -->
+      <div id="screen-actions" class="screen-actions">
+        <button id="welcome-action-button" class="primary-button" type="button" disabled>
+          <span data-i18n="startJourney">案内をはじめる</span><span class="button-arrow" aria-hidden="true">→</span>
+        </button>
+        <button id="home-action-button" class="primary-button" type="button" disabled>
+          <span data-i18n="findMyBus">バスを探す</span><span class="button-arrow" aria-hidden="true">→</span>
+        </button>
+        <button id="flow-action-button" class="primary-button" type="button" hidden disabled>
+          <span id="flow-action-label"></span><span class="button-arrow" aria-hidden="true">→</span>
+        </button>
+      </div>
+
+      <!-- データ出典とリアルタイム情報ではないことを案内します。 -->
       <footer class="page-footer">
         <p data-i18n="dataSource">データ出典：東京都交通局、公共交通オープンデータ協議会の都営バスGTFS</p>
-        <p class="prototype-note" data-i18n="prototypeNotice">試作品です。路線・停留所情報は同梱GTFSに基づき、リアルタイム運行情報ではありません。</p>
+        <p class="prototype-note" data-i18n="prototypeNotice">路線・停留所情報はGTFSに基づく案内です。リアルタイム情報ではありません。</p>
       </footer>
     </div>
   </body>
