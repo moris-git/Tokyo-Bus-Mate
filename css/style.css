@@ -1,29 +1,29 @@
-/* サイト全体で使う色、フォント、基本の画面背景です。 */
+/* 配色と共通の文字色です。案内の内容や動作とは独立して調整できます。 */
 :root {
   color-scheme: light;
-  font-family: Inter, "Noto Sans JP", "Yu Gothic", system-ui, sans-serif;
-  color: #152f43;
-  background: #eaf3f7;
+  font-family: system-ui, -apple-system, "Noto Sans JP", "Yu Gothic", sans-serif;
+  color: #17243b;
+  background: #f5f7fa;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-  --navy: #183d59;
-  --blue: #49addb;
-  --blue-light: #e7f5fc;
-  --orange: #ff9a3d;
-  --muted: #647d8e;
-  --border: #dce7ed;
+  --color-primary: #1769aa;
+  --color-primary-light: #edf5fb;
+  --color-border: #d7dee8;
+  --color-muted: #526174;
+  --color-surface: #fff;
+  --color-focus: #e8a43a;
 }
 
 * {
   box-sizing: border-box;
 }
 
-/* モバイルを基本にし、ページ幅に合わせて内容を収めます。 */
 body {
   min-width: 320px;
   min-height: 100vh;
+  min-height: 100svh;
   margin: 0;
-  background: #eaf3f7;
+  background: #f5f7fa;
 }
 
 button,
@@ -36,32 +36,25 @@ button {
 }
 
 .page {
-  /* スマートフォンでは画面幅いっぱいに案内を縦に並べます。 */
-  position: relative;
+  /* 画面の流れを縦に保ち、PCでもスマートフォンでも読みやすい幅にします。 */
   display: flex;
   flex-direction: column;
-  width: min(100%, 440px);
+  width: min(100% - 32px, 720px);
   min-height: 100vh;
   min-height: 100svh;
   margin: 0 auto;
-  padding: 18px 18px 96px;
-  overflow: hidden;
-  background: #f4f7f9;
-  box-shadow: 0 0 14px rgb(22 53 73 / 12%);
+  padding: 24px 0 32px;
 }
 
 .page-header {
-  position: relative;
-  z-index: 1;
-  margin: -18px -18px 0;
-  padding: 18px 18px 12px;
+  margin-bottom: 20px;
 }
 
-/* ホームのブランド表示と言語切り替えです。 */
+/* 共通のロゴ表示と言語切り替えです。 */
 .home-branding {
   display: flex;
   align-items: center;
-  gap: 11px;
+  gap: 12px;
 }
 
 .brand-mark {
@@ -70,10 +63,11 @@ button {
   height: 44px;
   flex: 0 0 auto;
   place-items: center;
-  border-radius: 14px;
-  color: #fff;
-  background: var(--blue);
-  font-size: 25px;
+  border: 1px solid #c9dff0;
+  border-radius: 12px;
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  font-size: 24px;
   font-weight: 800;
 }
 
@@ -88,194 +82,156 @@ button {
 }
 
 .brand-eyebrow {
-  color: #9cddf6;
-  font-size: 0.58rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
+  color: var(--color-muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
 }
 
 .brand-name {
-  color: #fff;
-  font-size: 1.08rem;
-  font-weight: 800;
+  color: #17243b;
+  font-size: 1.05rem;
+  font-weight: 750;
 }
 
 .language-switch {
   display: flex;
   flex: 0 0 auto;
-  gap: 2px;
+  gap: 3px;
   margin-left: auto;
   padding: 3px;
-  border: 1px solid rgb(255 255 255 / 28%);
-  border-radius: 999px;
-  background: rgb(255 255 255 / 9%);
-}
-
-.language-button {
-  min-width: 34px;
-  min-height: 28px;
-  padding: 3px 7px;
-  border: 0;
-  border-radius: 999px;
-  color: #d5e8f1;
-  background: transparent;
-  font-size: 0.68rem;
-  font-weight: 700;
-}
-
-.language-button[aria-pressed="true"] {
-  color: var(--navy);
+  border: 1px solid var(--color-border);
+  border-radius: 9px;
   background: #fff;
 }
 
+.language-button {
+  min-width: 36px;
+  min-height: 32px;
+  padding: 5px 8px;
+  border: 0;
+  border-radius: 6px;
+  color: var(--color-muted);
+  background: transparent;
+  font-size: 0.75rem;
+  font-weight: 650;
+}
+
+.language-button[aria-pressed="true"] {
+  color: #fff;
+  background: var(--color-primary);
+}
+
+/* 案内中の戻る操作、進捗、言語切り替えを共通で表示します。 */
 .flow-header {
-  /* 案内中は戻る操作、進捗、言語切り替えを共通で表示します。 */
   display: grid;
-  grid-template-columns: 42px 1fr 42px;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .back-button {
   width: 40px;
   height: 40px;
-  border: 1px solid #e6edf1;
-  border-radius: 13px;
-  color: var(--navy);
+  border: 1px solid var(--color-border);
+  border-radius: 9px;
+  color: var(--color-primary);
   background: #fff;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   line-height: 1;
 }
 
 .flow-brand {
   overflow: hidden;
-  color: var(--navy);
-  font-size: 0.82rem;
-  font-weight: 800;
-  text-align: center;
+  color: #17243b;
+  font-size: 0.92rem;
+  font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .step-count {
-  color: var(--muted);
-  font-size: 0.75rem;
-  font-weight: 700;
+  color: var(--color-muted);
+  font-size: 0.8rem;
+  font-weight: 650;
   text-align: right;
 }
 
 .flow-progress {
   display: flex;
   grid-column: 1 / -1;
-  gap: 5px;
-  margin: 3px 0 0;
+  gap: 6px;
+  margin: 5px 0 0;
 }
 
 .flow-progress span {
   height: 4px;
   flex: 1 1 0;
   border-radius: 999px;
-  background: #dce5e9;
+  background: #e0e5eb;
 }
 
 .flow-progress span.is-complete {
-  background: var(--blue);
+  background: var(--color-primary);
 }
 
 .flow-language-switch {
   grid-column: 1 / -1;
   justify-self: end;
-  margin-top: -2px;
-  padding: 2px;
-  border-color: #e2ebef;
-  background: #fff;
+  margin-top: 0;
 }
 
 .flow-language-switch .language-button {
-  min-height: 24px;
-  color: var(--muted);
+  min-height: 28px;
 }
 
-.flow-language-switch .language-button[aria-pressed="true"] {
-  color: #fff;
-  background: var(--navy);
-}
-
-/* ホームの濃紺ヒーロー領域と目的地検索です。 */
-.page.is-home {
-  background: #f4f7f9;
-}
-
-.page.is-home .page-header,
-.page.is-home .home-hero {
-  color: #fff;
-  background: var(--navy);
-}
-
-.page.is-welcome .page-header,
-.page.is-welcome .welcome-hero {
-  color: #fff;
-  background: var(--navy);
-}
-
-.page.is-welcome .page-header {
-  padding-bottom: 4px;
-}
-
+/* 最初の画面で、サービスの内容と利用の流れを説明します。 */
 .welcome-hero {
-  position: relative;
-  margin: 0 -18px;
-  padding: 12px 18px 22px;
-  overflow: hidden;
+  padding: 24px;
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-primary);
+  border-radius: 12px;
+  background: #fff;
 }
 
-.welcome-hero::after {
-  position: absolute;
-  right: -44px;
-  bottom: -72px;
-  width: 190px;
-  height: 190px;
-  border: 1px solid rgb(128 204 237 / 12%);
-  border-radius: 50%;
-  content: "";
-  pointer-events: none;
-}
-
-.welcome-heading {
-  position: relative;
-  z-index: 1;
-  max-width: 360px;
-  margin: 0 0 9px;
-  color: #fff;
-  font-size: clamp(1.7rem, 8vw, 2rem);
+.welcome-heading,
+.home-heading {
+  margin: 0 0 10px;
+  color: #17243b;
+  font-size: clamp(1.7rem, 5vw, 2.2rem);
+  font-weight: 750;
   letter-spacing: -0.035em;
-  line-height: 1.12;
+  line-height: 1.2;
 }
 
-.welcome-intro {
-  position: relative;
-  z-index: 1;
-  max-width: 360px;
+.welcome-intro,
+.home-intro {
+  max-width: 600px;
   margin: 0;
-  color: #d1e4ee;
-  font-size: 0.82rem;
-  line-height: 1.55;
+  color: var(--color-muted);
+  font-size: 1rem;
+  line-height: 1.65;
 }
 
 .welcome-guide {
-  padding-top: 21px;
+  padding-top: 24px;
+}
+
+.welcome-guide h2,
+.section-title-row h2 {
+  margin: 0;
+  color: #17243b;
+  font-size: 1.25rem;
+  font-weight: 700;
 }
 
 .welcome-guide h2 {
-  margin: 0 0 13px;
-  color: var(--navy);
-  font-size: 1.1rem;
-  font-weight: 600;
+  margin-bottom: 14px;
 }
 
 .welcome-steps {
   display: grid;
-  gap: 9px;
+  gap: 10px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -285,13 +241,12 @@ button {
   display: grid;
   grid-template-columns: 42px minmax(0, 1fr);
   align-items: center;
-  gap: 11px;
-  min-height: 75px;
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: 16px;
+  gap: 14px;
+  min-height: 78px;
+  padding: 14px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
   background: #fff;
-  box-shadow: 0 5px 13px rgb(21 58 78 / 5%);
 }
 
 .welcome-step-icon {
@@ -299,142 +254,111 @@ button {
   width: 42px;
   height: 42px;
   place-items: center;
-  border-radius: 13px;
+  border-radius: 50%;
   color: #fff;
-  background: var(--blue);
-  font-size: 1.15rem;
-  font-weight: 700;
+  background: var(--color-primary);
+  font-size: 1rem;
+  font-weight: 750;
 }
 
 .welcome-step:nth-child(2) .welcome-step-icon {
-  color: var(--navy);
-  background: #ffb45c;
+  color: var(--color-primary);
+  background: #e9f2f9;
 }
 
 .welcome-step-number {
   display: block;
-  margin-bottom: 2px;
-  color: #3199d0;
-  font-size: 0.54rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
+  margin-bottom: 3px;
+  color: var(--color-primary);
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
 }
 
 .welcome-step h3 {
   margin: 0;
-  color: var(--navy);
-  font-size: 0.77rem;
-  line-height: 1.35;
-}
-
-.welcome-step p {
-  margin: 3px 0 0;
-  color: var(--muted);
-  font-size: 0.64rem;
+  color: #17243b;
+  font-size: 0.98rem;
   line-height: 1.4;
 }
 
-.welcome-notice {
+.welcome-step p {
+  margin: 4px 0 0;
+  color: var(--color-muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.welcome-notice,
+.info-note,
+.listen-note {
   display: flex;
   align-items: flex-start;
-  gap: 9px;
-  margin-top: 12px;
-  padding: 10px 12px;
-  border-radius: 14px;
-  background: #eaf1f4;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 13px 15px;
+  border: 1px solid #d9e7f1;
+  border-radius: 9px;
+  background: var(--color-primary-light);
 }
 
-.welcome-notice p {
+.welcome-notice p,
+.info-note p,
+.listen-note p {
   margin: 0;
-  color: var(--muted);
-  font-size: 0.64rem;
-  line-height: 1.45;
+  color: #3e5368;
+  font-size: 0.88rem;
+  line-height: 1.55;
 }
 
-.page.is-home .page-header {
-  padding-bottom: 4px;
-}
-
-.page.is-home .home-hero {
-  position: relative;
-  margin: 0 -18px;
-  padding: 12px 18px 16px;
-  overflow: hidden;
-}
-
-.home-hero::after {
-  position: absolute;
-  right: -42px;
-  bottom: -34px;
-  width: 150px;
-  height: 150px;
-  border: 1px solid rgb(128 204 237 / 10%);
-  border-radius: 50%;
-  content: "";
-  pointer-events: none;
+/* ホーム画面の目的地検索と候補一覧です。 */
+.home-hero {
+  padding: 24px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: #fff;
 }
 
 .route-pill {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  margin: 8px 0 14px;
+  gap: 8px;
+  margin: 0 0 14px;
   padding: 6px 10px;
-  border: 1px solid rgb(255 255 255 / 20%);
+  border: 1px solid #d9e7f1;
   border-radius: 999px;
-  color: #e4f2f8;
-  background: rgb(255 255 255 / 8%);
-  font-size: 0.68rem;
+  color: var(--color-muted);
+  background: #f7fbfe;
+  font-size: 0.82rem;
 }
 
 .route-pill strong {
-  color: #fff;
-  font-size: 0.82rem;
+  color: var(--color-primary);
 }
 
 .route-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--orange);
-  box-shadow: 0 0 0 3px rgb(255 154 61 / 18%);
-}
-
-.home-heading {
-  max-width: 330px;
-  margin: 0 0 7px;
-  color: #fff;
-  font-size: clamp(1.7rem, 8vw, 2rem);
-  letter-spacing: -0.035em;
-  line-height: 1.08;
-}
-
-.home-intro {
-  max-width: 330px;
-  margin: 0;
-  color: #d1e4ee;
-  font-size: 0.82rem;
-  line-height: 1.5;
+  background: var(--color-primary);
 }
 
 .search-box {
-  position: relative;
-  z-index: 1;
   display: flex;
   align-items: center;
-  gap: 11px;
-  height: 46px;
-  margin-top: 13px;
-  padding: 0 15px;
-  border-radius: 15px;
-  color: var(--blue);
+  gap: 12px;
+  min-height: 50px;
+  margin-top: 20px;
+  padding: 0 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  color: var(--color-primary);
   background: #fff;
-  box-shadow: 0 8px 20px rgb(9 42 65 / 13%);
 }
 
 .search-icon {
-  width: 14px;
-  height: 14px;
+  width: 15px;
+  height: 15px;
   flex: 0 0 auto;
   border: 1.8px solid currentColor;
   border-radius: 50%;
@@ -442,9 +366,9 @@ button {
 
 .search-icon::after {
   display: block;
-  width: 5px;
+  width: 6px;
   height: 1.8px;
-  margin: 11px 0 0 10px;
+  margin: 12px 0 0 11px;
   transform: rotate(45deg);
   border-radius: 2px;
   background: currentColor;
@@ -456,145 +380,137 @@ button {
   min-width: 0;
   border: 0;
   outline: 0;
-  color: var(--navy);
+  color: #17243b;
   background: transparent;
-  font-size: 0.77rem;
+  font-size: 0.95rem;
 }
 
 .search-box input::placeholder {
-  color: #8297a5;
+  color: #687789;
   opacity: 1;
 }
 
-/* 目的地一覧と選択状態を示すカードです。 */
 .destination-section {
-  padding-top: 20px;
+  padding-top: 24px;
 }
 
 .section-title-row {
   display: flex;
   align-items: end;
   justify-content: space-between;
-  margin-bottom: 11px;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
 .eyebrow {
-  margin: 0 0 4px;
-  color: #3199d0;
-  font-size: 0.61rem;
-  font-weight: 800;
-  letter-spacing: 0.16em;
+  margin: 0 0 5px;
+  color: var(--color-primary);
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-}
-
-.section-title-row h2 {
-  margin: 0;
-  color: var(--navy);
-  font-size: 1.08rem;
-  font-weight: 500;
 }
 
 .place-count {
   padding-bottom: 2px;
-  color: var(--muted);
-  font-size: 0.68rem;
+  color: var(--color-muted);
+  font-size: 0.82rem;
 }
 
 .destination-list {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
 }
 
 .destination-card {
   position: relative;
-  display: flex;
-  min-width: 0;
-  min-height: 166px;
-  align-items: end;
-  overflow: hidden;
-  padding: 0;
-  border: 2px solid transparent;
-  border-radius: 19px;
-  color: #fff;
-  background: #28708b;
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 76px;
+  padding: 10px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  color: #17243b;
+  background: #fff;
   text-align: left;
-  box-shadow: 0 9px 18px rgb(21 58 78 / 13%);
+  transition: border-color 120ms ease, background-color 120ms ease;
+}
+
+.destination-card:hover {
+  border-color: #9dbbd3;
 }
 
 .destination-card[aria-pressed="true"] {
-  border-color: var(--orange);
+  border: 2px solid var(--color-primary);
+  padding: 9px 13px;
+  background: #f5faff;
 }
 
 .destination-art {
-  position: absolute;
-  inset: 0;
+  position: relative;
   display: grid;
+  width: 48px;
+  height: 48px;
   place-items: center;
   overflow: hidden;
-  isolation: isolate;
-  background: linear-gradient(155deg, #76c3dd 0%, #d2edf2 43%, #4b8068 44%, #173d4b 100%);
+  border-radius: 9px;
+  background: #e9f2f9;
 }
 
 .destination-art::before,
 .destination-art::after {
   position: absolute;
-  z-index: -1;
   content: "";
 }
 
 .destination-art::before {
-  right: -12%;
-  bottom: 8%;
-  width: 70%;
-  height: 68%;
-  border-radius: 50% 50% 0 0;
-  background: linear-gradient(145deg, #45836c, #183d42);
-  transform: rotate(-15deg);
+  right: -9px;
+  bottom: -19px;
+  width: 45px;
+  height: 42px;
+  border-radius: 50%;
+  background: #bfd5e6;
 }
 
 .destination-art::after {
-  left: 8%;
-  bottom: 18%;
-  width: 42%;
-  height: 62%;
-  border-radius: 50% 50% 8% 8%;
-  background: linear-gradient(90deg, #325c50, #6ea276);
-  transform: rotate(14deg);
+  bottom: -16px;
+  left: -9px;
+  width: 43px;
+  height: 39px;
+  border-radius: 50%;
+  background: #d4e4ef;
 }
 
 .destination-art--ueno-zoo {
-  background: linear-gradient(155deg, #b6dce5 0%, #e8eee8 43%, #739578 44%, #193c42 100%);
-}
-
-.destination-art--ueno-zoo .art-subject {
-  filter: drop-shadow(0 8px 8px rgb(0 0 0 / 28%));
-}
-
-.art-subject {
-  z-index: 1;
-  margin-top: -22px;
-  font-size: 4.5rem;
+  background: #edf3ee;
 }
 
 .destination-art--ueno-park {
-  background: linear-gradient(180deg, #78c8e8 0%, #d7eff4 65%, #528770 66%, #326b52 100%);
+  background: #eaf3f8;
 }
 
 .destination-art--ueno-station {
-  background: linear-gradient(155deg, #9ad5e9 0%, #d8eef2 48%, #88999a 49%, #354e5a 100%);
+  background: #f0f2f5;
 }
 
 .destination-art--ueno-matsuzakaya {
-  background: linear-gradient(160deg, #f3c7a6 0%, #e8e8dd 44%, #b56e50 45%, #754838 100%);
+  background: #f5efea;
+}
+
+.art-subject {
+  position: relative;
+  z-index: 1;
+  font-size: 1.8rem;
 }
 
 .destination-card-content {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  padding: 30px 10px 10px;
-  background: linear-gradient(transparent, rgb(9 33 44 / 84%));
+  display: grid;
+  min-width: 0;
+  gap: 2px;
 }
 
 .destination-name-ja,
@@ -605,166 +521,152 @@ button {
 
 .destination-name-ja {
   overflow: hidden;
-  color: #d5e8ed;
-  font-size: 0.62rem;
-  font-weight: 700;
+  color: var(--color-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .destination-name-en {
   overflow: hidden;
-  margin-top: 1px;
-  font-size: 0.94rem;
-  font-weight: 800;
+  color: #17243b;
+  font-size: 1rem;
+  font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .destination-selection {
   width: fit-content;
-  margin-top: 6px;
-  padding: 3px 9px;
+  margin-top: 3px;
+  padding: 2px 8px;
   border-radius: 999px;
-  color: var(--navy);
-  background: #fff;
-  font-size: 0.65rem;
-  font-weight: 800;
-}
-
-.destination-card[aria-pressed="true"] .destination-selection {
-  color: #fff;
-  background: var(--orange);
+  color: var(--color-primary);
+  background: #e9f2f9;
+  font-size: 0.72rem;
+  font-weight: 700;
 }
 
 .empty-message,
 .home-note {
-  margin: 10px 0 0;
-  color: var(--muted);
-  font-size: 0.78rem;
+  margin: 12px 0 0;
+  color: var(--color-muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
 }
 
 .status-message {
-  position: relative;
-  z-index: 2;
-  margin: 0;
-  color: #a52e2e;
-  font-size: 0.8rem;
-  line-height: 1.45;
+  min-height: 1.5em;
+  margin: 0 0 14px;
+  color: #9b1c1c;
+  font-size: 0.92rem;
+  line-height: 1.5;
 }
 
-.page.is-home .status-message:not(:empty) {
-  padding: 8px 10px;
-  background: #fff3f1;
-}
-
-/* 乗車停留所、バス確認、降車案内の基本レイアウトです。 */
+/* 乗車停留所の選択とバス案内を縦に続けて表示します。 */
 .flow-screen {
   flex: 1 0 auto;
-  padding-top: 10px;
+  padding-top: 4px;
 }
 
-.screen-heading {
-  margin: 0 0 6px;
-  color: #102f46;
-  font-size: clamp(1.45rem, 7vw, 1.8rem);
-  font-weight: 500;
-  letter-spacing: -0.04em;
-  line-height: 1.1;
+.screen-heading,
+.complete-heading {
+  margin: 0 0 8px;
+  color: #17243b;
+  font-size: clamp(1.55rem, 5vw, 2rem);
+  font-weight: 750;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
 }
 
-.screen-intro {
-  margin: 0 0 16px;
-  color: var(--muted);
-  font-size: 0.76rem;
-  line-height: 1.5;
+.screen-intro,
+.section-intro {
+  margin: 0 0 20px;
+  color: var(--color-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
 .destination-summary {
   display: flex;
   align-items: center;
-  gap: 11px;
-  margin: 16px 0;
-  padding: 9px;
-  border-radius: 17px;
-  background: var(--blue-light);
+  gap: 12px;
+  margin: 18px 0;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: #fff;
 }
 
-/* 目的地の小さなイラストと選択可能な乗車停留所です。 */
 .mini-art {
   display: grid;
-  width: 48px;
-  height: 48px;
+  width: 50px;
+  height: 50px;
   flex: 0 0 auto;
   place-items: center;
   overflow: hidden;
-  border-radius: 12px;
-  background: linear-gradient(140deg, #cceaf0, #52806d);
+  border-radius: 9px;
+  background: #e9f2f9;
   font-size: 1.8rem;
 }
 
 .small-label {
   margin: 0 0 4px;
-  color: var(--muted);
-  font-size: 0.59rem;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
+  color: var(--color-muted);
+  font-size: 0.76rem;
+  font-weight: 600;
 }
 
 .destination-summary strong,
 .trip-details strong,
 .walk-destination strong {
   display: block;
-  font-size: 0.82rem;
+  color: #17243b;
+  font-size: 0.98rem;
 }
 
 .destination-flag {
   margin-left: auto;
-  color: var(--navy);
-  font-size: 1.3rem;
+  color: var(--color-primary);
+  font-size: 1.25rem;
 }
 
 .boarding-stop-list {
   display: grid;
-  gap: 9px;
+  gap: 10px;
 }
 
 .boarding-stop-option {
   display: grid;
-  grid-template-columns: 38px minmax(0, 1fr) 24px;
+  grid-template-columns: 42px minmax(0, 1fr) 22px;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   width: 100%;
-  min-height: 68px;
-  padding: 9px 10px;
-  border: 1px solid #e0e9ee;
-  border-radius: 17px;
-  color: var(--navy);
+  min-height: 72px;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  color: #17243b;
   background: #fff;
   text-align: left;
 }
 
-/* 停留所名の補足と選択状態を示すラジオ風マークです。 */
 .boarding-stop-option[aria-pressed="true"] {
-  border: 1.5px solid var(--blue);
-  background: #f3fbff;
-  box-shadow: 0 4px 12px rgb(52 154 202 / 10%);
+  border: 2px solid var(--color-primary);
+  padding: 11px;
+  background: #f5faff;
 }
 
 .stop-icon {
   display: grid;
-  width: 38px;
-  height: 38px;
+  width: 42px;
+  height: 42px;
   place-items: center;
-  border-radius: 12px;
-  color: var(--navy);
-  background: #eef3f6;
-  font-size: 1.1rem;
-}
-
-.boarding-stop-option[aria-pressed="true"] .stop-icon {
-  color: #fff;
-  background: var(--blue);
+  border-radius: 9px;
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  font-size: 1.15rem;
 }
 
 .stop-copy strong,
@@ -773,136 +675,118 @@ button {
 }
 
 .stop-copy strong {
-  font-size: 0.78rem;
+  font-size: 0.95rem;
 }
 
 .stop-copy small {
-  margin-top: 3px;
-  color: var(--muted);
-  font-size: 0.68rem;
+  margin-top: 4px;
+  color: var(--color-muted);
+  font-size: 0.82rem;
 }
 
 .radio-mark {
   width: 19px;
   height: 19px;
-  border: 2px solid #c9d8e0;
+  border: 2px solid #9aa8b8;
   border-radius: 50%;
 }
 
 .boarding-stop-option[aria-pressed="true"] .radio-mark {
-  border: 5px solid var(--blue);
-}
-
-.info-note,
-.listen-note {
-  display: flex;
-  align-items: flex-start;
-  gap: 9px;
-  margin-top: 13px;
-  padding: 11px 12px;
-  border-radius: 14px;
-  background: #eaf1f4;
-}
-
-.info-note p,
-.listen-note p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.68rem;
-  line-height: 1.45;
+  border: 5px solid var(--color-primary);
 }
 
 .info-icon {
   display: grid;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   flex: 0 0 auto;
   place-items: center;
-  border: 1.5px solid var(--blue);
+  border: 1.5px solid var(--color-primary);
   border-radius: 50%;
-  color: var(--blue);
-  font-size: 0.68rem;
+  color: var(--color-primary);
+  font-size: 0.75rem;
   font-style: normal;
   font-weight: 800;
 }
 
-/* 系統番号・行き先表示を強調するバス案内カードです。 */
+/* 系統番号・行き先表示・乗車停留所を見分けやすくします。 */
 .bus-route-card {
   display: grid;
-  grid-template-columns: 92px 1fr;
-  min-height: 90px;
+  grid-template-columns: minmax(90px, 0.35fr) minmax(0, 1fr);
+  min-height: 104px;
   overflow: hidden;
-  margin: 11px 0;
-  border-radius: 19px;
-  color: #fff;
-  background: var(--navy);
-  box-shadow: 0 9px 18px rgb(21 58 78 / 15%);
+  margin: 14px 0;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: #fff;
 }
 
 .route-number-panel {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 10px;
-  color: #173c54;
-  background: var(--orange);
+  gap: 5px;
+  padding: 14px;
+  color: var(--color-primary);
+  background: var(--color-primary-light);
   text-align: center;
 }
 
 .route-number-panel .small-label {
-  color: #173c54;
-  font-weight: 800;
+  color: var(--color-muted);
 }
 
 .route-number-panel strong {
-  font-size: 1.7rem;
-  line-height: 1;
+  font-size: 1.65rem;
+  line-height: 1.1;
 }
 
 .route-direction {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 4px;
-  padding: 11px 14px;
+  gap: 5px;
+  padding: 14px 18px;
 }
 
 .route-direction .small-label {
-  color: #add9ee;
+  color: var(--color-muted);
 }
 
 .route-direction strong {
-  font-size: 0.91rem;
+  color: #17243b;
+  font-size: 1.08rem;
 }
 
 .translation-line {
-  color: #d4e5ed;
-  font-size: 0.68rem;
+  color: var(--color-muted);
+  font-size: 0.85rem;
 }
 
 /* 写真が未用意の間に使う、CSS製のバスイラストです。 */
 .bus-illustration {
   position: relative;
-  height: 150px;
+  height: 190px;
   overflow: hidden;
-  border-radius: 18px;
-  background: linear-gradient(180deg, #86d6ed 0%, #d3f0f3 63%, #89b6a5 64%, #425d62 100%);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: linear-gradient(180deg, #eaf3f8 0%, #f6f9fb 63%, #e0e9e4 64%, #d2ded7 100%);
 }
 
 .illustration-sun {
   position: absolute;
-  top: 15px;
-  right: 34px;
-  width: 40px;
-  height: 40px;
+  top: 18px;
+  right: 38px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  background: #fff4bd;
-  box-shadow: 0 0 30px rgb(255 247 197 / 75%);
+  background: #fff;
+  box-shadow: 0 0 0 8px rgb(255 255 255 / 45%);
 }
 
 .city-skyline {
   position: absolute;
-  inset: 24px 0 42px;
+  inset: 24px 0 48px;
   display: flex;
   align-items: end;
   justify-content: space-around;
@@ -911,42 +795,42 @@ button {
 .city-skyline span {
   width: 14%;
   height: 72%;
-  background: linear-gradient(90deg, #4a93a0, #26707f);
+  background: #9bb9c5;
   clip-path: polygon(0 8%, 35% 8%, 35% 0, 66% 0, 66% 8%, 100% 8%, 100% 100%, 0 100%);
 }
 
 .city-skyline span:nth-child(2) {
   height: 88%;
-  background: #317f8a;
+  background: #89aebb;
 }
 
 .city-skyline span:nth-child(3) {
   width: 20%;
   height: 64%;
-  background: #b7d1c2;
+  background: #c1d1d2;
 }
 
 .city-skyline span:nth-child(4) {
   height: 80%;
-  background: #438d9a;
+  background: #9ab8c2;
 }
 
 .city-skyline span:nth-child(5) {
   height: 58%;
-  background: #759d93;
+  background: #b4c9c7;
 }
 
 .illustration-bus {
   position: absolute;
   z-index: 1;
   right: 15%;
-  bottom: 19px;
+  bottom: 20px;
   width: 49%;
-  height: 52px;
+  height: 54px;
   border: 3px solid #fff;
-  border-radius: 12px 14px 8px 8px;
-  background: #57b7d1;
-  box-shadow: 0 7px 8px rgb(0 0 0 / 20%);
+  border-radius: 10px 12px 7px 7px;
+  background: #4a9ac8;
+  box-shadow: 0 5px 10px rgb(23 36 59 / 16%);
 }
 
 .bus-window {
@@ -955,8 +839,8 @@ button {
   right: 7px;
   left: 40px;
   height: 19px;
-  border-radius: 5px;
-  background: #e0f6f7;
+  border-radius: 4px;
+  background: #eaf5fa;
 }
 
 .bus-route-sign {
@@ -964,11 +848,11 @@ button {
   top: 7px;
   left: 6px;
   z-index: 1;
-  padding: 2px 3px;
+  padding: 2px 4px;
   border-radius: 3px;
-  color: var(--navy);
+  color: #17243b;
   background: #fff;
-  font-size: 0.55rem;
+  font-size: 0.56rem;
   font-weight: 800;
 }
 
@@ -979,7 +863,7 @@ button {
   height: 14px;
   border: 3px solid #fff;
   border-radius: 50%;
-  background: #274c5b;
+  background: #526174;
 }
 
 .bus-wheel--one {
@@ -995,11 +879,11 @@ button {
   right: 8px;
   bottom: 7px;
   z-index: 2;
-  padding: 2px 6px;
-  border-radius: 999px;
+  padding: 3px 7px;
+  border-radius: 4px;
   color: #fff;
-  background: rgb(18 49 67 / 68%);
-  font-size: 0.52rem;
+  background: #526174;
+  font-size: 0.65rem;
 }
 
 /* 乗車前に車両表示が一致することを確認するチェック欄です。 */
@@ -1007,22 +891,22 @@ button {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 10px;
-  padding: 11px;
-  border: 1px solid #ffd4af;
-  border-radius: 16px;
-  background: #fff9f3;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 9px;
+  background: #fff;
   cursor: pointer;
 }
 
 .match-confirmation input {
   position: absolute;
-  top: 11px;
-  left: 11px;
+  top: 12px;
+  left: 12px;
   z-index: 1;
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   margin: 0;
   opacity: 0;
   cursor: pointer;
@@ -1030,23 +914,25 @@ button {
 
 .checkmark {
   display: grid;
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   flex: 0 0 auto;
   place-items: center;
-  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 7px;
   color: #fff;
-  background: #bdc9ce;
+  background: #fff;
   font-size: 1rem;
   font-weight: 800;
 }
 
 .match-confirmation input:checked + .checkmark {
-  background: var(--orange);
+  border-color: var(--color-primary);
+  background: var(--color-primary);
 }
 
 .match-confirmation input:focus-visible + .checkmark {
-  outline: 3px solid var(--blue);
+  outline: 3px solid var(--color-focus);
   outline-offset: 3px;
 }
 
@@ -1056,21 +942,21 @@ button {
 }
 
 .match-confirmation strong {
-  font-size: 0.69rem;
+  font-size: 0.9rem;
 }
 
 .match-confirmation small {
-  margin-top: 3px;
-  color: var(--muted);
-  font-size: 0.59rem;
+  margin-top: 4px;
+  color: var(--color-muted);
+  font-size: 0.8rem;
 }
 
 .trip-endpoints {
   display: grid;
-  grid-template-columns: 1fr 24px 1fr;
+  grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr);
   align-items: center;
-  gap: 7px;
-  margin-top: 12px;
+  gap: 8px;
+  margin-top: 14px;
 }
 
 .trip-endpoints strong,
@@ -1079,79 +965,73 @@ button {
 }
 
 .trip-endpoints strong {
-  font-size: 0.66rem;
+  font-size: 0.86rem;
 }
 
 .trip-endpoints span:not(.endpoint-arrow) {
-  margin-top: 3px;
-  color: var(--muted);
-  font-size: 0.59rem;
+  margin-top: 4px;
+  color: var(--color-muted);
+  font-size: 0.78rem;
 }
 
 .route-details {
-  margin-top: 12px;
-  border-top: 1px solid var(--border);
-  color: var(--navy);
-  font-size: 0.68rem;
+  margin-top: 14px;
+  border-top: 1px solid var(--color-border);
+  color: #17243b;
+  font-size: 0.86rem;
 }
 
 .route-details summary {
-  padding: 10px 0 4px;
-  color: var(--muted);
+  padding: 12px 0 5px;
+  color: var(--color-primary);
   cursor: pointer;
 }
 
 .route-stop-list {
   margin: 0;
-  padding: 0 0 0 16px;
+  padding: 0;
   list-style: none;
 }
 
 .route-stop-list li {
   display: flex;
   justify-content: space-between;
-  gap: 8px;
-  padding: 6px 0;
-  border-bottom: 1px solid #edf2f4;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid #e8edf2;
 }
 
 .route-stop-list li strong {
-  color: #278ab8;
-  font-size: 0.62rem;
+  color: var(--color-primary);
+  font-size: 0.82rem;
 }
 
 .endpoint-arrow {
-  color: var(--blue);
+  color: var(--color-primary);
   text-align: center;
 }
 
-/* 必要に応じて停車順を展開して確認できる一覧です。 */
-
+/* 降車停留所を中央に示し、アナウンスや注意事項を添えます。 */
 .aboard-screen {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 0;
+  padding-top: 4px;
   text-align: center;
-  background: #fff;
-}
-
-/* 降車停留所の名前を目立たせる案内と補足情報です。 */
-.page.is-aboard {
-  background: #fff;
 }
 
 .destination-photo {
   position: relative;
   display: grid;
   width: 100%;
-  height: 190px;
+  height: 210px;
   flex: 0 0 auto;
   place-items: center;
   overflow: hidden;
   margin-bottom: 20px;
-  border-radius: 20px;
-  background: linear-gradient(160deg, #a5c4c6 0%, #e3ebe5 38%, #727d70 39%, #2f4840 100%);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: linear-gradient(160deg, #eaf1f3 0%, #f5f7f5 45%, #dfe9e1 46%, #cbd9ce 100%);
 }
 
 .destination-photo::before,
@@ -1161,7 +1041,7 @@ button {
   width: 45%;
   height: 85%;
   border-radius: 50% 50% 10% 10%;
-  background: linear-gradient(90deg, #4b6252, #8b9b7a);
+  background: linear-gradient(90deg, #b3c8b7, #d4dfd1);
   content: "";
 }
 
@@ -1179,7 +1059,7 @@ button {
 .destination-photo .art-subject {
   z-index: 1;
   margin-top: -4px;
-  font-size: 5.5rem;
+  font-size: 5rem;
 }
 
 .aboard-screen .centered,
@@ -1189,16 +1069,16 @@ button {
 
 .alighting-japanese {
   margin: 0;
-  color: #102f46;
-  font-size: clamp(1.8rem, 9vw, 2.15rem);
+  color: #17243b;
+  font-size: clamp(1.8rem, 6vw, 2.2rem);
   font-weight: 800;
-  line-height: 1.15;
+  line-height: 1.2;
 }
 
 .alighting-romaji {
-  margin: 2px 0 8px;
-  color: #359ed2;
-  font-size: 1.17rem;
+  margin: 4px 0 8px;
+  color: var(--color-primary);
+  font-size: 1.15rem;
 }
 
 .soundwave {
@@ -1206,13 +1086,13 @@ button {
   align-items: center;
   gap: 3px;
   height: 26px;
-  margin-bottom: 9px;
+  margin-bottom: 12px;
 }
 
 .soundwave i {
   width: 3px;
   border-radius: 4px;
-  background: #7bc5e4;
+  background: #75a9cf;
 }
 
 .soundwave i:nth-child(1),
@@ -1234,13 +1114,10 @@ button {
   height: 13px;
 }
 
-/* アナウンス確認、位置情報の注意、運賃表示です。 */
 .listen-note {
   width: 100%;
   align-items: center;
   margin-top: 0;
-  padding: 12px;
-  background: var(--blue-light);
   text-align: left;
 }
 
@@ -1248,9 +1125,9 @@ button {
   width: 36px;
   height: 36px;
   border: 0;
-  border-radius: 11px;
+  border-radius: 8px;
   color: #fff;
-  background: var(--blue);
+  background: var(--color-primary);
   font-size: 1rem;
 }
 
@@ -1260,22 +1137,22 @@ button {
 }
 
 .listen-note strong {
-  color: var(--navy);
-  font-size: 0.72rem;
+  color: #17243b;
+  font-size: 0.9rem;
 }
 
 .listen-note small {
-  margin-top: 3px;
-  color: var(--muted);
-  font-size: 0.62rem;
+  margin-top: 4px;
+  color: var(--color-muted);
+  font-size: 0.8rem;
 }
 
 .privacy-note {
-  max-width: 260px;
-  margin: 12px auto;
-  color: var(--muted);
-  font-size: 0.57rem;
-  line-height: 1.45;
+  max-width: 360px;
+  margin: 14px auto;
+  color: var(--color-muted);
+  font-size: 0.76rem;
+  line-height: 1.5;
 }
 
 .fare-summary {
@@ -1284,70 +1161,66 @@ button {
   align-items: baseline;
   width: 100%;
   margin-top: auto;
-  padding: 11px 12px;
-  border: 1px solid var(--border);
-  border-radius: 13px;
-  color: var(--muted);
-  font-size: 0.68rem;
+  padding: 13px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 9px;
+  color: var(--color-muted);
+  background: #fff;
+  font-size: 0.86rem;
   text-align: left;
 }
 
 .fare-summary strong {
-  color: var(--navy);
-  font-size: 0.8rem;
+  color: #17243b;
+  font-size: 0.98rem;
 }
 
 .fare-summary small {
   grid-column: 1 / -1;
-  margin-top: 3px;
-  font-size: 0.58rem;
+  margin-top: 4px;
+  font-size: 0.76rem;
 }
 
 /* 乗車・降車・徒歩の順に旅程をまとめる最終画面です。 */
 .complete-screen {
-  padding-top: 15px;
+  padding-top: 12px;
 }
 
 .complete-mark {
   display: grid;
-  width: 72px;
-  height: 72px;
+  width: 64px;
+  height: 64px;
   place-items: center;
-  margin: 0 auto 12px;
+  margin: 0 auto 16px;
+  border: 1px solid #c9dff0;
   border-radius: 50%;
-  color: #fff;
-  background: var(--blue);
-  font-size: 2rem;
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  font-size: 1.8rem;
   font-weight: 700;
 }
 
 .complete-heading {
-  max-width: 310px;
-  margin: 0 auto 6px;
-  color: #102f46;
-  font-size: 1.6rem;
-  font-weight: 500;
-  letter-spacing: -0.04em;
-  line-height: 1.12;
+  max-width: 560px;
+  margin: 0 auto 8px;
   text-align: center;
 }
 
 .complete-intro {
-  margin: 0 0 15px;
-  color: var(--muted);
-  font-size: 0.67rem;
+  margin: 0 0 18px;
+  color: var(--color-muted);
+  font-size: 0.9rem;
   text-align: center;
 }
 
 .trip-card {
   display: grid;
-  grid-template-columns: 38px 1fr;
-  gap: 0 8px;
-  padding: 17px 13px 12px;
-  border: 1px solid var(--border);
-  border-radius: 21px;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 0 12px;
+  padding: 18px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
   background: #fff;
-  box-shadow: 0 12px 24px rgb(33 66 83 / 8%);
 }
 
 .trip-timeline {
@@ -1357,7 +1230,7 @@ button {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  min-height: 157px;
+  min-height: 164px;
   padding: 1px 0;
 }
 
@@ -1366,7 +1239,7 @@ button {
   top: 24px;
   bottom: 24px;
   width: 2px;
-  background: #c9dfeb;
+  background: #cbdbe8;
   content: "";
 }
 
@@ -1374,66 +1247,67 @@ button {
   position: relative;
   z-index: 1;
   display: grid;
-  width: 31px;
-  height: 31px;
+  width: 32px;
+  height: 32px;
   place-items: center;
   border: 3px solid #fff;
   border-radius: 50%;
   color: #fff;
-  font-size: 0.95rem;
-  box-shadow: 0 0 0 1px #dceaf0;
+  font-size: 0.9rem;
+  box-shadow: 0 0 0 1px var(--color-border);
 }
 
 .boarding-icon {
-  background: var(--blue);
+  background: var(--color-primary);
 }
 
 .bus-icon {
-  background: var(--orange);
+  background: #71859a;
 }
 
 .destination-icon {
-  background: var(--navy);
+  background: #3f7563;
 }
 
 .trip-details {
   display: grid;
-  gap: 9px;
-  padding: 1px 0;
+  gap: 10px;
+  padding: 2px 0;
 }
 
 .trip-details span,
 .walk-destination span:not(.destination-flag) {
   display: block;
-  margin-top: 3px;
-  color: var(--muted);
-  font-size: 0.62rem;
+  margin-top: 4px;
+  color: var(--color-muted);
+  font-size: 0.82rem;
 }
 
 .trip-route {
-  margin-left: -4px;
-  padding-left: 4px;
-  border-left: 2px solid #f4a458;
+  margin-left: -5px;
+  padding-left: 8px;
+  border-left: 2px solid #9bbbd4;
 }
 
 .trip-route strong {
   width: fit-content;
-  padding: 3px 7px;
-  border-radius: 7px;
-  color: var(--navy);
-  background: #ffab4a;
-  font-size: 0.86rem;
+  padding: 3px 8px;
+  border-radius: 5px;
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  font-size: 0.92rem;
 }
 
 .walk-destination {
   display: flex;
   grid-column: 1 / -1;
   align-items: center;
-  gap: 10px;
-  margin-top: 13px;
-  padding: 8px;
-  border-radius: 15px;
-  background: var(--blue-light);
+  gap: 12px;
+  margin-top: 16px;
+  padding: 10px;
+  border: 1px solid #d9e7f1;
+  border-radius: 9px;
+  background: #f7fbfe;
 }
 
 .walk-destination .mini-art {
@@ -1442,64 +1316,80 @@ button {
 }
 
 .prototype-note {
-  margin: 10px 0 0;
-  color: var(--muted);
-  font-size: 0.58rem;
-  line-height: 1.45;
+  margin: 12px 0 0;
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
 }
 
-/* 次の操作を画面下に固定するボタンとフッターです。 */
+/* 操作ボタンはスマートフォンでは画面下に置き、PCでは本文の後に配置します。 */
 .screen-actions {
   position: fixed;
   z-index: 5;
   right: 0;
   bottom: 0;
   left: 0;
-  width: min(100%, 440px);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  width: min(100% - 32px, 720px);
   margin: 0 auto;
-  padding: 12px 18px max(12px, env(safe-area-inset-bottom));
-  background: linear-gradient(transparent, #f4f7f9 18%);
+  padding: 14px 0 max(14px, env(safe-area-inset-bottom));
+  background: linear-gradient(transparent, #f5f7fa 18%);
+}
+
+.primary-button,
+.secondary-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 50px;
+  padding: 11px 16px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: center;
 }
 
 .primary-button {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  min-height: 51px;
-  padding: 6px 7px 6px 18px;
-  border: 0;
-  border-radius: 17px;
   color: #fff;
-  background: var(--navy);
-  font-size: 0.82rem;
-  font-weight: 800;
-  box-shadow: 0 8px 16px rgb(21 58 78 / 22%);
+  background: var(--color-primary);
+}
+
+.primary-button:hover:not(:disabled) {
+  background: #12588f;
 }
 
 .primary-button:disabled {
-  opacity: 0.48;
+  color: #fff;
+  background: #8795a7;
   cursor: not-allowed;
 }
 
+.secondary-button {
+  border-color: var(--color-border);
+  color: var(--color-primary);
+  background: #fff;
+}
+
+.secondary-button:hover {
+  background: #f3f7fa;
+}
+
 .button-arrow {
-  display: grid;
-  width: 38px;
-  height: 38px;
-  flex: 0 0 auto;
-  place-items: center;
-  border-radius: 12px;
-  color: var(--navy);
-  background: var(--orange);
-  font-size: 1.1rem;
+  display: none;
 }
 
 .page-footer {
   display: none;
-  margin-top: 16px;
-  color: var(--muted);
-  font-size: 0.64rem;
-  line-height: 1.45;
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-muted);
+  font-size: 0.8rem;
+  line-height: 1.5;
 }
 
 .page.is-welcome .page-footer,
@@ -1509,14 +1399,14 @@ button {
 }
 
 .page-footer p {
-  margin: 0 0 5px;
+  margin: 0 0 6px;
 }
 
 .page-footer .prototype-note {
   font-size: inherit;
 }
 
-/* 視覚表示を抑えつつ読み上げやキーボード操作を支援します。 */
+/* 読み上げ用テキスト、キーボード操作、非表示画面を支援します。 */
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -1529,7 +1419,7 @@ button {
 
 button:focus-visible,
 input:focus-visible {
-  outline: 3px solid #ffb364;
+  outline: 3px solid var(--color-focus);
   outline-offset: 3px;
 }
 
@@ -1537,55 +1427,29 @@ input:focus-visible {
   display: none !important;
 }
 
-/* PCでは縦の操作順を保ったまま、カード幅・余白・文字を広げます。 */
+/* PCでも要素を横並びにせず、余白と文字サイズだけを調整します。 */
 @media (min-width: 700px) {
-  body {
-    display: grid;
-    place-items: start center;
-    padding: 32px 0;
-  }
-
   .page {
-    width: min(calc(100vw - 48px), 620px);
-    min-height: min(900px, calc(100vh - 64px));
-    padding: 28px 30px 36px;
-    border-radius: 16px;
+    padding-top: 32px;
+    padding-bottom: 40px;
   }
 
   .page-header {
-    margin: -28px -30px 0;
-    padding: 28px 30px 16px;
+    margin-bottom: 26px;
   }
 
-  .page.is-home .home-hero {
-    margin-right: -30px;
-    margin-left: -30px;
-    padding: 18px 30px 22px;
-  }
-
-  .page.is-welcome .welcome-hero {
-    margin-right: -30px;
-    margin-left: -30px;
-    padding: 18px 30px 26px;
-  }
-
-  .welcome-heading {
-    max-width: 500px;
-    font-size: 2.25rem;
-  }
-
-  .welcome-intro {
-    max-width: 480px;
-    font-size: 0.94rem;
+  .welcome-hero,
+  .home-hero {
+    padding: 30px;
   }
 
   .welcome-guide {
-    padding-top: 28px;
+    padding-top: 30px;
   }
 
-  .welcome-guide h2 {
-    margin-bottom: 16px;
-    font-size: 1.3rem;
+  .welcome-guide h2,
+  .section-title-row h2 {
+    font-size: 1.35rem;
   }
 
   .welcome-steps {
@@ -1594,10 +1458,9 @@ input:focus-visible {
 
   .welcome-step {
     grid-template-columns: 48px minmax(0, 1fr);
-    gap: 14px;
-    min-height: 84px;
-    padding: 12px 15px;
-    border-radius: 17px;
+    gap: 16px;
+    min-height: 88px;
+    padding: 16px 18px;
   }
 
   .welcome-step-icon {
@@ -1605,206 +1468,45 @@ input:focus-visible {
     height: 48px;
   }
 
-  .welcome-step h3 {
-    font-size: 0.86rem;
-  }
-
-  .welcome-step p,
-  .welcome-notice p {
-    font-size: 0.72rem;
-  }
-
-  .home-heading {
-    max-width: 470px;
-    font-size: 2.25rem;
-  }
-
-  .home-intro {
-    max-width: 440px;
-    font-size: 0.94rem;
-  }
-
-  .search-box {
-    max-width: 100%;
-    height: 54px;
-    margin-top: 18px;
-    border-radius: 17px;
-  }
-
   .destination-section {
-    padding-top: 26px;
-  }
-
-  .section-title-row {
-    margin-bottom: 16px;
-  }
-
-  .section-title-row h2 {
-    font-size: 1.25rem;
-  }
-
-  .destination-list {
-    gap: 16px;
+    padding-top: 30px;
   }
 
   .destination-card {
-    min-height: 170px;
-    border-radius: 21px;
+    min-height: 82px;
+    padding: 12px 16px;
   }
 
-  .destination-card-content {
-    padding: 38px 14px 14px;
-  }
-
-  .destination-name-ja {
-    font-size: 0.72rem;
-  }
-
-  .destination-name-en {
-    font-size: 1.08rem;
-  }
-
-  .flow-screen {
-    padding-top: 18px;
-  }
-
-  .screen-heading {
-    max-width: 540px;
-    font-size: 2rem;
-  }
-
-  .screen-intro {
-    margin-bottom: 22px;
-    font-size: 0.9rem;
-  }
-
-  .destination-summary {
-    margin: 22px 0;
-    padding: 12px;
-  }
-
-  .boarding-stop-list {
-    gap: 12px;
-  }
-
-  .boarding-stop-option {
-    min-height: 76px;
-    padding: 12px;
-  }
-
-  .bus-route-card {
-    grid-template-columns: 120px 1fr;
-    min-height: 108px;
-    margin: 16px 0;
-  }
-
-  .route-number-panel strong {
-    font-size: 2rem;
-  }
-
-  .route-direction {
-    padding: 14px 20px;
-  }
-
-  .route-direction strong {
-    font-size: 1.05rem;
-  }
-
-  .bus-illustration {
-    height: 205px;
-  }
-
-  .destination-photo {
-    height: 250px;
-    margin-bottom: 26px;
-  }
-
-  .complete-screen {
-    padding-top: 25px;
-  }
-
-  .complete-mark {
-    width: 82px;
-    height: 82px;
-  }
-
-  .complete-heading {
-    max-width: 430px;
-    font-size: 2rem;
-  }
-
-  .complete-intro {
-    margin-bottom: 22px;
-    font-size: 0.8rem;
-  }
-
-  .trip-card {
-    padding: 22px 18px 16px;
+  .destination-card[aria-pressed="true"] {
+    padding: 11px 15px;
   }
 
   .screen-actions {
-    position: relative;
-    right: auto;
-    bottom: auto;
-    left: auto;
+    position: static;
     width: 100%;
-    margin: 22px auto 0;
+    margin-top: 24px;
     padding: 0;
     background: none;
   }
 
-  .primary-button {
-    min-height: 58px;
-    padding-left: 22px;
-    border-radius: 18px;
-    font-size: 0.9rem;
+  .page-footer {
+    margin-top: 28px;
   }
 
-  .button-arrow {
-    width: 44px;
-    height: 44px;
-    border-radius: 13px;
+  .aboard-screen {
+    padding-top: 12px;
+  }
+
+  .destination-photo {
+    height: 250px;
   }
 }
 
-/* 小型スマートフォンでは左右余白とカード間隔を詰めます。 */
-@media (max-width: 360px) {
-  .page {
-    padding-right: 15px;
-    padding-left: 15px;
-  }
-
-  .page-header {
-    margin-right: -15px;
-    margin-left: -15px;
-    padding-right: 15px;
-    padding-left: 15px;
-  }
-
-  .page.is-home .home-hero {
-    margin-right: -15px;
-    margin-left: -15px;
-    padding-right: 15px;
-    padding-left: 15px;
-  }
-
-  .page.is-welcome .welcome-hero {
-    margin-right: -15px;
-    margin-left: -15px;
-    padding-right: 15px;
-    padding-left: 15px;
-  }
-
-  .screen-actions {
-    padding-right: 15px;
-    padding-left: 15px;
-  }
-
-  .destination-list {
-    gap: 8px;
-  }
-
-  .destination-card {
-    min-height: 155px;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }
