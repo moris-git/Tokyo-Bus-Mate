@@ -30,6 +30,7 @@
               "stopId": "0032-04",
               "nameJa": "浅草雷門",
               "nameEn": "Asakusa-Kaminarimon (Asakusa-Kaminarimon Gate)",
+              "nameRomanized": "Asakusa-Kaminarimon",
               "stopSequence": 21,
               "alightingStopSequence": 28,
               "itineraryStops": [
@@ -37,49 +38,57 @@
                   "stopId": "0032-04",
                   "stopSequence": 21,
                   "nameJa": "浅草雷門",
-                  "nameEn": "Asakusa-Kaminarimon (Asakusa-Kaminarimon Gate)"
+                  "nameEn": "Asakusa-Kaminarimon (Asakusa-Kaminarimon Gate)",
+                  "nameRomanized": "Asakusa-Kaminarimon"
                 },
                 {
                   "stopId": "0038-03",
                   "stopSequence": 22,
                   "nameJa": "浅草一丁目",
-                  "nameEn": "Asakusa-Itchōme (Asakusa 1)"
+                  "nameEn": "Asakusa-Itchōme (Asakusa 1)",
+                  "nameRomanized": "Asakusa-Itchōme"
                 },
                 {
                   "stopId": "0035-10",
                   "stopSequence": 23,
                   "nameJa": "浅草寿町",
-                  "nameEn": "Asakusa-Kotobukichō"
+                  "nameEn": "Asakusa-Kotobukichō",
+                  "nameRomanized": "Asakusa-Kotobukichō"
                 },
                 {
                   "stopId": "0396-02",
                   "stopSequence": 24,
                   "nameJa": "菊屋橋",
-                  "nameEn": "Kikuyabashi"
+                  "nameEn": "Kikuyabashi",
+                  "nameRomanized": "Kikuyabashi"
                 },
                 {
                   "stopId": "1268-02",
                   "stopSequence": 25,
                   "nameJa": "東上野六丁目",
-                  "nameEn": "Higashi-Ueno-Rokuchōme (Higashi-Ueno 6)"
+                  "nameEn": "Higashi-Ueno-Rokuchōme (Higashi-Ueno 6)",
+                  "nameRomanized": "Higashi-Ueno-Rokuchōme"
                 },
                 {
                   "stopId": "0601-01",
                   "stopSequence": 26,
                   "nameJa": "下谷神社前",
-                  "nameEn": "Shitaya-Jinja (Shitaya-Jinja Shrine)"
+                  "nameEn": "Shitaya-Jinja (Shitaya-Jinja Shrine)",
+                  "nameRomanized": "Shitaya-Jinja"
                 },
                 {
                   "stopId": "0131-05",
                   "stopSequence": 27,
                   "nameJa": "上野駅前",
-                  "nameEn": "Ueno Sta."
+                  "nameEn": "Ueno Sta.",
+                  "nameRomanized": "Ueno Sta."
                 },
                 {
                   "stopId": "0133-09",
                   "stopSequence": 28,
                   "nameJa": "上野公園山下",
-                  "nameEn": "Ueno-Kōen-Yamashita (Ueno Park)"
+                  "nameEn": "Ueno-Kōen-Yamashita (Ueno Park)",
+                  "nameRomanized": "Ueno-Kōen-Yamashita"
                 }
               ],
               "headsigns": [
@@ -88,12 +97,15 @@
                   "tripCount": 114
                 }
               ],
+              "estimatedRideMinutes": 11,
+              "scheduledTripCount": 114,
               "orderedTripCount": 114
             },
             {
               "stopId": "0038-03",
               "nameJa": "浅草一丁目",
               "nameEn": "Asakusa-Itchōme (Asakusa 1)",
+              "nameRomanized": "Asakusa-Itchōme",
               "stopSequence": 22,
               "alightingStopSequence": 28,
               "itineraryStops": [
@@ -101,43 +113,50 @@
                   "stopId": "0038-03",
                   "stopSequence": 22,
                   "nameJa": "浅草一丁目",
-                  "nameEn": "Asakusa-Itchōme (Asakusa 1)"
+                  "nameEn": "Asakusa-Itchōme (Asakusa 1)",
+                  "nameRomanized": "Asakusa-Itchōme"
                 },
                 {
                   "stopId": "0035-10",
                   "stopSequence": 23,
                   "nameJa": "浅草寿町",
-                  "nameEn": "Asakusa-Kotobukichō"
+                  "nameEn": "Asakusa-Kotobukichō",
+                  "nameRomanized": "Asakusa-Kotobukichō"
                 },
                 {
                   "stopId": "0396-02",
                   "stopSequence": 24,
                   "nameJa": "菊屋橋",
-                  "nameEn": "Kikuyabashi"
+                  "nameEn": "Kikuyabashi",
+                  "nameRomanized": "Kikuyabashi"
                 },
                 {
                   "stopId": "1268-02",
                   "stopSequence": 25,
                   "nameJa": "東上野六丁目",
-                  "nameEn": "Higashi-Ueno-Rokuchōme (Higashi-Ueno 6)"
+                  "nameEn": "Higashi-Ueno-Rokuchōme (Higashi-Ueno 6)",
+                  "nameRomanized": "Higashi-Ueno-Rokuchōme"
                 },
                 {
                   "stopId": "0601-01",
                   "stopSequence": 26,
                   "nameJa": "下谷神社前",
-                  "nameEn": "Shitaya-Jinja (Shitaya-Jinja Shrine)"
+                  "nameEn": "Shitaya-Jinja (Shitaya-Jinja Shrine)",
+                  "nameRomanized": "Shitaya-Jinja"
                 },
                 {
                   "stopId": "0131-05",
                   "stopSequence": 27,
                   "nameJa": "上野駅前",
-                  "nameEn": "Ueno Sta."
+                  "nameEn": "Ueno Sta.",
+                  "nameRomanized": "Ueno Sta."
                 },
                 {
                   "stopId": "0133-09",
                   "stopSequence": 28,
                   "nameJa": "上野公園山下",
-                  "nameEn": "Ueno-Kōen-Yamashita (Ueno Park)"
+                  "nameEn": "Ueno-Kōen-Yamashita (Ueno Park)",
+                  "nameRomanized": "Ueno-Kōen-Yamashita"
                 }
               ],
               "headsigns": [
@@ -146,12 +165,15 @@
                   "tripCount": 114
                 }
               ],
+              "estimatedRideMinutes": 10,
+              "scheduledTripCount": 114,
               "orderedTripCount": 114
             },
             {
               "stopId": "0035-10",
               "nameJa": "浅草寿町",
               "nameEn": "Asakusa-Kotobukichō",
+              "nameRomanized": "Asakusa-Kotobukichō",
               "stopSequence": 23,
               "alightingStopSequence": 28,
               "itineraryStops": [
@@ -159,37 +181,43 @@
                   "stopId": "0035-10",
                   "stopSequence": 23,
                   "nameJa": "浅草寿町",
-                  "nameEn": "Asakusa-Kotobukichō"
+                  "nameEn": "Asakusa-Kotobukichō",
+                  "nameRomanized": "Asakusa-Kotobukichō"
                 },
                 {
                   "stopId": "0396-02",
                   "stopSequence": 24,
                   "nameJa": "菊屋橋",
-                  "nameEn": "Kikuyabashi"
+                  "nameEn": "Kikuyabashi",
+                  "nameRomanized": "Kikuyabashi"
                 },
                 {
                   "stopId": "1268-02",
                   "stopSequence": 25,
                   "nameJa": "東上野六丁目",
-                  "nameEn": "Higashi-Ueno-Rokuchōme (Higashi-Ueno 6)"
+                  "nameEn": "Higashi-Ueno-Rokuchōme (Higashi-Ueno 6)",
+                  "nameRomanized": "Higashi-Ueno-Rokuchōme"
                 },
                 {
                   "stopId": "0601-01",
                   "stopSequence": 26,
                   "nameJa": "下谷神社前",
-                  "nameEn": "Shitaya-Jinja (Shitaya-Jinja Shrine)"
+                  "nameEn": "Shitaya-Jinja (Shitaya-Jinja Shrine)",
+                  "nameRomanized": "Shitaya-Jinja"
                 },
                 {
                   "stopId": "0131-05",
                   "stopSequence": 27,
                   "nameJa": "上野駅前",
-                  "nameEn": "Ueno Sta."
+                  "nameEn": "Ueno Sta.",
+                  "nameRomanized": "Ueno Sta."
                 },
                 {
                   "stopId": "0133-09",
                   "stopSequence": 28,
                   "nameJa": "上野公園山下",
-                  "nameEn": "Ueno-Kōen-Yamashita (Ueno Park)"
+                  "nameEn": "Ueno-Kōen-Yamashita (Ueno Park)",
+                  "nameRomanized": "Ueno-Kōen-Yamashita"
                 }
               ],
               "headsigns": [
@@ -198,6 +226,8 @@
                   "tripCount": 114
                 }
               ],
+              "estimatedRideMinutes": 6,
+              "scheduledTripCount": 114,
               "orderedTripCount": 114
             }
           ],
@@ -221,6 +251,7 @@
               "stopId": "0032-04",
               "nameJa": "浅草雷門",
               "nameEn": "Asakusa-Kaminarimon (Asakusa-Kaminarimon Gate)",
+              "nameRomanized": "Asakusa-Kaminarimon",
               "stopSequence": 21,
               "alightingStopSequence": 28,
               "itineraryStops": [
@@ -228,49 +259,57 @@
                   "stopId": "0032-04",
                   "stopSequence": 21,
                   "nameJa": "浅草雷門",
-                  "nameEn": "Asakusa-Kaminarimon (Asakusa-Kaminarimon Gate)"
+                  "nameEn": "Asakusa-Kaminarimon (Asakusa-Kaminarimon Gate)",
+                  "nameRomanized": "Asakusa-Kaminarimon"
                 },
                 {
                   "stopId": "0038-03",
                   "stopSequence": 22,
                   "nameJa": "浅草一丁目",
-                  "nameEn": "Asakusa-Itchōme (Asakusa 1)"
+                  "nameEn": "Asakusa-Itchōme (Asakusa 1)",
+                  "nameRomanized": "Asakusa-Itchōme"
                 },
                 {
                   "stopId": "0035-10",
                   "stopSequence": 23,
                   "nameJa": "浅草寿町",
-                  "nameEn": "Asakusa-Kotobukichō"
+                  "nameEn": "Asakusa-Kotobukichō",
+                  "nameRomanized": "Asakusa-Kotobukichō"
                 },
                 {
                   "stopId": "0396-02",
                   "stopSequence": 24,
                   "nameJa": "菊屋橋",
-                  "nameEn": "Kikuyabashi"
+                  "nameEn": "Kikuyabashi",
+                  "nameRomanized": "Kikuyabashi"
                 },
                 {
                   "stopId": "1268-02",
                   "stopSequence": 25,
                   "nameJa": "東上野六丁目",
-                  "nameEn": "Higashi-Ueno-Rokuchōme (Higashi-Ueno 6)"
+                  "nameEn": "Higashi-Ueno-Rokuchōme (Higashi-Ueno 6)",
+                  "nameRomanized": "Higashi-Ueno-Rokuchōme"
                 },
                 {
                   "stopId": "0601-01",
                   "stopSequence": 26,
                   "nameJa": "下谷神社前",
-                  "nameEn": "Shitaya-Jinja (Shitaya-Jinja Shrine)"
+                  "nameEn": "Shitaya-Jinja (Shitaya-Jinja Shrine)",
+                  "nameRomanized": "Shitaya-Jinja"
                 },
                 {
                   "stopId": "0131-05",
                   "stopSequence": 27,
                   "nameJa": "上野駅前",
-                  "nameEn": "Ueno Sta."
+                  "nameEn": "Ueno Sta.",
+                  "nameRomanized": "Ueno Sta."
                 },
                 {
                   "stopId": "0133-09",
                   "stopSequence": 28,
                   "nameJa": "上野公園山下",
-                  "nameEn": "Ueno-Kōen-Yamashita (Ueno Park)"
+                  "nameEn": "Ueno-Kōen-Yamashita (Ueno Park)",
+                  "nameRomanized": "Ueno-Kōen-Yamashita"
                 }
               ],
               "headsigns": [
@@ -279,12 +318,15 @@
                   "tripCount": 114
                 }
               ],
+              "estimatedRideMinutes": 11,
+              "scheduledTripCount": 114,
               "orderedTripCount": 114
             },
             {
               "stopId": "0038-03",
               "nameJa": "浅草一丁目",
               "nameEn": "Asakusa-Itchōme (Asakusa 1)",
+              "nameRomanized": "Asakusa-Itchōme",
               "stopSequence": 22,
               "alightingStopSequence": 28,
               "itineraryStops": [
@@ -292,43 +334,50 @@
                   "stopId": "0038-03",
                   "stopSequence": 22,
                   "nameJa": "浅草一丁目",
-                  "nameEn": "Asakusa-Itchōme (Asakusa 1)"
+                  "nameEn": "Asakusa-Itchōme (Asakusa 1)",
+                  "nameRomanized": "Asakusa-Itchōme"
                 },
                 {
                   "stopId": "0035-10",
                   "stopSequence": 23,
                   "nameJa": "浅草寿町",
-                  "nameEn": "Asakusa-Kotobukichō"
+                  "nameEn": "Asakusa-Kotobukichō",
+                  "nameRomanized": "Asakusa-Kotobukichō"
                 },
                 {
                   "stopId": "0396-02",
                   "stopSequence": 24,
                   "nameJa": "菊屋橋",
-                  "nameEn": "Kikuyabashi"
+                  "nameEn": "Kikuyabashi",
+                  "nameRomanized": "Kikuyabashi"
                 },
                 {
                   "stopId": "1268-02",
                   "stopSequence": 25,
                   "nameJa": "東上野六丁目",
-                  "nameEn": "Higashi-Ueno-Rokuchōme (Higashi-Ueno 6)"
+                  "nameEn": "Higashi-Ueno-Rokuchōme (Higashi-Ueno 6)",
+                  "nameRomanized": "Higashi-Ueno-Rokuchōme"
                 },
                 {
                   "stopId": "0601-01",
                   "stopSequence": 26,
                   "nameJa": "下谷神社前",
-                  "nameEn": "Shitaya-Jinja (Shitaya-Jinja Shrine)"
+                  "nameEn": "Shitaya-Jinja (Shitaya-Jinja Shrine)",
+                  "nameRomanized": "Shitaya-Jinja"
                 },
                 {
                   "stopId": "0131-05",
                   "stopSequence": 27,
                   "nameJa": "上野駅前",
-                  "nameEn": "Ueno Sta."
+                  "nameEn": "Ueno Sta.",
+                  "nameRomanized": "Ueno Sta."
                 },
                 {
                   "stopId": "0133-09",
                   "stopSequence": 28,
                   "nameJa": "上野公園山下",
-                  "nameEn": "Ueno-Kōen-Yamashita (Ueno Park)"
+                  "nameEn": "Ueno-Kōen-Yamashita (Ueno Park)",
+                  "nameRomanized": "Ueno-Kōen-Yamashita"
                 }
               ],
               "headsigns": [
@@ -337,12 +386,15 @@
                   "tripCount": 114
                 }
               ],
+              "estimatedRideMinutes": 10,
+              "scheduledTripCount": 114,
               "orderedTripCount": 114
             },
             {
               "stopId": "0035-10",
               "nameJa": "浅草寿町",
               "nameEn": "Asakusa-Kotobukichō",
+              "nameRomanized": "Asakusa-Kotobukichō",
               "stopSequence": 23,
               "alightingStopSequence": 28,
               "itineraryStops": [
@@ -350,37 +402,43 @@
                   "stopId": "0035-10",
                   "stopSequence": 23,
                   "nameJa": "浅草寿町",
-                  "nameEn": "Asakusa-Kotobukichō"
+                  "nameEn": "Asakusa-Kotobukichō",
+                  "nameRomanized": "Asakusa-Kotobukichō"
                 },
                 {
                   "stopId": "0396-02",
                   "stopSequence": 24,
                   "nameJa": "菊屋橋",
-                  "nameEn": "Kikuyabashi"
+                  "nameEn": "Kikuyabashi",
+                  "nameRomanized": "Kikuyabashi"
                 },
                 {
                   "stopId": "1268-02",
                   "stopSequence": 25,
                   "nameJa": "東上野六丁目",
-                  "nameEn": "Higashi-Ueno-Rokuchōme (Higashi-Ueno 6)"
+                  "nameEn": "Higashi-Ueno-Rokuchōme (Higashi-Ueno 6)",
+                  "nameRomanized": "Higashi-Ueno-Rokuchōme"
                 },
                 {
                   "stopId": "0601-01",
                   "stopSequence": 26,
                   "nameJa": "下谷神社前",
-                  "nameEn": "Shitaya-Jinja (Shitaya-Jinja Shrine)"
+                  "nameEn": "Shitaya-Jinja (Shitaya-Jinja Shrine)",
+                  "nameRomanized": "Shitaya-Jinja"
                 },
                 {
                   "stopId": "0131-05",
                   "stopSequence": 27,
                   "nameJa": "上野駅前",
-                  "nameEn": "Ueno Sta."
+                  "nameEn": "Ueno Sta.",
+                  "nameRomanized": "Ueno Sta."
                 },
                 {
                   "stopId": "0133-09",
                   "stopSequence": 28,
                   "nameJa": "上野公園山下",
-                  "nameEn": "Ueno-Kōen-Yamashita (Ueno Park)"
+                  "nameEn": "Ueno-Kōen-Yamashita (Ueno Park)",
+                  "nameRomanized": "Ueno-Kōen-Yamashita"
                 }
               ],
               "headsigns": [
@@ -389,6 +447,8 @@
                   "tripCount": 114
                 }
               ],
+              "estimatedRideMinutes": 6,
+              "scheduledTripCount": 114,
               "orderedTripCount": 114
             }
           ],
@@ -412,6 +472,7 @@
               "stopId": "0032-04",
               "nameJa": "浅草雷門",
               "nameEn": "Asakusa-Kaminarimon (Asakusa-Kaminarimon Gate)",
+              "nameRomanized": "Asakusa-Kaminarimon",
               "stopSequence": 21,
               "alightingStopSequence": 27,
               "itineraryStops": [
@@ -419,43 +480,50 @@
                   "stopId": "0032-04",
                   "stopSequence": 21,
                   "nameJa": "浅草雷門",
-                  "nameEn": "Asakusa-Kaminarimon (Asakusa-Kaminarimon Gate)"
+                  "nameEn": "Asakusa-Kaminarimon (Asakusa-Kaminarimon Gate)",
+                  "nameRomanized": "Asakusa-Kaminarimon"
                 },
                 {
                   "stopId": "0038-03",
                   "stopSequence": 22,
                   "nameJa": "浅草一丁目",
-                  "nameEn": "Asakusa-Itchōme (Asakusa 1)"
+                  "nameEn": "Asakusa-Itchōme (Asakusa 1)",
+                  "nameRomanized": "Asakusa-Itchōme"
                 },
                 {
                   "stopId": "0035-10",
                   "stopSequence": 23,
                   "nameJa": "浅草寿町",
-                  "nameEn": "Asakusa-Kotobukichō"
+                  "nameEn": "Asakusa-Kotobukichō",
+                  "nameRomanized": "Asakusa-Kotobukichō"
                 },
                 {
                   "stopId": "0396-02",
                   "stopSequence": 24,
                   "nameJa": "菊屋橋",
-                  "nameEn": "Kikuyabashi"
+                  "nameEn": "Kikuyabashi",
+                  "nameRomanized": "Kikuyabashi"
                 },
                 {
                   "stopId": "1268-02",
                   "stopSequence": 25,
                   "nameJa": "東上野六丁目",
-                  "nameEn": "Higashi-Ueno-Rokuchōme (Higashi-Ueno 6)"
+                  "nameEn": "Higashi-Ueno-Rokuchōme (Higashi-Ueno 6)",
+                  "nameRomanized": "Higashi-Ueno-Rokuchōme"
                 },
                 {
                   "stopId": "0601-01",
                   "stopSequence": 26,
                   "nameJa": "下谷神社前",
-                  "nameEn": "Shitaya-Jinja (Shitaya-Jinja Shrine)"
+                  "nameEn": "Shitaya-Jinja (Shitaya-Jinja Shrine)",
+                  "nameRomanized": "Shitaya-Jinja"
                 },
                 {
                   "stopId": "0131-05",
                   "stopSequence": 27,
                   "nameJa": "上野駅前",
-                  "nameEn": "Ueno Sta."
+                  "nameEn": "Ueno Sta.",
+                  "nameRomanized": "Ueno Sta."
                 }
               ],
               "headsigns": [
@@ -464,12 +532,15 @@
                   "tripCount": 114
                 }
               ],
+              "estimatedRideMinutes": 11,
+              "scheduledTripCount": 114,
               "orderedTripCount": 114
             },
             {
               "stopId": "0038-03",
               "nameJa": "浅草一丁目",
               "nameEn": "Asakusa-Itchōme (Asakusa 1)",
+              "nameRomanized": "Asakusa-Itchōme",
               "stopSequence": 22,
               "alightingStopSequence": 27,
               "itineraryStops": [
@@ -477,37 +548,43 @@
                   "stopId": "0038-03",
                   "stopSequence": 22,
                   "nameJa": "浅草一丁目",
-                  "nameEn": "Asakusa-Itchōme (Asakusa 1)"
+                  "nameEn": "Asakusa-Itchōme (Asakusa 1)",
+                  "nameRomanized": "Asakusa-Itchōme"
                 },
                 {
                   "stopId": "0035-10",
                   "stopSequence": 23,
                   "nameJa": "浅草寿町",
-                  "nameEn": "Asakusa-Kotobukichō"
+                  "nameEn": "Asakusa-Kotobukichō",
+                  "nameRomanized": "Asakusa-Kotobukichō"
                 },
                 {
                   "stopId": "0396-02",
                   "stopSequence": 24,
                   "nameJa": "菊屋橋",
-                  "nameEn": "Kikuyabashi"
+                  "nameEn": "Kikuyabashi",
+                  "nameRomanized": "Kikuyabashi"
                 },
                 {
                   "stopId": "1268-02",
                   "stopSequence": 25,
                   "nameJa": "東上野六丁目",
-                  "nameEn": "Higashi-Ueno-Rokuchōme (Higashi-Ueno 6)"
+                  "nameEn": "Higashi-Ueno-Rokuchōme (Higashi-Ueno 6)",
+                  "nameRomanized": "Higashi-Ueno-Rokuchōme"
                 },
                 {
                   "stopId": "0601-01",
                   "stopSequence": 26,
                   "nameJa": "下谷神社前",
-                  "nameEn": "Shitaya-Jinja (Shitaya-Jinja Shrine)"
+                  "nameEn": "Shitaya-Jinja (Shitaya-Jinja Shrine)",
+                  "nameRomanized": "Shitaya-Jinja"
                 },
                 {
                   "stopId": "0131-05",
                   "stopSequence": 27,
                   "nameJa": "上野駅前",
-                  "nameEn": "Ueno Sta."
+                  "nameEn": "Ueno Sta.",
+                  "nameRomanized": "Ueno Sta."
                 }
               ],
               "headsigns": [
@@ -516,12 +593,15 @@
                   "tripCount": 114
                 }
               ],
+              "estimatedRideMinutes": 10,
+              "scheduledTripCount": 114,
               "orderedTripCount": 114
             },
             {
               "stopId": "0035-10",
               "nameJa": "浅草寿町",
               "nameEn": "Asakusa-Kotobukichō",
+              "nameRomanized": "Asakusa-Kotobukichō",
               "stopSequence": 23,
               "alightingStopSequence": 27,
               "itineraryStops": [
@@ -529,31 +609,36 @@
                   "stopId": "0035-10",
                   "stopSequence": 23,
                   "nameJa": "浅草寿町",
-                  "nameEn": "Asakusa-Kotobukichō"
+                  "nameEn": "Asakusa-Kotobukichō",
+                  "nameRomanized": "Asakusa-Kotobukichō"
                 },
                 {
                   "stopId": "0396-02",
                   "stopSequence": 24,
                   "nameJa": "菊屋橋",
-                  "nameEn": "Kikuyabashi"
+                  "nameEn": "Kikuyabashi",
+                  "nameRomanized": "Kikuyabashi"
                 },
                 {
                   "stopId": "1268-02",
                   "stopSequence": 25,
                   "nameJa": "東上野六丁目",
-                  "nameEn": "Higashi-Ueno-Rokuchōme (Higashi-Ueno 6)"
+                  "nameEn": "Higashi-Ueno-Rokuchōme (Higashi-Ueno 6)",
+                  "nameRomanized": "Higashi-Ueno-Rokuchōme"
                 },
                 {
                   "stopId": "0601-01",
                   "stopSequence": 26,
                   "nameJa": "下谷神社前",
-                  "nameEn": "Shitaya-Jinja (Shitaya-Jinja Shrine)"
+                  "nameEn": "Shitaya-Jinja (Shitaya-Jinja Shrine)",
+                  "nameRomanized": "Shitaya-Jinja"
                 },
                 {
                   "stopId": "0131-05",
                   "stopSequence": 27,
                   "nameJa": "上野駅前",
-                  "nameEn": "Ueno Sta."
+                  "nameEn": "Ueno Sta.",
+                  "nameRomanized": "Ueno Sta."
                 }
               ],
               "headsigns": [
@@ -562,6 +647,8 @@
                   "tripCount": 114
                 }
               ],
+              "estimatedRideMinutes": 6,
+              "scheduledTripCount": 114,
               "orderedTripCount": 114
             }
           ],
@@ -585,6 +672,7 @@
               "stopId": "0032-04",
               "nameJa": "浅草雷門",
               "nameEn": "Asakusa-Kaminarimon (Asakusa-Kaminarimon Gate)",
+              "nameRomanized": "Asakusa-Kaminarimon",
               "stopSequence": 21,
               "alightingStopSequence": 29,
               "itineraryStops": [
@@ -592,55 +680,64 @@
                   "stopId": "0032-04",
                   "stopSequence": 21,
                   "nameJa": "浅草雷門",
-                  "nameEn": "Asakusa-Kaminarimon (Asakusa-Kaminarimon Gate)"
+                  "nameEn": "Asakusa-Kaminarimon (Asakusa-Kaminarimon Gate)",
+                  "nameRomanized": "Asakusa-Kaminarimon"
                 },
                 {
                   "stopId": "0038-03",
                   "stopSequence": 22,
                   "nameJa": "浅草一丁目",
-                  "nameEn": "Asakusa-Itchōme (Asakusa 1)"
+                  "nameEn": "Asakusa-Itchōme (Asakusa 1)",
+                  "nameRomanized": "Asakusa-Itchōme"
                 },
                 {
                   "stopId": "0035-10",
                   "stopSequence": 23,
                   "nameJa": "浅草寿町",
-                  "nameEn": "Asakusa-Kotobukichō"
+                  "nameEn": "Asakusa-Kotobukichō",
+                  "nameRomanized": "Asakusa-Kotobukichō"
                 },
                 {
                   "stopId": "0396-02",
                   "stopSequence": 24,
                   "nameJa": "菊屋橋",
-                  "nameEn": "Kikuyabashi"
+                  "nameEn": "Kikuyabashi",
+                  "nameRomanized": "Kikuyabashi"
                 },
                 {
                   "stopId": "1268-02",
                   "stopSequence": 25,
                   "nameJa": "東上野六丁目",
-                  "nameEn": "Higashi-Ueno-Rokuchōme (Higashi-Ueno 6)"
+                  "nameEn": "Higashi-Ueno-Rokuchōme (Higashi-Ueno 6)",
+                  "nameRomanized": "Higashi-Ueno-Rokuchōme"
                 },
                 {
                   "stopId": "0601-01",
                   "stopSequence": 26,
                   "nameJa": "下谷神社前",
-                  "nameEn": "Shitaya-Jinja (Shitaya-Jinja Shrine)"
+                  "nameEn": "Shitaya-Jinja (Shitaya-Jinja Shrine)",
+                  "nameRomanized": "Shitaya-Jinja"
                 },
                 {
                   "stopId": "0131-05",
                   "stopSequence": 27,
                   "nameJa": "上野駅前",
-                  "nameEn": "Ueno Sta."
+                  "nameEn": "Ueno Sta.",
+                  "nameRomanized": "Ueno Sta."
                 },
                 {
                   "stopId": "0133-09",
                   "stopSequence": 28,
                   "nameJa": "上野公園山下",
-                  "nameEn": "Ueno-Kōen-Yamashita (Ueno Park)"
+                  "nameEn": "Ueno-Kōen-Yamashita (Ueno Park)",
+                  "nameRomanized": "Ueno-Kōen-Yamashita"
                 },
                 {
                   "stopId": "2000-10",
                   "stopSequence": 29,
                   "nameJa": "上野松坂屋前",
-                  "nameEn": "Ueno-Matsuzakaya (Ueno-Matsuzakaya Department Store)"
+                  "nameEn": "Ueno-Matsuzakaya (Ueno-Matsuzakaya Department Store)",
+                  "nameRomanized": "Ueno-Matsuzakaya"
                 }
               ],
               "headsigns": [
@@ -649,12 +746,15 @@
                   "tripCount": 114
                 }
               ],
+              "estimatedRideMinutes": 16,
+              "scheduledTripCount": 114,
               "orderedTripCount": 114
             },
             {
               "stopId": "0038-03",
               "nameJa": "浅草一丁目",
               "nameEn": "Asakusa-Itchōme (Asakusa 1)",
+              "nameRomanized": "Asakusa-Itchōme",
               "stopSequence": 22,
               "alightingStopSequence": 29,
               "itineraryStops": [
@@ -662,49 +762,57 @@
                   "stopId": "0038-03",
                   "stopSequence": 22,
                   "nameJa": "浅草一丁目",
-                  "nameEn": "Asakusa-Itchōme (Asakusa 1)"
+                  "nameEn": "Asakusa-Itchōme (Asakusa 1)",
+                  "nameRomanized": "Asakusa-Itchōme"
                 },
                 {
                   "stopId": "0035-10",
                   "stopSequence": 23,
                   "nameJa": "浅草寿町",
-                  "nameEn": "Asakusa-Kotobukichō"
+                  "nameEn": "Asakusa-Kotobukichō",
+                  "nameRomanized": "Asakusa-Kotobukichō"
                 },
                 {
                   "stopId": "0396-02",
                   "stopSequence": 24,
                   "nameJa": "菊屋橋",
-                  "nameEn": "Kikuyabashi"
+                  "nameEn": "Kikuyabashi",
+                  "nameRomanized": "Kikuyabashi"
                 },
                 {
                   "stopId": "1268-02",
                   "stopSequence": 25,
                   "nameJa": "東上野六丁目",
-                  "nameEn": "Higashi-Ueno-Rokuchōme (Higashi-Ueno 6)"
+                  "nameEn": "Higashi-Ueno-Rokuchōme (Higashi-Ueno 6)",
+                  "nameRomanized": "Higashi-Ueno-Rokuchōme"
                 },
                 {
                   "stopId": "0601-01",
                   "stopSequence": 26,
                   "nameJa": "下谷神社前",
-                  "nameEn": "Shitaya-Jinja (Shitaya-Jinja Shrine)"
+                  "nameEn": "Shitaya-Jinja (Shitaya-Jinja Shrine)",
+                  "nameRomanized": "Shitaya-Jinja"
                 },
                 {
                   "stopId": "0131-05",
                   "stopSequence": 27,
                   "nameJa": "上野駅前",
-                  "nameEn": "Ueno Sta."
+                  "nameEn": "Ueno Sta.",
+                  "nameRomanized": "Ueno Sta."
                 },
                 {
                   "stopId": "0133-09",
                   "stopSequence": 28,
                   "nameJa": "上野公園山下",
-                  "nameEn": "Ueno-Kōen-Yamashita (Ueno Park)"
+                  "nameEn": "Ueno-Kōen-Yamashita (Ueno Park)",
+                  "nameRomanized": "Ueno-Kōen-Yamashita"
                 },
                 {
                   "stopId": "2000-10",
                   "stopSequence": 29,
                   "nameJa": "上野松坂屋前",
-                  "nameEn": "Ueno-Matsuzakaya (Ueno-Matsuzakaya Department Store)"
+                  "nameEn": "Ueno-Matsuzakaya (Ueno-Matsuzakaya Department Store)",
+                  "nameRomanized": "Ueno-Matsuzakaya"
                 }
               ],
               "headsigns": [
@@ -713,12 +821,15 @@
                   "tripCount": 114
                 }
               ],
+              "estimatedRideMinutes": 15,
+              "scheduledTripCount": 114,
               "orderedTripCount": 114
             },
             {
               "stopId": "0035-10",
               "nameJa": "浅草寿町",
               "nameEn": "Asakusa-Kotobukichō",
+              "nameRomanized": "Asakusa-Kotobukichō",
               "stopSequence": 23,
               "alightingStopSequence": 29,
               "itineraryStops": [
@@ -726,43 +837,50 @@
                   "stopId": "0035-10",
                   "stopSequence": 23,
                   "nameJa": "浅草寿町",
-                  "nameEn": "Asakusa-Kotobukichō"
+                  "nameEn": "Asakusa-Kotobukichō",
+                  "nameRomanized": "Asakusa-Kotobukichō"
                 },
                 {
                   "stopId": "0396-02",
                   "stopSequence": 24,
                   "nameJa": "菊屋橋",
-                  "nameEn": "Kikuyabashi"
+                  "nameEn": "Kikuyabashi",
+                  "nameRomanized": "Kikuyabashi"
                 },
                 {
                   "stopId": "1268-02",
                   "stopSequence": 25,
                   "nameJa": "東上野六丁目",
-                  "nameEn": "Higashi-Ueno-Rokuchōme (Higashi-Ueno 6)"
+                  "nameEn": "Higashi-Ueno-Rokuchōme (Higashi-Ueno 6)",
+                  "nameRomanized": "Higashi-Ueno-Rokuchōme"
                 },
                 {
                   "stopId": "0601-01",
                   "stopSequence": 26,
                   "nameJa": "下谷神社前",
-                  "nameEn": "Shitaya-Jinja (Shitaya-Jinja Shrine)"
+                  "nameEn": "Shitaya-Jinja (Shitaya-Jinja Shrine)",
+                  "nameRomanized": "Shitaya-Jinja"
                 },
                 {
                   "stopId": "0131-05",
                   "stopSequence": 27,
                   "nameJa": "上野駅前",
-                  "nameEn": "Ueno Sta."
+                  "nameEn": "Ueno Sta.",
+                  "nameRomanized": "Ueno Sta."
                 },
                 {
                   "stopId": "0133-09",
                   "stopSequence": 28,
                   "nameJa": "上野公園山下",
-                  "nameEn": "Ueno-Kōen-Yamashita (Ueno Park)"
+                  "nameEn": "Ueno-Kōen-Yamashita (Ueno Park)",
+                  "nameRomanized": "Ueno-Kōen-Yamashita"
                 },
                 {
                   "stopId": "2000-10",
                   "stopSequence": 29,
                   "nameJa": "上野松坂屋前",
-                  "nameEn": "Ueno-Matsuzakaya (Ueno-Matsuzakaya Department Store)"
+                  "nameEn": "Ueno-Matsuzakaya (Ueno-Matsuzakaya Department Store)",
+                  "nameRomanized": "Ueno-Matsuzakaya"
                 }
               ],
               "headsigns": [
@@ -771,6 +889,8 @@
                   "tripCount": 114
                 }
               ],
+              "estimatedRideMinutes": 11,
+              "scheduledTripCount": 114,
               "orderedTripCount": 114
             }
           ],

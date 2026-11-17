@@ -5,6 +5,7 @@ import { getTranslation } from "./translations.js";
 const page = document.querySelector(".page");
 const homeBranding = document.querySelector("#home-branding");
 const flowHeader = document.querySelector("#flow-header");
+const backButton = document.querySelector("#back-button");
 const welcomeActionButton = document.querySelector("#welcome-action-button");
 const destinationSearch = document.querySelector("#destination-search");
 const destinationList = document.querySelector("#destination-list");
@@ -16,8 +17,10 @@ const homeActionButton = document.querySelector("#home-action-button");
 const flowActionButton = document.querySelector("#flow-action-button");
 const flowActionLabel = document.querySelector("#flow-action-label");
 const busMatchCheckbox = document.querySelector("#bus-match-checkbox");
+const speakAlightingButton = document.querySelector("#speak-alighting-button");
+const speechStatus = document.querySelector("#speech-status");
 const screenNames = ["welcome", "home", "boarding", "check", "aboard", "complete"];
-const stepByScreen = { boarding: 2, check: 3, aboard: 4, complete: 5 };
+const stepByScreen = { home: 1, boarding: 2, check: 3, aboard: 4, complete: 5 };
 const destinationArt = {
   "ueno-zoo": "🐼",
   "ueno-park": "🌸",
@@ -68,14 +71,92 @@ function updateStaticText(language) {
   renderDestinations();
   renderStatusMessage();
   renderCurrentScreen();
+  updateSpeechSupportStatus();
 }
 
-// 停留所名は、画面言語に応じて日本語または英語を優先して表示します。
+// 英語表示ではGTFSの英訳から説明語を除いたローマ字を優先して停留所名を表示します。
+function getRomanizedStopName(stop) {
+  return stop.nameRomanized
+    || stop.nameEn?.split(/\s+\(/, 1)[0].trim()
+    || stop.nameJa;
+}
+
+// 既存の確認・完了画面では、日本語名とGTFS英訳の表示を従来どおり維持します。
 function displayStopName(stop) {
   return currentLanguage === "en" && stop.nameEn ? stop.nameEn : stop.nameJa;
 }
 
-// 検索文字列で目的地を絞り込み、選択可能なカードとして描画します。
+// 音声合成と日本語用の発話オブジェクトが両方利用できるブラウザーか確認します。
+function supportsSpeechSynthesis() {
+  return typeof window.speechSynthesis?.speak === "function"
+    && typeof window.SpeechSynthesisUtterance === "function";
+}
+
+// 非対応環境ではボタンを無効にし、理由を読み上げ可能なステータス欄へ表示します。
+function updateSpeechSupportStatus() {
+  const isSupported = supportsSpeechSynthesis();
+  speakAlightingButton.disabled = !isSupported;
+  if (!isSupported) {
+    speechStatus.textContent = text("speechNotSupported");
+  }
+}
+
+// 選択中の降車停留所の日本語名を、利用者のクリックを受けて一度だけ読み上げます。
+function readAlightingStop() {
+  if (!supportsSpeechSynthesis()) {
+    updateSpeechSupportStatus();
+    return;
+  }
+
+  if (!currentGuide?.alightingStop?.nameJa) {
+    speechStatus.textContent = text("speechStopUnavailable");
+    return;
+  }
+
+  // 連続操作で発話が重ならないよう、前の読み上げを止めてから新しい発話を開始します。
+  window.speechSynthesis.cancel();
+  const utterance = new window.SpeechSynthesisUtterance(currentGuide.alightingStop.nameJa);
+  utterance.lang = "ja-JP";
+  utterance.rate = 0.9;
+  utterance.onstart = () => {
+    speechStatus.textContent = text("speechPlaying", {
+      stopName: currentGuide.alightingStop.nameJa
+    });
+  };
+  utterance.onend = () => {
+    speechStatus.textContent = text("speechFinished", {
+      stopName: currentGuide.alightingStop.nameJa
+    });
+  };
+  utterance.onerror = (event) => {
+    // 利用者の再操作や画面移動による停止は通常操作なので、再生エラーとして扱いません。
+    if (event.error === "canceled" || event.error === "interrupted") {
+      return;
+    }
+
+    speechStatus.textContent = text("speechError", {
+      error: event.error || "unknown"
+    });
+  };
+  window.speechSynthesis.speak(utterance);
+}
+
+// 目的地名だけでなく、その目的地に向かえる乗車停留所名も検索対象にします。
+function destinationMatchesQuery(destination, query) {
+  const destinationNames = `${destination.nameJa} ${destination.nameEn ?? ""}`.toLocaleLowerCase();
+  if (destinationNames.includes(query)) {
+    return true;
+  }
+
+  const { routeDestination } = getRouteDestination(destination);
+  return routeDestination?.boardingStops.some((stop) =>
+    `${stop.nameJa} ${stop.nameRomanized ?? ""} ${stop.nameEn ?? ""}`
+      .toLocaleLowerCase()
+      .includes(query)
+  ) ?? false;
+}
+
+// 検索条件に合う目的地だけを、写真差し替え用の仮画像付きカードとして描画します。
 function renderDestinations() {
   if (!busData) {
     return;
@@ -83,7 +164,7 @@ function renderDestinations() {
 
   const query = destinationSearch.value.trim().toLocaleLowerCase();
   const destinations = busData.destinations.filter((destination) =>
-    `${destination.nameJa} ${destination.nameEn}`.toLocaleLowerCase().includes(query)
+    destinationMatchesQuery(destination, query)
   );
   destinationList.replaceChildren();
 
@@ -126,7 +207,10 @@ function renderDestinations() {
     selection.textContent = destination.id === currentDestinationId
       ? text("selected")
       : text("choose");
-    content.append(japaneseName, englishName, selection);
+    const photoNote = document.createElement("span");
+    photoNote.className = "destination-photo-note";
+    photoNote.textContent = text("photoComingSoon");
+    content.append(japaneseName, englishName, photoNote, selection);
     card.append(art, content);
     destinationList.append(card);
   }
@@ -177,21 +261,22 @@ function populateBoardingStops(selectedStopId = "") {
       updateActionState();
     });
 
-    const icon = document.createElement("span");
-    icon.className = "stop-icon";
-    icon.setAttribute("aria-hidden", "true");
-    icon.textContent = "⌖";
+    // 停留所の実写真を用意するまでは、写真予定を示すプレースホルダーを表示します。
+    const thumbnail = document.createElement("span");
+    thumbnail.className = "stop-thumbnail";
+    thumbnail.setAttribute("aria-hidden", "true");
+    const photoNote = document.createElement("span");
+    photoNote.textContent = text("photoComingSoon");
+    thumbnail.append(photoNote);
     const copy = document.createElement("span");
     copy.className = "stop-copy";
-    const englishName = document.createElement("strong");
-    englishName.textContent = stop.nameEn || stop.nameJa;
-    const japaneseName = document.createElement("small");
-    japaneseName.textContent = stop.nameJa;
+    const romanizedName = document.createElement("strong");
+    romanizedName.textContent = getRomanizedStopName(stop);
     const radio = document.createElement("span");
     radio.className = "radio-mark";
     radio.setAttribute("aria-hidden", "true");
-    copy.append(englishName, japaneseName);
-    option.append(icon, copy, radio);
+    copy.append(romanizedName);
+    option.append(thumbnail, copy, radio);
     boardingStopList.append(option);
   }
 
@@ -218,7 +303,19 @@ function renderGuide() {
     return;
   }
 
-  const { destination, route, headsignJa, boardingStop, alightingStop } = currentGuide;
+  const {
+    destination,
+    route,
+    headsigns,
+    headsignJa,
+    boardingStop,
+    alightingStop,
+    estimatedRideMinutes
+  } = currentGuide;
+  // 停留所を切り替えたとき、前の停留所名に関する再生結果を残さないようにします。
+  speechStatus.textContent = supportsSpeechSynthesis()
+    ? ""
+    : text("speechNotSupported");
   document.querySelector("#boarding-destination-name").textContent =
     currentLanguage === "en" ? destination.nameEn : destination.nameJa;
   const boardingArt = document.querySelector("#boarding-destination-art");
@@ -227,7 +324,21 @@ function renderGuide() {
     destinationArt[destination.id] ?? "📍";
   document.querySelector("#route-number").textContent = route.routeShortName;
   document.querySelector("#bus-headsign").textContent = headsignJa;
-  document.querySelector("#bus-headsign-translation").textContent = text("japaneseDisplay");
+  // 複数の適合する便が別の行き先表示を使う場合は、追加候補も一覧で確認できます。
+  const additionalHeadsigns = document.querySelector("#additional-headsigns");
+  additionalHeadsigns.replaceChildren();
+  for (const headsign of headsigns.slice(1)) {
+    const item = document.createElement("li");
+    item.textContent = headsign.headsignJa;
+    additionalHeadsigns.append(item);
+  }
+  additionalHeadsigns.hidden = headsigns.length <= 1;
+  // 時刻表に所要時間がない場合は推測せず、未掲載であることを画面に明示します。
+  const formattedRideMinutes = Number.isFinite(estimatedRideMinutes)
+    ? text("approximateMinutes", { minutes: estimatedRideMinutes })
+    : text("rideTimeUnavailable");
+  document.querySelector("#check-ride-minutes").textContent = formattedRideMinutes;
+  document.querySelector("#arrival-estimate").textContent = formattedRideMinutes;
   document.querySelector("#check-boarding-stop").textContent = displayStopName(boardingStop);
   document.querySelector("#check-boarding-stop-en").textContent =
     currentLanguage === "en" ? boardingStop.nameJa : boardingStop.nameEn || "";
@@ -323,16 +434,22 @@ function updateActionState() {
 
 // 画面表示、進捗、次の操作ボタンを現在のステップに合わせて更新します。
 function renderCurrentScreen() {
-  const isLandingScreen = currentScreen === "welcome" || currentScreen === "home";
+  const isWelcomeScreen = currentScreen === "welcome";
   page.classList.toggle("is-welcome", currentScreen === "welcome");
   page.classList.toggle("is-home", currentScreen === "home");
   page.classList.toggle("is-aboard", currentScreen === "aboard");
   page.classList.toggle("is-complete", currentScreen === "complete");
-  homeBranding.hidden = !isLandingScreen;
-  flowHeader.hidden = isLandingScreen;
+  homeBranding.hidden = !isWelcomeScreen;
+  flowHeader.hidden = isWelcomeScreen;
   welcomeActionButton.hidden = currentScreen !== "welcome";
   homeActionButton.hidden = currentScreen !== "home";
-  flowActionButton.hidden = isLandingScreen;
+  flowActionButton.hidden = isWelcomeScreen || currentScreen === "home";
+  // 目的地画面ではホームアイコンを表示し、それ以降では前画面へ戻る矢印を表示します。
+  backButton.textContent = currentScreen === "home" ? "⌂" : "‹";
+  backButton.setAttribute(
+    "aria-label",
+    text(currentScreen === "home" ? "returnHome" : "goBack")
+  );
 
   for (const screenName of screenNames) {
     document.querySelector(`#screen-${screenName}`).hidden = screenName !== currentScreen;
@@ -341,13 +458,17 @@ function renderCurrentScreen() {
   if (currentScreen === "home") {
     document.querySelector("#home-note").textContent =
       text(busData ? "homeReady" : "homeNote");
-  } else if (!isLandingScreen) {
+  }
+
+  if (!isWelcomeScreen) {
     const step = stepByScreen[currentScreen];
     document.querySelector("#step-count").textContent = `${step}/5`;
     document.querySelectorAll("[data-progress-bar]").forEach((bar) => {
       bar.classList.toggle("is-complete", Number(bar.dataset.progressBar) <= step);
     });
-    flowActionLabel.textContent = text(actionLabels[currentScreen]);
+    if (currentScreen !== "home") {
+      flowActionLabel.textContent = text(actionLabels[currentScreen]);
+    }
     if (currentGuide) {
       renderGuide();
     }
@@ -372,7 +493,8 @@ function renderStatusMessage() {
     "destinationRouteMissing",
     "destinationNotVerified",
     "boardingStopNotVerified",
-    "invalidStopOrder"
+    "invalidStopOrder",
+    "tripHeadsignMissing"
   ];
   const errorCode = knownErrorCodes.includes(currentError.code)
     ? currentError.code
@@ -394,6 +516,11 @@ function showError(error, includeLocalServerHint = false) {
 function setScreen(screenName, moveFocus = true) {
   if (!screenNames.includes(screenName)) {
     throw new Error(`画面が見つかりません: ${screenName}`);
+  }
+
+  // 降車画面を離れたら、読み上げが画面外で続かないよう音声キューを停止します。
+  if (currentScreen === "aboard" && screenName !== "aboard" && supportsSpeechSynthesis()) {
+    window.speechSynthesis.cancel();
   }
 
   currentScreen = screenName;
@@ -439,6 +566,12 @@ function openBusCheck() {
 
 // 現在の案内ステップに応じて、前の画面へ戻ります。
 function goBack() {
+  // 目的地選択画面のヘッダー操作は、最初の説明ホームへ戻します。
+  if (currentScreen === "home") {
+    setScreen("welcome");
+    return;
+  }
+
   const previousScreen = {
     boarding: "home",
     check: "boarding",
@@ -494,8 +627,9 @@ flowActionButton.addEventListener("click", () => {
     setScreen("welcome");
   }
 });
-document.querySelector("#back-button").addEventListener("click", goBack);
+backButton.addEventListener("click", goBack);
 busMatchCheckbox.addEventListener("change", updateActionState);
+speakAlightingButton.addEventListener("click", readAlightingStop);
 
 // アプリ起動時に、目的地と路線のデータを読み込みます。
 initialize();

@@ -141,6 +141,36 @@ function findEnglishTranslation(translations, tableName, fieldName, recordId) {
   )?.translation ?? "";
 }
 
+// GTFSの英語訳に併記された説明語を除き、日本語の読みを表すローマ字部分を取り出します。
+function getRomanizedName(englishTranslation) {
+  return englishTranslation.split(/\s+\(/, 1)[0].trim();
+}
+
+// GTFSの時刻（24時を超える表記を含む）を、深夜からの分数へ変換します。
+function getMinutesFromGtfsTime(time) {
+  const match = /^(\d{1,2}):(\d{2}):(\d{2})$/.exec(time);
+  if (!match) {
+    return null;
+  }
+
+  const [, hours, minutes, seconds] = match;
+  return Number(hours) * 60 + Number(minutes) + Number(seconds) / 60;
+}
+
+// 便ごとの所要時間の中央値を返し、外れた時刻の影響を抑えます。
+function getMedian(values) {
+  if (values.length === 0) {
+    return null;
+  }
+
+  const sortedValues = [...values].sort((first, second) => first - second);
+  const middleIndex = Math.floor(sortedValues.length / 2);
+  const median = sortedValues.length % 2 === 0
+    ? (sortedValues[middleIndex - 1] + sortedValues[middleIndex]) / 2
+    : sortedValues[middleIndex];
+  return Math.round(median);
+}
+
 async function main() {
   // 参照用GTFS表と手動登録した目的地対応表をまとめて読み込みます。
   // Promise.allを使い、互いに依存しないファイルを並行して取得します。
@@ -257,7 +287,6 @@ async function main() {
       // 目的地ごとに、検証対象となる乗車停留所と行き先表示を決めます。
       const boardingStopStats = new Map();
       const wantedBoardingStopIds = new Set(destination.boardingStopIds);
-      const expectedHeadsign = destination.headsignJa;
       const compatibleTrips = new Map();
 
       // stop_times全件を配列にせず、対象系統・行き先表示の便だけを順番に読み込みます。
@@ -286,15 +315,17 @@ async function main() {
           headers.map((header, index) => [header, values[index] ?? ""])
         );
         const trip = tripById.get(record.trip_id);
-        // 乗る方向の便だけを対象にし、便に含まれる全停留所を保持します。
-        if (!trip || trip.trip_headsign !== expectedHeadsign) {
+        // 便の終点表示を先に固定せず、乗車地点と降車地点を順に通る便を対象にします。
+        if (!trip) {
           continue;
         }
 
         const tripStops = compatibleTrips.get(record.trip_id) ?? [];
         tripStops.push({
           stopId: record.stop_id,
-          stopSequence: Number(record.stop_sequence)
+          stopSequence: Number(record.stop_sequence),
+          arrivalTime: record.arrival_time,
+          departureTime: record.departure_time
         });
         compatibleTrips.set(record.trip_id, tripStops);
       }
@@ -324,13 +355,29 @@ async function main() {
             stopSequence: boardingSequence,
             alightingStopSequence: alightingSequence,
             itineraryStopIds: null,
-            itineraryStops: null
+            itineraryStops: null,
+            headsignCounts: new Map(),
+            rideMinutes: []
           };
 
           // 乗車停留所から降車停留所までの順序どおりの経路を作ります。
           const itinerary = tripStops.filter((stop) =>
             stop.stopSequence >= boardingSequence
             && stop.stopSequence <= alightingSequence
+          );
+          const boardingTime = getMinutesFromGtfsTime(
+            tripStops.find((stop) => stop.stopSequence === boardingSequence)?.departureTime ?? ""
+          );
+          const alightingTime = getMinutesFromGtfsTime(
+            tripStops.find((stop) => stop.stopSequence === alightingSequence)?.arrivalTime ?? ""
+          );
+          if (boardingTime !== null && alightingTime !== null && alightingTime > boardingTime) {
+            stats.rideMinutes.push(alightingTime - boardingTime);
+          }
+          const headsign = tripById.get(tripId).trip_headsign.normalize("NFKC");
+          stats.headsignCounts.set(
+            headsign,
+            (stats.headsignCounts.get(headsign) ?? 0) + 1
           );
           const itineraryStopIds = itinerary.map((stop) => stop.stopId);
           if (stats.itineraryStopIds
@@ -360,7 +407,13 @@ async function main() {
                   "stops",
                   "stop_name",
                   stop.stopId
-                )
+                ),
+                nameRomanized: getRomanizedName(findEnglishTranslation(
+                  translations,
+                  "stops",
+                  "stop_name",
+                  stop.stopId
+                ))
               };
             });
           }
@@ -388,32 +441,26 @@ async function main() {
           stopId,
           nameJa: stop.stop_name,
           nameEn: findEnglishTranslation(translations, "stops", "stop_name", stopId),
+          nameRomanized: getRomanizedName(
+            findEnglishTranslation(translations, "stops", "stop_name", stopId)
+          ),
           stopSequence: stats.stopSequence,
           alightingStopSequence: stats.alightingStopSequence,
           itineraryStops: stats.itineraryStops,
+          headsigns: [...stats.headsignCounts.entries()]
+            .map(([headsignJa, tripCount]) => ({ headsignJa, tripCount }))
+            .sort((first, second) => second.tripCount - first.tripCount),
+          estimatedRideMinutes: getMedian(stats.rideMinutes),
+          scheduledTripCount: stats.rideMinutes.length,
           orderedTripCount: stats.orderedTripCount,
           activeTripCountOnFeedStart: stats.activeTripCount
         };
       });
 
-      const targetTrip = trips.find((trip) =>
-        trip.route_id === routeId && trip.trip_headsign === expectedHeadsign
-      );
-      if (!targetTrip) {
-        throw new Error(`行き先表示「${expectedHeadsign}」の便が見つかりません。`);
-      }
-
-      // ブラウザー側で表示する目的地と、停留所順序・カレンダーの検証結果をまとめます。
+      // GTFSで見つかった行き先表示と、停留所順序・所要時間の検証結果をまとめます。
       routeOutput.destinations.push({
         destinationId: destination.id,
         alightingStopId: destination.alightingStopId,
-        headsignJa: expectedHeadsign,
-        headsignEn: findEnglishTranslation(
-          translations,
-          "trips",
-          "trip_headsign",
-          targetTrip.trip_id
-        ),
         alightingStop: {
           nameJa: alightingStop.stop_name,
           nameEn: findEnglishTranslation(

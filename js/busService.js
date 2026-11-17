@@ -101,12 +101,22 @@ export function getBusGuide(data, destinationId, boardingStopId) {
     throw createServiceError("invalidStopOrder");
   }
 
+  // 選択された停留所から降車停留所へ順に向かう便だけの行き先表示を返します。
+  const headsigns = [...(boardingStop.headsigns ?? [])]
+    .filter((item) => typeof item.headsignJa === "string" && item.headsignJa.length > 0)
+    .sort((first, second) => second.tripCount - first.tripCount);
+  if (headsigns.length === 0) {
+    throw createServiceError("tripHeadsignMissing");
+  }
+
   return {
     route,
     destination,
-    headsignJa: routeDestination.headsignJa,
+    headsigns,
+    headsignJa: headsigns[0].headsignJa,
     boardingStop,
     alightingStop: routeDestination.alightingStop,
+    estimatedRideMinutes: boardingStop.estimatedRideMinutes,
     fare: route.fare
   };
 }
