@@ -17,6 +17,8 @@ const homeActionButton = document.querySelector("#home-action-button");
 const flowActionButton = document.querySelector("#flow-action-button");
 const flowActionLabel = document.querySelector("#flow-action-label");
 const busMatchCheckbox = document.querySelector("#bus-match-checkbox");
+const speakAlightingButton = document.querySelector("#speak-alighting-button");
+const speechStatus = document.querySelector("#speech-status");
 const screenNames = ["welcome", "home", "boarding", "check", "aboard", "complete"];
 const stepByScreen = { home: 1, boarding: 2, check: 3, aboard: 4, complete: 5 };
 const destinationArt = {
@@ -69,6 +71,7 @@ function updateStaticText(language) {
   renderDestinations();
   renderStatusMessage();
   renderCurrentScreen();
+  updateSpeechSupportStatus();
 }
 
 // 英語表示ではGTFSの英訳から説明語を除いたローマ字を優先して停留所名を表示します。
@@ -81,6 +84,61 @@ function getRomanizedStopName(stop) {
 // 既存の確認・完了画面では、日本語名とGTFS英訳の表示を従来どおり維持します。
 function displayStopName(stop) {
   return currentLanguage === "en" && stop.nameEn ? stop.nameEn : stop.nameJa;
+}
+
+// 音声合成と日本語用の発話オブジェクトが両方利用できるブラウザーか確認します。
+function supportsSpeechSynthesis() {
+  return typeof window.speechSynthesis?.speak === "function"
+    && typeof window.SpeechSynthesisUtterance === "function";
+}
+
+// 非対応環境ではボタンを無効にし、理由を読み上げ可能なステータス欄へ表示します。
+function updateSpeechSupportStatus() {
+  const isSupported = supportsSpeechSynthesis();
+  speakAlightingButton.disabled = !isSupported;
+  if (!isSupported) {
+    speechStatus.textContent = text("speechNotSupported");
+  }
+}
+
+// 選択中の降車停留所の日本語名を、利用者のクリックを受けて一度だけ読み上げます。
+function readAlightingStop() {
+  if (!supportsSpeechSynthesis()) {
+    updateSpeechSupportStatus();
+    return;
+  }
+
+  if (!currentGuide?.alightingStop?.nameJa) {
+    speechStatus.textContent = text("speechStopUnavailable");
+    return;
+  }
+
+  // 連続操作で発話が重ならないよう、前の読み上げを止めてから新しい発話を開始します。
+  window.speechSynthesis.cancel();
+  const utterance = new window.SpeechSynthesisUtterance(currentGuide.alightingStop.nameJa);
+  utterance.lang = "ja-JP";
+  utterance.rate = 0.9;
+  utterance.onstart = () => {
+    speechStatus.textContent = text("speechPlaying", {
+      stopName: currentGuide.alightingStop.nameJa
+    });
+  };
+  utterance.onend = () => {
+    speechStatus.textContent = text("speechFinished", {
+      stopName: currentGuide.alightingStop.nameJa
+    });
+  };
+  utterance.onerror = (event) => {
+    // 利用者の再操作や画面移動による停止は通常操作なので、再生エラーとして扱いません。
+    if (event.error === "canceled" || event.error === "interrupted") {
+      return;
+    }
+
+    speechStatus.textContent = text("speechError", {
+      error: event.error || "unknown"
+    });
+  };
+  window.speechSynthesis.speak(utterance);
 }
 
 // 目的地名だけでなく、その目的地に向かえる乗車停留所名も検索対象にします。
@@ -254,6 +312,10 @@ function renderGuide() {
     alightingStop,
     estimatedRideMinutes
   } = currentGuide;
+  // 停留所を切り替えたとき、前の停留所名に関する再生結果を残さないようにします。
+  speechStatus.textContent = supportsSpeechSynthesis()
+    ? ""
+    : text("speechNotSupported");
   document.querySelector("#boarding-destination-name").textContent =
     currentLanguage === "en" ? destination.nameEn : destination.nameJa;
   const boardingArt = document.querySelector("#boarding-destination-art");
@@ -456,6 +518,11 @@ function setScreen(screenName, moveFocus = true) {
     throw new Error(`画面が見つかりません: ${screenName}`);
   }
 
+  // 降車画面を離れたら、読み上げが画面外で続かないよう音声キューを停止します。
+  if (currentScreen === "aboard" && screenName !== "aboard" && supportsSpeechSynthesis()) {
+    window.speechSynthesis.cancel();
+  }
+
   currentScreen = screenName;
   renderCurrentScreen();
   if (moveFocus) {
@@ -562,6 +629,7 @@ flowActionButton.addEventListener("click", () => {
 });
 backButton.addEventListener("click", goBack);
 busMatchCheckbox.addEventListener("change", updateActionState);
+speakAlightingButton.addEventListener("click", readAlightingStop);
 
 // アプリ起動時に、目的地と路線のデータを読み込みます。
 initialize();

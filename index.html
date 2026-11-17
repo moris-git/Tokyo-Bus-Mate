@@ -162,6 +162,12 @@
           <p class="eyebrow centered" data-i18n="yourDestinationStop">降車する停留所</p>
           <h1 id="aboard-heading" class="alighting-japanese screen-heading" tabindex="-1"></h1>
           <p id="alighting-name-romaji" class="alighting-romaji" lang="en"></p>
+          <!-- 利用者が操作したときだけ、停留所の日本語名をWeb Speech APIで読み上げます。 -->
+          <button id="speak-alighting-button" class="speech-button" type="button" aria-describedby="speech-status">
+            <span aria-hidden="true">🔊</span>
+            <span data-i18n="speakAlightingStop">停留所名を音声で聞く</span>
+          </button>
+          <p id="speech-status" class="speech-status" role="status" aria-live="polite"></p>
           <div class="soundwave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
           <p class="arrival-estimate"><span data-i18n="arrivalEstimateLabel">降車停留所までの目安</span><strong id="arrival-estimate"></strong><small data-i18n="arrivalEstimateNote">GTFS時刻表上の所要時間です。実際の到着時刻や遅延は反映されません。</small></p>
           <aside class="listen-note"><span class="info-icon">i</span><p><strong data-i18n="listenForName">この停留所名を目印に</strong><small data-i18n="alightingHelp">車内表示やアナウンスと照らし合わせてください。</small></p></aside>

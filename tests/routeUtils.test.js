@@ -159,6 +159,19 @@ test("画面文言を日本語と英語で取得できる", () => {
   assert.equal(getTranslation("en", "guideHeading"), "Find Your Bus");
   assert.equal(getTranslation("ja", "approximateMinutes", { minutes: 11 }), "約11分");
   assert.equal(getTranslation("en", "approximateMinutes", { minutes: 11 }), "About 11 min");
+  assert.equal(getTranslation("ja", "speakAlightingStop"), "停留所名を音声で聞く");
+  assert.equal(
+    getTranslation("ja", "speechStopUnavailable"),
+    "読み上げる降車停留所が選択されていません。"
+  );
+  assert.equal(
+    getTranslation("ja", "speechPlaying", { stopName: "上野公園山下" }),
+    "「上野公園山下」を読み上げています。"
+  );
+  assert.equal(
+    getTranslation("en", "speechError", { error: "audio-busy" }),
+    "Could not play speech (audio-busy). Check your browser's audio settings."
+  );
   assert.equal(
     getTranslation("ja", "routeMissing", { routeId: "070" }),
     "系統 070 のデータがありません。"
@@ -191,6 +204,8 @@ test("説明用ホームと5段階の案内画面はHTMLに定義する", () => 
   assert.match(htmlFile, /id="flow-progress"/);
   assert.match(htmlFile, /id="additional-headsigns"/);
   assert.match(htmlFile, /id="arrival-estimate"/);
+  assert.match(htmlFile, /id="speak-alighting-button"/);
+  assert.match(htmlFile, /id="speech-status"[^>]*aria-live="polite"/);
   assert.match(htmlFile, /id="destination-list"/);
   assert.match(htmlFile, /id="bus-match-checkbox"/);
   assert.match(htmlFile, /id="welcome-action-button"/);
