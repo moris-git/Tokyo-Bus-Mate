@@ -74,21 +74,21 @@ Update: READMEの文章を変更
 GitHub Pagesで公開できる構成を維持し、相対パスを使ってプロジェクト用URL配下でも動作するようにします。
 秘密情報や公開許可のない写真・データを公開対象へ含めないでください。
 
-### ローカル環境での画面テスト
+### クローンして開発・画面を確認する
 
-Git、Visual Studio Code、Live Server拡張機能を使って、ローカルでアプリを起動します。
-この手順では、開発作業用の `dev` ブランチをチェックアウトします。
+開発時はリポジトリをGitでクローンし、クローンしたローカルフォルダー内で変更・修正します。
+公開用の `main` ではなく、開発作業用の `dev` ブランチで作業してください。
 
 1. リポジトリをクローンし、開発ブランチへ切り替えます。
 
    ```text
    git clone https://github.com/moris-git/Tokyo-Bus-Mate.git
    cd Tokyo-Bus-Mate
-   git switch dev
    ```
 
-2. Visual Studio Codeで、クローンした `Tokyo-Bus-Mate` フォルダーを開きます。
-3. 拡張機能ビューで **Live Server**（Ritwick Dey）を検索してインストールします。
+2. Visual Studio Codeで、クローンした `Tokyo-Bus-Mate` フォルダーを開き、その中のファイルを編集します。
+   JavaScriptを変更した場合は、フォルダー内で `npm test` を実行します。
+3. 画面を確認するときは、拡張機能ビューで **Live Server**（Ritwick Dey）を検索してインストールします。
 4. エクスプローラーから `index.html` を右クリックし、**Open with Live Server** を選びます。
    ブラウザーでローカルサーバー上のアプリが開きます。`index.html` を直接ブラウザーで開かず、
    Live Server経由で起動してください。
