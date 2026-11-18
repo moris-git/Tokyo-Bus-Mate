@@ -99,6 +99,9 @@ function renderDestinations() {
       }`
     );
     card.addEventListener("click", () => {
+      if (currentDestinationId !== destination.id) {
+        currentBoardingStopId = "";
+      }
       currentDestinationId = destination.id;
       currentGuide = null;
       renderDestinations();
@@ -149,7 +152,7 @@ function getRouteDestination(destination) {
   return { route, routeDestination };
 }
 
-// 選択目的地の停留所候補を表示し、前回選んだ停留所があれば維持します。
+// 選択目的地の停留所候補を表示し、有効な選択があれば維持します。
 function populateBoardingStops(selectedStopId = "") {
   const destination = getSelectedDestination();
   const { routeDestination } = getRouteDestination(destination);
@@ -415,7 +418,6 @@ function openBoardingScreen() {
       throw error;
     }
     currentError = null;
-    currentBoardingStopId = routeDestination.boardingStops[0]?.stopId ?? "";
     populateBoardingStops(currentBoardingStopId);
     setScreen("boarding");
   } catch (error) {
@@ -454,7 +456,6 @@ function goBack() {
 async function initialize() {
   try {
     busData = await loadBusData();
-    currentDestinationId = busData.destinations[0]?.id ?? "";
     renderDestinations();
     renderCurrentScreen();
   } catch (error) {
