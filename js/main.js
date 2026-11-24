@@ -363,9 +363,7 @@ function renderGuide() {
   const fare = currentGuide.fare.price.toLocaleString(
     currentLanguage === "ja" ? "ja-JP" : "en-US"
   );
-  document.querySelector("#fare-amount").textContent = currentLanguage === "ja"
-    ? `${fare}円`
-    : `${currentGuide.fare.currency} ${fare}`;
+  document.querySelector("#fare-amount").textContent = `￥${fare}`;
   document.querySelector("#fare-note").textContent =
     currentGuide.fare.icPrice === null
       ? text("fareNotSpecified")
