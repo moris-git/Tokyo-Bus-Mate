@@ -878,29 +878,6 @@ button {
   font-size: 0.8rem;
 }
 
-.trip-endpoints {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr);
-  align-items: center;
-  gap: 8px;
-  margin-top: 14px;
-}
-
-.trip-endpoints strong,
-.trip-endpoints span:not(.endpoint-arrow) {
-  display: block;
-}
-
-.trip-endpoints strong {
-  font-size: 0.86rem;
-}
-
-.trip-endpoints span:not(.endpoint-arrow) {
-  margin-top: 4px;
-  color: var(--color-muted);
-  font-size: 0.78rem;
-}
-
 .route-details {
   margin-top: 14px;
   border-top: 1px solid var(--color-border);
@@ -908,10 +885,10 @@ button {
   font-size: 0.86rem;
 }
 
-.route-details summary {
-  padding: 12px 0 5px;
-  color: var(--color-primary);
-  cursor: pointer;
+.route-list-heading {
+  margin: 0;
+  padding: 12px 0 8px;
+  font-size: 0.92rem;
 }
 
 .route-stop-list {
@@ -920,22 +897,85 @@ button {
   list-style: none;
 }
 
-.route-stop-list li {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 9px 0;
-  border-bottom: 1px solid #e8edf2;
+.route-stop {
+  position: relative;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 6px 0;
 }
 
-.route-stop-list li strong {
-  color: var(--color-primary);
-  font-size: 0.82rem;
+.route-stop::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 12px;
+  width: 2px;
+  background: #dfe5e1;
+  content: "";
 }
 
-.endpoint-arrow {
-  color: var(--color-primary);
-  text-align: center;
+.route-stop:first-child::before {
+  top: 50%;
+}
+
+.route-stop:last-child::before {
+  bottom: 50%;
+}
+
+.route-stop-marker {
+  z-index: 1;
+  width: 20px;
+  height: 20px;
+  margin-left: 3px;
+  border: 2px solid #dfe5e1;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.route-stop.is-boarding .route-stop-marker {
+  border-color: #17364f;
+  background: #17364f;
+}
+
+.route-stop.is-alighting .route-stop-marker {
+  border-color: #d32f2f;
+  background: #d32f2f;
+}
+
+.route-stop-copy {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  padding: 4px 0;
+}
+
+.route-stop-name {
+  font-size: 0.98rem;
+  font-weight: 650;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.route-stop-translation {
+  color: var(--color-muted);
+  font-size: 0.8rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.route-stop-status {
+  font-size: 0.76rem;
+}
+
+.route-stop.is-boarding .route-stop-status {
+  color: #17364f;
+}
+
+.route-stop.is-alighting .route-stop-status {
+  color: #d32f2f;
 }
 
 /* 降車停留所を中央に示し、アナウンスや注意事項を添えます。 */

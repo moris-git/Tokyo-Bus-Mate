@@ -220,8 +220,11 @@ test("説明用ホームと5段階の案内画面はHTMLに定義する", () => 
   const aboardScreenIndex = htmlFile.indexOf('id="screen-aboard"');
   const arrivalEstimateIndex = htmlFile.indexOf('id="arrival-estimate"');
   const completeScreenIndex = htmlFile.indexOf('id="screen-complete"');
+  const routeStopListIndex = htmlFile.indexOf('id="route-stop-list"');
   assert.ok(arrivalTimeIndex > checkScreenIndex && arrivalTimeIndex < aboardScreenIndex);
   assert.ok(arrivalEstimateIndex > aboardScreenIndex && arrivalEstimateIndex < completeScreenIndex);
+  assert.ok(routeStopListIndex > checkScreenIndex && routeStopListIndex < aboardScreenIndex);
+  assert.doesNotMatch(htmlFile, /<details class="route-details"|class="trip-endpoints"/);
   assert.doesNotMatch(htmlFile, /id="check-ride-minutes"/);
   assert.match(htmlFile, /id="speak-alighting-button"/);
   assert.match(htmlFile, /id="speech-status"[^>]*aria-live="polite"/);

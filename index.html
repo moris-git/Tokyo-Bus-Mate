@@ -143,15 +143,10 @@
           </label>
           <!-- GTFSの所要時間を3/5画面を開いた時刻に加えた到着予定時刻を表示します。 -->
           <p class="arrival-time"><span data-i18n="arrivalTimeLabel">到着予定時刻</span><strong id="arrival-time"></strong><small data-i18n="arrivalTimeNote">GTFS時刻表の所要時間を画面表示時刻に加えた目安です。実際の到着時刻や遅延は反映されません。</small></p>
-          <div class="trip-endpoints">
-            <div><p class="small-label" data-i18n="boardAt">乗車</p><strong id="check-boarding-stop"></strong><span id="check-boarding-stop-en"></span></div>
-            <span class="endpoint-arrow" aria-hidden="true">→</span>
-            <div><p class="small-label" data-i18n="getOffAt">降車</p><strong id="check-alighting-stop"></strong><span id="check-alighting-stop-en"></span></div>
-          </div>
-          <details class="route-details">
-            <summary data-i18n="routeStopsHeading">乗車停留所から降車停留所まで</summary>
+          <section class="route-details" aria-labelledby="route-stops-heading">
+            <h2 id="route-stops-heading" class="route-list-heading" data-i18n="routeStopsHeading">乗車停留所から降車停留所まで</h2>
             <ol id="route-stop-list" class="route-stop-list"></ol>
-          </details>
+          </section>
         </section>
 
         <!-- バスに乗った後、降車停留所名と運賃を確認する画面です。 -->

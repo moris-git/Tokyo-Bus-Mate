@@ -351,13 +351,6 @@ function renderGuide() {
       hourCycle: "h23"
     }).format(estimatedArrivalTime)
     : text("arrivalTimeUnavailable");
-  document.querySelector("#check-boarding-stop").textContent = displayStopName(boardingStop);
-  document.querySelector("#check-boarding-stop-en").textContent =
-    currentLanguage === "en" ? boardingStop.nameJa : boardingStop.nameEn || "";
-  document.querySelector("#check-alighting-stop").textContent = displayStopName(alightingStop);
-  document.querySelector("#check-alighting-stop-en").textContent =
-    currentLanguage === "en" ? alightingStop.nameJa : alightingStop.nameEn || "";
-
   const art = document.querySelector("#aboard-destination-art");
   art.className = `destination-photo destination-art--${destination.id}`;
   art.replaceChildren();
@@ -414,17 +407,42 @@ function renderRouteStops() {
   routeStops.replaceChildren();
   currentGuide.boardingStop.itineraryStops.forEach((stop, index, stops) => {
     const item = document.createElement("li");
-    item.className = "route-stop";
+    const isBoardingStop = index === 0;
+    const isAlightingStop = index === stops.length - 1;
+    item.className = [
+      "route-stop",
+      isBoardingStop ? "is-boarding" : "",
+      isAlightingStop ? "is-alighting" : ""
+    ].filter(Boolean).join(" ");
+    const marker = document.createElement("span");
+    marker.className = "route-stop-marker";
+    marker.setAttribute("aria-hidden", "true");
+    const copy = document.createElement("span");
+    copy.className = "route-stop-copy";
     const name = document.createElement("span");
+    name.className = "route-stop-name";
     name.textContent = displayStopName(stop);
-    item.append(name);
+    copy.append(name);
 
-    if (index === 0 || index === stops.length - 1) {
-      const badge = document.createElement("strong");
-      badge.textContent = text(index === 0 ? "boardingStop" : "getOffAt");
-      item.append(badge);
+    // 日本語表示には英語名、英語表示には日本語名を添えて停留所を見分けやすくします。
+    const secondaryName = currentLanguage === "en"
+      ? stop.nameJa
+      : stop.nameEn || getRomanizedStopName(stop);
+    if (secondaryName && secondaryName !== name.textContent) {
+      const translation = document.createElement("span");
+      translation.className = "route-stop-translation";
+      translation.textContent = secondaryName;
+      copy.append(translation);
     }
 
+    if (isBoardingStop || isAlightingStop) {
+      const status = document.createElement("strong");
+      status.className = "route-stop-status";
+      status.textContent = text(isBoardingStop ? "boardAt" : "getOffAt");
+      copy.append(status);
+    }
+
+    item.append(marker, copy);
     routeStops.append(item);
   });
 }
