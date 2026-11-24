@@ -165,13 +165,11 @@
           <p class="eyebrow centered" data-i18n="yourDestinationStop">降車する停留所</p>
           <h1 id="aboard-heading" class="alighting-japanese screen-heading" tabindex="-1"></h1>
           <p id="alighting-name-romaji" class="alighting-romaji" lang="en"></p>
-          <!-- 利用者が操作したときだけ、停留所の日本語名をWeb Speech APIで読み上げます。 -->
-          <button id="speak-alighting-button" class="speech-button" type="button" aria-describedby="speech-status">
-            <span aria-hidden="true">🔊</span>
-            <span data-i18n="speakAlightingStop">停留所名を音声で聞く</span>
-          </button>
+          <!-- 音声マークを操作したときだけ、停留所の日本語名を読み上げます。 -->
           <p id="speech-status" class="speech-status" role="status" aria-live="polite"></p>
-          <div class="soundwave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <button id="speak-alighting-soundwave" class="soundwave" type="button" aria-label="停留所名を音声で聞く" data-i18n-aria-label="speakAlightingStop" aria-describedby="speech-status">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </button>
           <p class="arrival-time"><span data-i18n="arrivalTimeLabel">到着予定時刻</span><strong id="aboard-arrival-time"></strong><small data-i18n="arrivalTimeNote">GTFS時刻表の所要時間を画面表示時刻に加えた目安です。実際の到着時刻や遅延は反映されません。</small></p>
           <aside class="listen-note"><span class="info-icon">i</span><p><strong data-i18n="listenForName">この停留所名を目印に</strong><small data-i18n="alightingHelp">車内表示やアナウンスと照らし合わせてください。</small></p></aside>
           <p class="privacy-note" data-i18n="privacyNotice">位置情報は追跡しません。降車前に表示とアナウンスをご確認ください。</p>

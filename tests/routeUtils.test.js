@@ -224,7 +224,8 @@ test("説明用ホームと5段階の案内画面はHTMLに定義する", () => 
   assert.ok(routeStopListIndex > checkScreenIndex && routeStopListIndex < aboardScreenIndex);
   assert.doesNotMatch(htmlFile, /<details class="route-details"|class="trip-endpoints"/);
   assert.doesNotMatch(htmlFile, /id="check-ride-minutes"/);
-  assert.match(htmlFile, /id="speak-alighting-button"/);
+  assert.doesNotMatch(htmlFile, /id="speak-alighting-button"/);
+  assert.match(htmlFile, /id="speak-alighting-soundwave"/);
   assert.match(htmlFile, /id="speech-status"[^>]*aria-live="polite"/);
   assert.match(htmlFile, /id="destination-list"/);
   assert.match(htmlFile, /id="bus-match-checkbox"/);

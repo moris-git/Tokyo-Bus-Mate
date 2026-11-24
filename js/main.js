@@ -17,7 +17,7 @@ const homeActionButton = document.querySelector("#home-action-button");
 const flowActionButton = document.querySelector("#flow-action-button");
 const flowActionLabel = document.querySelector("#flow-action-label");
 const busMatchCheckbox = document.querySelector("#bus-match-checkbox");
-const speakAlightingButton = document.querySelector("#speak-alighting-button");
+const speakAlightingSoundwave = document.querySelector("#speak-alighting-soundwave");
 const speechStatus = document.querySelector("#speech-status");
 const screenNames = ["welcome", "home", "boarding", "check", "aboard", "complete"];
 const stepByScreen = { home: 1, boarding: 2, check: 3, aboard: 4, complete: 5 };
@@ -96,7 +96,7 @@ function supportsSpeechSynthesis() {
 // 非対応環境ではボタンを無効にし、理由を読み上げ可能なステータス欄へ表示します。
 function updateSpeechSupportStatus() {
   const isSupported = supportsSpeechSynthesis();
-  speakAlightingButton.disabled = !isSupported;
+  speakAlightingSoundwave.disabled = !isSupported;
   if (!isSupported) {
     speechStatus.textContent = text("speechNotSupported");
   }
@@ -649,7 +649,7 @@ flowActionButton.addEventListener("click", () => {
 });
 backButton.addEventListener("click", goBack);
 busMatchCheckbox.addEventListener("change", updateActionState);
-speakAlightingButton.addEventListener("click", readAlightingStop);
+speakAlightingSoundwave.addEventListener("click", readAlightingStop);
 
 // アプリ起動時に、目的地と路線のデータを読み込みます。
 initialize();
