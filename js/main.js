@@ -17,7 +17,7 @@ const homeActionButton = document.querySelector("#home-action-button");
 const flowActionButton = document.querySelector("#flow-action-button");
 const flowActionLabel = document.querySelector("#flow-action-label");
 const busMatchCheckbox = document.querySelector("#bus-match-checkbox");
-const speakAlightingButton = document.querySelector("#speak-alighting-button");
+const speakAlightingSoundwave = document.querySelector("#speak-alighting-soundwave");
 const speechStatus = document.querySelector("#speech-status");
 const screenNames = ["welcome", "home", "boarding", "check", "aboard", "complete"];
 const stepByScreen = { home: 1, boarding: 2, check: 3, aboard: 4, complete: 5 };
@@ -96,7 +96,7 @@ function supportsSpeechSynthesis() {
 // 非対応環境ではボタンを無効にし、理由を読み上げ可能なステータス欄へ表示します。
 function updateSpeechSupportStatus() {
   const isSupported = supportsSpeechSynthesis();
-  speakAlightingButton.disabled = !isSupported;
+  speakAlightingSoundwave.disabled = !isSupported;
   if (!isSupported) {
     speechStatus.textContent = text("speechNotSupported");
   }
@@ -306,8 +306,7 @@ function renderGuide() {
     headsigns,
     headsignJa,
     boardingStop,
-    alightingStop,
-    estimatedRideMinutes
+    alightingStop
   } = currentGuide;
   // 停留所を切り替えたとき、前の停留所名に関する再生結果を残さないようにします。
   speechStatus.textContent = supportsSpeechSynthesis()
@@ -330,13 +329,8 @@ function renderGuide() {
     additionalHeadsigns.append(item);
   }
   additionalHeadsigns.hidden = headsigns.length <= 1;
-  // 時刻表に所要時間がない場合は推測せず、未掲載であることを画面に明示します。
-  const formattedRideMinutes = Number.isFinite(estimatedRideMinutes)
-    ? text("approximateMinutes", { minutes: estimatedRideMinutes })
-    : text("rideTimeUnavailable");
-  document.querySelector("#arrival-estimate").textContent = formattedRideMinutes;
-  // GTFS所要時間を加えた到着予定時刻を、日本時間で表示します。
-  document.querySelector("#arrival-time").textContent = estimatedArrivalTime
+  // 3/5と4/5に同じ到着予定時刻を表示します。
+  const formattedArrivalTime = estimatedArrivalTime
     ? new Intl.DateTimeFormat(currentLanguage === "ja" ? "ja-JP" : "en-GB", {
       timeZone: "Asia/Tokyo",
       hour: "2-digit",
@@ -344,6 +338,8 @@ function renderGuide() {
       hourCycle: "h23"
     }).format(estimatedArrivalTime)
     : text("arrivalTimeUnavailable");
+  document.querySelector("#arrival-time").textContent = formattedArrivalTime;
+  document.querySelector("#aboard-arrival-time").textContent = formattedArrivalTime;
   const art = document.querySelector("#aboard-destination-art");
   art.className = `destination-photo destination-art--${destination.id}`;
   art.replaceChildren();
@@ -363,9 +359,7 @@ function renderGuide() {
   const fare = currentGuide.fare.price.toLocaleString(
     currentLanguage === "ja" ? "ja-JP" : "en-US"
   );
-  document.querySelector("#fare-amount").textContent = currentLanguage === "ja"
-    ? `${fare}円`
-    : `${currentGuide.fare.currency} ${fare}`;
+  document.querySelector("#fare-amount").textContent = `￥${fare}`;
   document.querySelector("#fare-note").textContent =
     currentGuide.fare.icPrice === null
       ? text("fareNotSpecified")
@@ -655,7 +649,7 @@ flowActionButton.addEventListener("click", () => {
 });
 backButton.addEventListener("click", goBack);
 busMatchCheckbox.addEventListener("change", updateActionState);
-speakAlightingButton.addEventListener("click", readAlightingStop);
+speakAlightingSoundwave.addEventListener("click", readAlightingStop);
 
 // アプリ起動時に、目的地と路線のデータを読み込みます。
 initialize();

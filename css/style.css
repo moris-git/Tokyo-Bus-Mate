@@ -892,10 +892,9 @@ button {
   list-style: none;
 }
 
-/* 3/5画面の到着予定時刻と既存の所要時間表示をカードで示します。 */
+/* 3/5・4/5画面で共通の到着予定時刻をカードで示します。 */
 .ride-estimate,
-.arrival-time,
-.arrival-estimate {
+.arrival-time {
   display: grid;
   gap: 5px;
   margin: 14px 0;
@@ -907,28 +906,24 @@ button {
 }
 
 .ride-estimate span,
-.arrival-time span,
-.arrival-estimate span {
+.arrival-time span {
   font-size: 0.82rem;
   font-weight: 600;
 }
 
 .ride-estimate strong,
-.arrival-time strong,
-.arrival-estimate strong {
+.arrival-time strong {
   color: var(--color-primary);
   font-size: 1.15rem;
 }
 
-.arrival-time,
-.arrival-estimate {
+.arrival-time {
   width: 100%;
   margin: 0 0 16px;
   text-align: center;
 }
 
-.arrival-time small,
-.arrival-estimate small {
+.arrival-time small {
   color: var(--color-muted);
   font-size: 0.78rem;
   line-height: 1.5;
@@ -1169,34 +1164,6 @@ button {
   font-size: 1.15rem;
 }
 
-/* 利用者が停留所名の読み上げを開始し、対応状況や再生結果を確認する操作欄です。 */
-.speech-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  min-height: 46px;
-  margin: 4px 0 0;
-  padding: 9px 16px;
-  border: 1px solid var(--color-primary);
-  border-radius: 8px;
-  color: var(--color-primary);
-  background: #fff;
-  font-size: 0.92rem;
-  font-weight: 700;
-}
-
-.speech-button:hover:not(:disabled) {
-  background: var(--color-primary-light);
-}
-
-.speech-button:disabled {
-  border-color: var(--color-border);
-  color: var(--color-muted);
-  background: #f1f3f6;
-  cursor: not-allowed;
-}
-
 .speech-status {
   min-height: 1.4em;
   margin: 7px 0 10px;
@@ -1208,34 +1175,55 @@ button {
 .soundwave {
   display: flex;
   align-items: center;
-  gap: 3px;
-  height: 26px;
-  margin-bottom: 12px;
+  justify-content: center;
+  gap: 5px;
+  width: 76px;
+  height: 76px;
+  margin: 4px 0 16px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: inherit;
+  background: var(--color-primary);
+  box-shadow: 0 4px 10px rgba(23, 105, 170, 0.25);
+  cursor: pointer;
+  transition: background-color 120ms ease, transform 120ms ease;
+}
+
+.soundwave:hover {
+  background: #0e568f;
+  transform: scale(1.05);
+}
+
+.soundwave:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  transform: none;
 }
 
 .soundwave i {
-  width: 3px;
+  width: 4px;
   border-radius: 4px;
-  background: #75a9cf;
+  background: #fff;
 }
 
 .soundwave i:nth-child(1),
 .soundwave i:nth-child(7) {
-  height: 9px;
+  height: 14px;
 }
 
 .soundwave i:nth-child(2),
 .soundwave i:nth-child(6) {
-  height: 17px;
+  height: 26px;
 }
 
 .soundwave i:nth-child(3),
 .soundwave i:nth-child(5) {
-  height: 23px;
+  height: 38px;
 }
 
 .soundwave i:nth-child(4) {
-  height: 13px;
+  height: 20px;
 }
 
 .listen-note {
@@ -1284,7 +1272,7 @@ button {
   grid-template-columns: 1fr auto;
   align-items: baseline;
   width: 100%;
-  margin-top: auto;
+  margin: 0 0 18px;
   padding: 13px 14px;
   border: 1px solid var(--color-border);
   border-radius: 9px;
@@ -1296,7 +1284,7 @@ button {
 
 .fare-summary strong {
   color: #17243b;
-  font-size: 0.98rem;
+  font-size: 1.2rem;
 }
 
 .fare-summary small {

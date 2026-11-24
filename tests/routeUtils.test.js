@@ -169,8 +169,6 @@ test("画面文言を日本語と英語で取得できる", () => {
   assert.equal(getTranslation("en", "guideHeading"), "Find Your Bus");
   assert.equal(getTranslation("ja", "arrivalTimeLabel"), "到着予定時刻");
   assert.equal(getTranslation("en", "arrivalTimeLabel"), "Estimated arrival time");
-  assert.equal(getTranslation("ja", "approximateMinutes", { minutes: 11 }), "約11分");
-  assert.equal(getTranslation("en", "approximateMinutes", { minutes: 11 }), "About 11 min");
   assert.equal(getTranslation("ja", "speakAlightingStop"), "停留所名を音声で聞く");
   assert.equal(
     getTranslation("ja", "speechStopUnavailable"),
@@ -218,15 +216,20 @@ test("説明用ホームと5段階の案内画面はHTMLに定義する", () => 
   const arrivalTimeIndex = htmlFile.indexOf('id="arrival-time"');
   const checkScreenIndex = htmlFile.indexOf('id="screen-check"');
   const aboardScreenIndex = htmlFile.indexOf('id="screen-aboard"');
-  const arrivalEstimateIndex = htmlFile.indexOf('id="arrival-estimate"');
+  const aboardArrivalTimeIndex = htmlFile.indexOf('id="aboard-arrival-time"');
+  const listenNoteIndex = htmlFile.indexOf('class="listen-note"');
+  const aboardHeadingIndex = htmlFile.indexOf('id="aboard-heading"');
   const completeScreenIndex = htmlFile.indexOf('id="screen-complete"');
   const routeStopListIndex = htmlFile.indexOf('id="route-stop-list"');
   assert.ok(arrivalTimeIndex > checkScreenIndex && arrivalTimeIndex < aboardScreenIndex);
-  assert.ok(arrivalEstimateIndex > aboardScreenIndex && arrivalEstimateIndex < completeScreenIndex);
+  assert.ok(aboardArrivalTimeIndex > aboardScreenIndex && aboardArrivalTimeIndex < completeScreenIndex);
+  assert.ok(listenNoteIndex > htmlFile.indexOf('id="aboard-destination-art"'));
+  assert.ok(listenNoteIndex < aboardHeadingIndex);
   assert.ok(routeStopListIndex > checkScreenIndex && routeStopListIndex < aboardScreenIndex);
   assert.doesNotMatch(htmlFile, /<details class="route-details"|class="trip-endpoints"/);
   assert.doesNotMatch(htmlFile, /id="check-ride-minutes"/);
-  assert.match(htmlFile, /id="speak-alighting-button"/);
+  assert.doesNotMatch(htmlFile, /id="speak-alighting-button"/);
+  assert.match(htmlFile, /id="speak-alighting-soundwave"/);
   assert.match(htmlFile, /id="speech-status"[^>]*aria-live="polite"/);
   assert.match(htmlFile, /id="destination-list"/);
   assert.match(htmlFile, /id="bus-match-checkbox"/);
