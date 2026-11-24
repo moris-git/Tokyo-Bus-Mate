@@ -306,8 +306,7 @@ function renderGuide() {
     headsigns,
     headsignJa,
     boardingStop,
-    alightingStop,
-    estimatedRideMinutes
+    alightingStop
   } = currentGuide;
   // 停留所を切り替えたとき、前の停留所名に関する再生結果を残さないようにします。
   speechStatus.textContent = supportsSpeechSynthesis()
@@ -330,13 +329,8 @@ function renderGuide() {
     additionalHeadsigns.append(item);
   }
   additionalHeadsigns.hidden = headsigns.length <= 1;
-  // 時刻表に所要時間がない場合は推測せず、未掲載であることを画面に明示します。
-  const formattedRideMinutes = Number.isFinite(estimatedRideMinutes)
-    ? text("approximateMinutes", { minutes: estimatedRideMinutes })
-    : text("rideTimeUnavailable");
-  document.querySelector("#arrival-estimate").textContent = formattedRideMinutes;
-  // GTFS所要時間を加えた到着予定時刻を、日本時間で表示します。
-  document.querySelector("#arrival-time").textContent = estimatedArrivalTime
+  // 3/5と4/5に同じ到着予定時刻を表示します。
+  const formattedArrivalTime = estimatedArrivalTime
     ? new Intl.DateTimeFormat(currentLanguage === "ja" ? "ja-JP" : "en-GB", {
       timeZone: "Asia/Tokyo",
       hour: "2-digit",
@@ -344,6 +338,8 @@ function renderGuide() {
       hourCycle: "h23"
     }).format(estimatedArrivalTime)
     : text("arrivalTimeUnavailable");
+  document.querySelector("#arrival-time").textContent = formattedArrivalTime;
+  document.querySelector("#aboard-arrival-time").textContent = formattedArrivalTime;
   const art = document.querySelector("#aboard-destination-art");
   art.className = `destination-photo destination-art--${destination.id}`;
   art.replaceChildren();

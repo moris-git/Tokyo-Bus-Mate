@@ -892,10 +892,9 @@ button {
   list-style: none;
 }
 
-/* 3/5画面の到着予定時刻と既存の所要時間表示をカードで示します。 */
+/* 3/5・4/5画面で共通の到着予定時刻をカードで示します。 */
 .ride-estimate,
-.arrival-time,
-.arrival-estimate {
+.arrival-time {
   display: grid;
   gap: 5px;
   margin: 14px 0;
@@ -907,28 +906,24 @@ button {
 }
 
 .ride-estimate span,
-.arrival-time span,
-.arrival-estimate span {
+.arrival-time span {
   font-size: 0.82rem;
   font-weight: 600;
 }
 
 .ride-estimate strong,
-.arrival-time strong,
-.arrival-estimate strong {
+.arrival-time strong {
   color: var(--color-primary);
   font-size: 1.15rem;
 }
 
-.arrival-time,
-.arrival-estimate {
+.arrival-time {
   width: 100%;
   margin: 0 0 16px;
   text-align: center;
 }
 
-.arrival-time small,
-.arrival-estimate small {
+.arrival-time small {
   color: var(--color-muted);
   font-size: 0.78rem;
   line-height: 1.5;
