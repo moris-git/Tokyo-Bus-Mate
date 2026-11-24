@@ -190,13 +190,9 @@ function renderDestinations() {
       updateActionState();
     });
 
-    const art = document.createElement("span");
-    art.className = `destination-art destination-art--${destination.id}`;
-    art.setAttribute("aria-hidden", "true");
-    const subject = document.createElement("span");
-    subject.className = "art-subject";
-    subject.textContent = destinationArt[destination.id] ?? "📍";
-    art.append(subject);
+    const image = document.createElement("span");
+    image.className = `destination-image destination-art--${destination.id}`;
+    image.setAttribute("aria-hidden", "true");
 
     const content = document.createElement("span");
     content.className = "destination-card-content";
@@ -214,8 +210,8 @@ function renderDestinations() {
     const photoNote = document.createElement("span");
     photoNote.className = "destination-photo-note";
     photoNote.textContent = text("photoComingSoon");
-    content.append(japaneseName, englishName, photoNote, selection);
-    card.append(art, content);
+    content.append(japaneseName, englishName, selection);
+    card.append(image, content, photoNote);
     destinationList.append(card);
   }
 
