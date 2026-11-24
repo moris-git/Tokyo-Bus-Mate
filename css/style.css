@@ -57,12 +57,41 @@ button {
   gap: 12px;
 }
 
-.brand-logo {
-  display: block;
-  width: 190px;
-  max-width: calc(100% - 100px);
-  height: auto;
-  flex: 0 1 190px;
+.brand-mark {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid #c9dff0;
+  border-radius: 12px;
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.brand-copy {
+  min-width: 0;
+}
+
+.brand-eyebrow,
+.brand-name,
+.flow-brand {
+  margin: 0;
+}
+
+.brand-eyebrow {
+  color: var(--color-muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.brand-name {
+  color: #17243b;
+  font-size: 1.05rem;
+  font-weight: 750;
 }
 
 .language-switch {
@@ -113,10 +142,12 @@ button {
 }
 
 .flow-brand {
-  display: block;
-  width: min(150px, 100%);
-  max-height: 42px;
-  object-fit: contain;
+  overflow: hidden;
+  color: #17243b;
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .step-count {
@@ -691,7 +722,7 @@ button {
   font-weight: 800;
 }
 
-/* 系統番号と、実車の電光表示を模した行き先表示を見分けやすくします。 */
+/* 系統番号・行き先表示・乗車停留所を見分けやすくします。 */
 .bus-route-card {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -725,39 +756,22 @@ button {
 }
 
 .route-direction {
-  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 8px;
-  min-height: 130px;
-  margin: 12px;
-  padding: 16px 18px;
-  overflow: hidden;
-  border: 5px solid #293033;
-  border-radius: 5px;
-  background-color: #111719;
-  background-image: radial-gradient(circle, rgb(255 177 81 / 12%) 1px, transparent 1.5px);
-  background-size: 7px 7px;
-  box-shadow: inset 0 0 0 1px #050809, inset 0 0 18px rgb(0 0 0 / 75%);
+  min-height: 105px;
+  padding: 20px 18px;
 }
 
 .route-direction .small-label {
-  align-self: flex-start;
-  margin: 0;
-  color: #ffbd75;
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
+  color: var(--color-muted);
 }
 
 .route-direction strong {
-  color: #ff9a37;
-  font-size: clamp(1.65rem, 7vw, 2.1rem);
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  line-height: 1.35;
-  text-align: center;
-  text-shadow: 0 0 5px rgb(255 145 38 / 75%), 0 0 13px rgb(255 106 18 / 45%);
+  color: #17243b;
+  font-size: clamp(1.35rem, 5vw, 1.8rem);
+  line-height: 1.25;
 }
 
 /* GTFS上で複数の行き先表示が見つかったとき、主表示以外の候補を縦に並べます。 */
@@ -766,14 +780,13 @@ button {
   gap: 5px;
   margin: 0;
   padding: 0;
-  color: #ffc078;
+  color: var(--color-muted);
   font-size: 0.95rem;
   list-style: none;
 }
 
-/* 3/5画面の到着予定時刻と既存の所要時間表示をカードで示します。 */
+/* 乗車後の目安時間と降車案内の所要時間を、時刻表由来だと分かるカードで示します。 */
 .ride-estimate,
-.arrival-time,
 .arrival-estimate {
   display: grid;
   gap: 5px;
@@ -786,27 +799,23 @@ button {
 }
 
 .ride-estimate span,
-.arrival-time span,
 .arrival-estimate span {
   font-size: 0.82rem;
   font-weight: 600;
 }
 
 .ride-estimate strong,
-.arrival-time strong,
 .arrival-estimate strong {
   color: var(--color-primary);
   font-size: 1.15rem;
 }
 
-.arrival-time,
 .arrival-estimate {
   width: 100%;
   margin: 0 0 16px;
   text-align: center;
 }
 
-.arrival-time small,
 .arrival-estimate small {
   color: var(--color-muted);
   font-size: 0.78rem;
@@ -878,6 +887,29 @@ button {
   font-size: 0.8rem;
 }
 
+.trip-endpoints {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.trip-endpoints strong,
+.trip-endpoints span:not(.endpoint-arrow) {
+  display: block;
+}
+
+.trip-endpoints strong {
+  font-size: 0.86rem;
+}
+
+.trip-endpoints span:not(.endpoint-arrow) {
+  margin-top: 4px;
+  color: var(--color-muted);
+  font-size: 0.78rem;
+}
+
 .route-details {
   margin-top: 14px;
   border-top: 1px solid var(--color-border);
@@ -885,10 +917,10 @@ button {
   font-size: 0.86rem;
 }
 
-.route-list-heading {
-  margin: 0;
-  padding: 12px 0 8px;
-  font-size: 0.92rem;
+.route-details summary {
+  padding: 12px 0 5px;
+  color: var(--color-primary);
+  cursor: pointer;
 }
 
 .route-stop-list {
@@ -897,85 +929,22 @@ button {
   list-style: none;
 }
 
-.route-stop {
-  position: relative;
-  display: grid;
-  grid-template-columns: 28px minmax(0, 1fr);
-  align-items: center;
-  gap: 12px;
-  min-height: 56px;
-  padding: 6px 0;
+.route-stop-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid #e8edf2;
 }
 
-.route-stop::before {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 12px;
-  width: 2px;
-  background: #dfe5e1;
-  content: "";
+.route-stop-list li strong {
+  color: var(--color-primary);
+  font-size: 0.82rem;
 }
 
-.route-stop:first-child::before {
-  top: 50%;
-}
-
-.route-stop:last-child::before {
-  bottom: 50%;
-}
-
-.route-stop-marker {
-  z-index: 1;
-  width: 20px;
-  height: 20px;
-  margin-left: 3px;
-  border: 2px solid #dfe5e1;
-  border-radius: 50%;
-  background: #fff;
-}
-
-.route-stop.is-boarding .route-stop-marker {
-  border-color: #17364f;
-  background: #17364f;
-}
-
-.route-stop.is-alighting .route-stop-marker {
-  border-color: #d32f2f;
-  background: #d32f2f;
-}
-
-.route-stop-copy {
-  display: grid;
-  gap: 3px;
-  min-width: 0;
-  padding: 4px 0;
-}
-
-.route-stop-name {
-  font-size: 0.98rem;
-  font-weight: 650;
-  line-height: 1.35;
-  overflow-wrap: anywhere;
-}
-
-.route-stop-translation {
-  color: var(--color-muted);
-  font-size: 0.8rem;
-  line-height: 1.35;
-  overflow-wrap: anywhere;
-}
-
-.route-stop-status {
-  font-size: 0.76rem;
-}
-
-.route-stop.is-boarding .route-stop-status {
-  color: #17364f;
-}
-
-.route-stop.is-alighting .route-stop-status {
-  color: #d32f2f;
+.endpoint-arrow {
+  color: var(--color-primary);
+  text-align: center;
 }
 
 /* 降車停留所を中央に示し、アナウンスや注意事項を添えます。 */

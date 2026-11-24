@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#1769aa">
     <title>Tokyo Bus Mate - バス案内</title>
-    <link rel="icon" type="image/png" href="./images/logo.png">
     <link rel="stylesheet" href="./css/style.css">
     <script type="module" src="./js/main.js"></script>
   </head>
@@ -14,7 +13,11 @@
       <!-- ホームではブランドと言語切り替えを表示し、案内中は進捗ヘッダーに切り替えます。 -->
       <header class="page-header">
         <div id="home-branding" class="home-branding">
-          <img class="brand-logo" src="./images/title-logo.png" alt="Tokyo Bus Mate">
+          <div class="brand-mark" aria-hidden="true">▤</div>
+          <div class="brand-copy">
+            <p class="brand-eyebrow">TOKYO TRAVEL COMPANION</p>
+            <p class="brand-name">Tokyo Bus Mate</p>
+          </div>
           <div class="language-switch" role="group" aria-label="表示言語" data-i18n-aria-label="languageSelection">
             <button type="button" class="language-button" data-language="ja" aria-pressed="true" lang="ja">日本語</button>
             <button type="button" class="language-button" data-language="en" aria-pressed="false" lang="en">EN</button>
@@ -23,7 +26,7 @@
 
         <div id="flow-header" class="flow-header" hidden>
           <button id="back-button" class="back-button" type="button" aria-label="戻る" data-i18n-aria-label="goBack">‹</button>
-          <img class="flow-brand" src="./images/title-logo.png" alt="Tokyo Bus Mate">
+          <p class="flow-brand">Tokyo Bus Mate</p>
           <span id="step-count" class="step-count">1/5</span>
           <div id="flow-progress" class="flow-progress" aria-label="案内の進み具合" data-i18n-aria-label="progressLabel">
             <span data-progress-bar="1"></span>
@@ -141,12 +144,16 @@
             <span class="checkmark" aria-hidden="true">✓</span>
             <span><strong data-i18n="busMatchQuestion">行き先表示は一致していますか？</strong><small data-i18n="busMatchHelp">バス前面の行き先表示を確認してください。</small></span>
           </label>
-          <!-- GTFSの所要時間を3/5画面を開いた時刻に加えた到着予定時刻を表示します。 -->
-          <p class="arrival-time"><span data-i18n="arrivalTimeLabel">到着予定時刻</span><strong id="arrival-time"></strong><small data-i18n="arrivalTimeNote">GTFS時刻表の所要時間を画面表示時刻に加えた目安です。実際の到着時刻や遅延は反映されません。</small></p>
-          <section class="route-details" aria-labelledby="route-stops-heading">
-            <h2 id="route-stops-heading" class="route-list-heading" data-i18n="routeStopsHeading">乗車停留所から降車停留所まで</h2>
+          <p class="ride-estimate"><span data-i18n="rideTimeLabel">乗車後の所要時間目安</span><strong id="check-ride-minutes"></strong></p>
+          <div class="trip-endpoints">
+            <div><p class="small-label" data-i18n="boardAt">乗車</p><strong id="check-boarding-stop"></strong><span id="check-boarding-stop-en"></span></div>
+            <span class="endpoint-arrow" aria-hidden="true">→</span>
+            <div><p class="small-label" data-i18n="getOffAt">降車</p><strong id="check-alighting-stop"></strong><span id="check-alighting-stop-en"></span></div>
+          </div>
+          <details class="route-details">
+            <summary data-i18n="routeStopsHeading">乗車停留所から降車停留所まで</summary>
             <ol id="route-stop-list" class="route-stop-list"></ol>
-          </section>
+          </details>
         </section>
 
         <!-- バスに乗った後、降車停留所名と運賃を確認する画面です。 -->
