@@ -141,7 +141,8 @@
             <span class="checkmark" aria-hidden="true">✓</span>
             <span><strong data-i18n="busMatchQuestion">行き先表示は一致していますか？</strong><small data-i18n="busMatchHelp">バス前面の行き先表示を確認してください。</small></span>
           </label>
-          <p class="ride-estimate"><span data-i18n="rideTimeLabel">乗車後の所要時間目安</span><strong id="check-ride-minutes"></strong></p>
+          <!-- GTFSの所要時間を3/5画面を開いた時刻に加えた到着予定時刻を表示します。 -->
+          <p class="arrival-time"><span data-i18n="arrivalTimeLabel">到着予定時刻</span><strong id="arrival-time"></strong><small data-i18n="arrivalTimeNote">GTFS時刻表の所要時間を画面表示時刻に加えた目安です。実際の到着時刻や遅延は反映されません。</small></p>
           <div class="trip-endpoints">
             <div><p class="small-label" data-i18n="boardAt">乗車</p><strong id="check-boarding-stop"></strong><span id="check-boarding-stop-en"></span></div>
             <span class="endpoint-arrow" aria-hidden="true">→</span>

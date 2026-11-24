@@ -1,4 +1,4 @@
-import { getBusGuide, loadBusData } from "./busService.js";
+import { getBusGuide, getEstimatedArrivalTime, loadBusData } from "./busService.js";
 import { getTranslation } from "./translations.js";
 
 // HTMLに定義した要素を取得し、画面更新とユーザー操作で共有します。
@@ -41,6 +41,7 @@ let currentScreen = "welcome";
 let currentDestinationId = "";
 let currentBoardingStopId = "";
 let currentGuide = null;
+let estimatedArrivalTime = null;
 let currentError = null;
 let currentErrorIncludesServerHint = false;
 
@@ -340,8 +341,16 @@ function renderGuide() {
   const formattedRideMinutes = Number.isFinite(estimatedRideMinutes)
     ? text("approximateMinutes", { minutes: estimatedRideMinutes })
     : text("rideTimeUnavailable");
-  document.querySelector("#check-ride-minutes").textContent = formattedRideMinutes;
   document.querySelector("#arrival-estimate").textContent = formattedRideMinutes;
+  // GTFS所要時間を加えた到着予定時刻を、日本時間で表示します。
+  document.querySelector("#arrival-time").textContent = estimatedArrivalTime
+    ? new Intl.DateTimeFormat(currentLanguage === "ja" ? "ja-JP" : "en-GB", {
+      timeZone: "Asia/Tokyo",
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23"
+    }).format(estimatedArrivalTime)
+    : text("arrivalTimeUnavailable");
   document.querySelector("#check-boarding-stop").textContent = displayStopName(boardingStop);
   document.querySelector("#check-boarding-stop-en").textContent =
     currentLanguage === "en" ? boardingStop.nameJa : boardingStop.nameEn || "";
@@ -556,6 +565,11 @@ function openBoardingScreen() {
 function openBusCheck() {
   try {
     currentGuide = getBusGuide(busData, currentDestinationId, currentBoardingStopId);
+    // 3/5画面を開いた時刻に、GTFSから算出した所要時間を加えて到着予定時刻を固定します。
+    estimatedArrivalTime = getEstimatedArrivalTime(
+      currentGuide.estimatedRideMinutes,
+      new Date()
+    );
     currentError = null;
     busMatchCheckbox.checked = false;
     renderStatusMessage();

@@ -754,8 +754,9 @@ button {
   list-style: none;
 }
 
-/* 乗車後の目安時間と降車案内の所要時間を、時刻表由来だと分かるカードで示します。 */
+/* 3/5画面の到着予定時刻と既存の所要時間表示をカードで示します。 */
 .ride-estimate,
+.arrival-time,
 .arrival-estimate {
   display: grid;
   gap: 5px;
@@ -768,23 +769,27 @@ button {
 }
 
 .ride-estimate span,
+.arrival-time span,
 .arrival-estimate span {
   font-size: 0.82rem;
   font-weight: 600;
 }
 
 .ride-estimate strong,
+.arrival-time strong,
 .arrival-estimate strong {
   color: var(--color-primary);
   font-size: 1.15rem;
 }
 
+.arrival-time,
 .arrival-estimate {
   width: 100%;
   margin: 0 0 16px;
   text-align: center;
 }
 
+.arrival-time small,
 .arrival-estimate small {
   color: var(--color-muted);
   font-size: 0.78rem;
