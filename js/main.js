@@ -1,4 +1,4 @@
-import { getBusGuide, loadBusData } from "./busService.js";
+import { getBusGuide, getEstimatedArrivalTime, loadBusData } from "./busService.js";
 import { getTranslation } from "./translations.js";
 
 // HTMLに定義した要素を取得し、画面更新とユーザー操作で共有します。
@@ -41,6 +41,7 @@ let currentScreen = "welcome";
 let currentDestinationId = "";
 let currentBoardingStopId = "";
 let currentGuide = null;
+let estimatedArrivalTime = null;
 let currentError = null;
 let currentErrorIncludesServerHint = false;
 
@@ -180,6 +181,9 @@ function renderDestinations() {
       }`
     );
     card.addEventListener("click", () => {
+      if (currentDestinationId !== destination.id) {
+        currentBoardingStopId = "";
+      }
       currentDestinationId = destination.id;
       currentGuide = null;
       renderDestinations();
@@ -233,7 +237,7 @@ function getRouteDestination(destination) {
   return { route, routeDestination };
 }
 
-// 選択目的地の停留所候補を表示し、前回選んだ停留所があれば維持します。
+// 選択目的地の停留所候補を表示し、有効な選択があれば維持します。
 function populateBoardingStops(selectedStopId = "") {
   const destination = getSelectedDestination();
   const { routeDestination } = getRouteDestination(destination);
@@ -337,15 +341,16 @@ function renderGuide() {
   const formattedRideMinutes = Number.isFinite(estimatedRideMinutes)
     ? text("approximateMinutes", { minutes: estimatedRideMinutes })
     : text("rideTimeUnavailable");
-  document.querySelector("#check-ride-minutes").textContent = formattedRideMinutes;
   document.querySelector("#arrival-estimate").textContent = formattedRideMinutes;
-  document.querySelector("#check-boarding-stop").textContent = displayStopName(boardingStop);
-  document.querySelector("#check-boarding-stop-en").textContent =
-    currentLanguage === "en" ? boardingStop.nameJa : boardingStop.nameEn || "";
-  document.querySelector("#check-alighting-stop").textContent = displayStopName(alightingStop);
-  document.querySelector("#check-alighting-stop-en").textContent =
-    currentLanguage === "en" ? alightingStop.nameJa : alightingStop.nameEn || "";
-
+  // GTFS所要時間を加えた到着予定時刻を、日本時間で表示します。
+  document.querySelector("#arrival-time").textContent = estimatedArrivalTime
+    ? new Intl.DateTimeFormat(currentLanguage === "ja" ? "ja-JP" : "en-GB", {
+      timeZone: "Asia/Tokyo",
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23"
+    }).format(estimatedArrivalTime)
+    : text("arrivalTimeUnavailable");
   const art = document.querySelector("#aboard-destination-art");
   art.className = `destination-photo destination-art--${destination.id}`;
   art.replaceChildren();
@@ -402,17 +407,42 @@ function renderRouteStops() {
   routeStops.replaceChildren();
   currentGuide.boardingStop.itineraryStops.forEach((stop, index, stops) => {
     const item = document.createElement("li");
-    item.className = "route-stop";
+    const isBoardingStop = index === 0;
+    const isAlightingStop = index === stops.length - 1;
+    item.className = [
+      "route-stop",
+      isBoardingStop ? "is-boarding" : "",
+      isAlightingStop ? "is-alighting" : ""
+    ].filter(Boolean).join(" ");
+    const marker = document.createElement("span");
+    marker.className = "route-stop-marker";
+    marker.setAttribute("aria-hidden", "true");
+    const copy = document.createElement("span");
+    copy.className = "route-stop-copy";
     const name = document.createElement("span");
+    name.className = "route-stop-name";
     name.textContent = displayStopName(stop);
-    item.append(name);
+    copy.append(name);
 
-    if (index === 0 || index === stops.length - 1) {
-      const badge = document.createElement("strong");
-      badge.textContent = text(index === 0 ? "boardingStop" : "getOffAt");
-      item.append(badge);
+    // 日本語表示には英語名、英語表示には日本語名を添えて停留所を見分けやすくします。
+    const secondaryName = currentLanguage === "en"
+      ? stop.nameJa
+      : stop.nameEn || getRomanizedStopName(stop);
+    if (secondaryName && secondaryName !== name.textContent) {
+      const translation = document.createElement("span");
+      translation.className = "route-stop-translation";
+      translation.textContent = secondaryName;
+      copy.append(translation);
     }
 
+    if (isBoardingStop || isAlightingStop) {
+      const status = document.createElement("strong");
+      status.className = "route-stop-status";
+      status.textContent = text(isBoardingStop ? "boardAt" : "getOffAt");
+      copy.append(status);
+    }
+
+    item.append(marker, copy);
     routeStops.append(item);
   });
 }
@@ -542,7 +572,6 @@ function openBoardingScreen() {
       throw error;
     }
     currentError = null;
-    currentBoardingStopId = routeDestination.boardingStops[0]?.stopId ?? "";
     populateBoardingStops(currentBoardingStopId);
     setScreen("boarding");
   } catch (error) {
@@ -554,6 +583,11 @@ function openBoardingScreen() {
 function openBusCheck() {
   try {
     currentGuide = getBusGuide(busData, currentDestinationId, currentBoardingStopId);
+    // 3/5画面を開いた時刻に、GTFSから算出した所要時間を加えて到着予定時刻を固定します。
+    estimatedArrivalTime = getEstimatedArrivalTime(
+      currentGuide.estimatedRideMinutes,
+      new Date()
+    );
     currentError = null;
     busMatchCheckbox.checked = false;
     renderStatusMessage();
@@ -587,7 +621,6 @@ function goBack() {
 async function initialize() {
   try {
     busData = await loadBusData();
-    currentDestinationId = busData.destinations[0]?.id ?? "";
     renderDestinations();
     renderCurrentScreen();
   } catch (error) {

@@ -120,3 +120,20 @@ export function getBusGuide(data, destinationId, boardingStopId) {
     fare: route.fare
   };
 }
+
+/**
+ * GTFSの停留所間所要時間を、バス確認画面を開いた時刻に加えます。
+ * 所要時間や基準時刻が無効な場合は、到着時刻を推測せずnullを返します。
+ *
+ * @param {number | null} estimatedRideMinutes GTFSから算出した所要時間（分）
+ * @param {Date} [currentTime] 到着時刻の基準となる現在時刻
+ * @returns {Date | null} 計算した到着予定時刻
+ */
+export function getEstimatedArrivalTime(estimatedRideMinutes, currentTime = new Date()) {
+  if (!Number.isFinite(estimatedRideMinutes) || estimatedRideMinutes <= 0
+    || !(currentTime instanceof Date) || !Number.isFinite(currentTime.getTime())) {
+    return null;
+  }
+
+  return new Date(currentTime.getTime() + estimatedRideMinutes * 60_000);
+}

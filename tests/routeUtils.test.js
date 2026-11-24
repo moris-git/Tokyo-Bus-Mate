@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { isAlightingStopAfter } from "../js/routeUtils.js";
-import { getBusGuide } from "../js/busService.js";
+import { getBusGuide, getEstimatedArrivalTime } from "../js/busService.js";
 import { getTranslation } from "../js/translations.js";
 
 // 実際に画面が利用する加工済みデータを読み込み、データ更新時の不整合もテストします。
@@ -55,6 +55,16 @@ test("降車停留所は乗車停留所より後の順序でなければなら�
 test("欠損値や数値以外の停車順序は無効と判定する", () => {
   assert.equal(isAlightingStopAfter(undefined, 28), false);
   assert.equal(isAlightingStopAfter(21, Number.NaN), false);
+});
+
+test("GTFS所要時間を現在時刻に加えて到着予定時刻を計算する", () => {
+  const currentTime = new Date("2026-11-24T14:53:00+09:00");
+  assert.equal(
+    getEstimatedArrivalTime(11, currentTime)?.toISOString(),
+    "2026-11-24T06:04:00.000Z"
+  );
+  assert.equal(getEstimatedArrivalTime(null, currentTime), null);
+  assert.equal(getEstimatedArrivalTime(0, currentTime), null);
 });
 
 test("目的地と検証済み路線・停留所を結び付けて案内を作る", () => {
@@ -157,6 +167,8 @@ test("画面文言を日本語と英語で取得できる", () => {
   assert.equal(getTranslation("en", "welcomeHeading"), "Ride the bus with confidence.");
   assert.equal(getTranslation("ja", "guideHeading"), "バスを見つける");
   assert.equal(getTranslation("en", "guideHeading"), "Find Your Bus");
+  assert.equal(getTranslation("ja", "arrivalTimeLabel"), "到着予定時刻");
+  assert.equal(getTranslation("en", "arrivalTimeLabel"), "Estimated arrival time");
   assert.equal(getTranslation("ja", "approximateMinutes", { minutes: 11 }), "約11分");
   assert.equal(getTranslation("en", "approximateMinutes", { minutes: 11 }), "About 11 min");
   assert.equal(getTranslation("ja", "speakAlightingStop"), "停留所名を音声で聞く");
@@ -203,7 +215,17 @@ test("説明用ホームと5段階の案内画面はHTMLに定義する", () => 
   }
   assert.match(htmlFile, /id="flow-progress"/);
   assert.match(htmlFile, /id="additional-headsigns"/);
-  assert.match(htmlFile, /id="arrival-estimate"/);
+  const arrivalTimeIndex = htmlFile.indexOf('id="arrival-time"');
+  const checkScreenIndex = htmlFile.indexOf('id="screen-check"');
+  const aboardScreenIndex = htmlFile.indexOf('id="screen-aboard"');
+  const arrivalEstimateIndex = htmlFile.indexOf('id="arrival-estimate"');
+  const completeScreenIndex = htmlFile.indexOf('id="screen-complete"');
+  const routeStopListIndex = htmlFile.indexOf('id="route-stop-list"');
+  assert.ok(arrivalTimeIndex > checkScreenIndex && arrivalTimeIndex < aboardScreenIndex);
+  assert.ok(arrivalEstimateIndex > aboardScreenIndex && arrivalEstimateIndex < completeScreenIndex);
+  assert.ok(routeStopListIndex > checkScreenIndex && routeStopListIndex < aboardScreenIndex);
+  assert.doesNotMatch(htmlFile, /<details class="route-details"|class="trip-endpoints"/);
+  assert.doesNotMatch(htmlFile, /id="check-ride-minutes"/);
   assert.match(htmlFile, /id="speak-alighting-button"/);
   assert.match(htmlFile, /id="speech-status"[^>]*aria-live="polite"/);
   assert.match(htmlFile, /id="destination-list"/);
