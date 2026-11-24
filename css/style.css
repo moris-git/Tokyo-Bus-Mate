@@ -57,12 +57,41 @@ button {
   gap: 12px;
 }
 
-.brand-logo {
-  display: block;
-  width: 190px;
-  max-width: calc(100% - 100px);
-  height: auto;
-  flex: 0 1 190px;
+.brand-mark {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid #c9dff0;
+  border-radius: 12px;
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.brand-copy {
+  min-width: 0;
+}
+
+.brand-eyebrow,
+.brand-name,
+.flow-brand {
+  margin: 0;
+}
+
+.brand-eyebrow {
+  color: var(--color-muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.brand-name {
+  color: #17243b;
+  font-size: 1.05rem;
+  font-weight: 750;
 }
 
 .language-switch {
@@ -113,10 +142,12 @@ button {
 }
 
 .flow-brand {
-  display: block;
-  width: min(150px, 100%);
-  max-height: 42px;
-  object-fit: contain;
+  overflow: hidden;
+  color: #17243b;
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .step-count {

@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#1769aa">
     <title>Tokyo Bus Mate - バス案内</title>
-    <link rel="icon" type="image/png" href="./images/logo.png">
     <link rel="stylesheet" href="./css/style.css">
     <script type="module" src="./js/main.js"></script>
   </head>
@@ -14,7 +13,11 @@
       <!-- ホームではブランドと言語切り替えを表示し、案内中は進捗ヘッダーに切り替えます。 -->
       <header class="page-header">
         <div id="home-branding" class="home-branding">
-          <img class="brand-logo" src="./images/title-logo.png" alt="Tokyo Bus Mate">
+          <div class="brand-mark" aria-hidden="true">▤</div>
+          <div class="brand-copy">
+            <p class="brand-eyebrow">TOKYO TRAVEL COMPANION</p>
+            <p class="brand-name">Tokyo Bus Mate</p>
+          </div>
           <div class="language-switch" role="group" aria-label="表示言語" data-i18n-aria-label="languageSelection">
             <button type="button" class="language-button" data-language="ja" aria-pressed="true" lang="ja">日本語</button>
             <button type="button" class="language-button" data-language="en" aria-pressed="false" lang="en">EN</button>
@@ -23,7 +26,7 @@
 
         <div id="flow-header" class="flow-header" hidden>
           <button id="back-button" class="back-button" type="button" aria-label="戻る" data-i18n-aria-label="goBack">‹</button>
-          <img class="flow-brand" src="./images/title-logo.png" alt="Tokyo Bus Mate">
+          <p class="flow-brand">Tokyo Bus Mate</p>
           <span id="step-count" class="step-count">1/5</span>
           <div id="flow-progress" class="flow-progress" aria-label="案内の進み具合" data-i18n-aria-label="progressLabel">
             <span data-progress-bar="1"></span>
