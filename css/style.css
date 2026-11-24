@@ -684,44 +684,84 @@ button {
 
 .boarding-stop-list {
   display: grid;
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
 
 .boarding-stop-option {
-  display: grid;
-  grid-template-columns: 72px minmax(0, 1fr) 22px;
-  align-items: center;
-  gap: 12px;
+  position: relative;
+  display: flex;
+  min-width: 0;
   width: 100%;
-  min-height: 72px;
+  min-height: 160px;
+  aspect-ratio: 0.95;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  gap: 8px;
+  overflow: hidden;
   padding: 12px;
-  border: 1px solid var(--color-border);
-  border-radius: 10px;
-  color: #17243b;
-  background: #fff;
+  border: 1px solid #c8d2dc;
+  border-radius: 12px;
+  color: #fff;
+  background: #486474;
   text-align: left;
+  transition: border-color 120ms ease, transform 120ms ease;
+}
+
+.boarding-stop-option:hover {
+  border-color: #91b9d1;
+  transform: translateY(-2px);
 }
 
 .boarding-stop-option[aria-pressed="true"] {
-  border: 2px solid var(--color-primary);
+  border: 2px solid #f59b37;
   padding: 11px;
-  background: #f5faff;
 }
 
-/* 実際の停留所写真が未提供の間に、写真の仮枠と追加予定を表示します。 */
 .stop-thumbnail {
-  display: grid;
-  width: 72px;
-  height: 54px;
-  place-items: center;
-  padding: 4px;
-  border: 1px dashed #9aa8b8;
-  border-radius: 7px;
-  color: var(--color-muted);
-  background: #f1f4f8;
-  font-size: 0.65rem;
-  line-height: 1.3;
-  text-align: center;
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: block;
+  width: auto;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+  background:
+    linear-gradient(180deg, transparent 26%, rgba(12, 27, 38, 0.82) 100%),
+    radial-gradient(ellipse at 18% 55%, #41674d 0 13%, transparent 14%),
+    linear-gradient(180deg, #91c8e0 0 43%, #8ba47c 43% 62%, #777d6b 62% 100%);
+}
+
+.stop-thumbnail::before {
+  position: absolute;
+  top: 27%;
+  right: 14%;
+  width: 25%;
+  height: 23%;
+  border: 2px solid #fff;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #d9e7e8 0 25%, #f4f0e2 25% 80%, #b8c5c6 80%);
+  box-shadow: 0 1px 5px rgba(20, 39, 51, 0.38);
+  content: "";
+}
+
+.stop-thumbnail::after {
+  position: absolute;
+  top: 48%;
+  right: calc(14% + 12.5% - 2px);
+  bottom: 0;
+  width: 4px;
+  background: #54636a;
+  content: "";
+}
+
+.stop-copy {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  padding-right: 22px;
 }
 
 .stop-copy strong,
@@ -730,7 +770,10 @@ button {
 }
 
 .stop-copy strong {
-  font-size: 0.95rem;
+  overflow-wrap: anywhere;
+  color: #fff;
+  font-size: 0.82rem;
+  line-height: 1.35;
 }
 
 .stop-copy small {
@@ -740,14 +783,19 @@ button {
 }
 
 .radio-mark {
+  position: absolute;
+  top: 12px;
+  right: 12px;
   width: 19px;
   height: 19px;
-  border: 2px solid #9aa8b8;
+  border: 2px solid #fff;
   border-radius: 50%;
+  background: rgba(20, 39, 51, 0.45);
 }
 
 .boarding-stop-option[aria-pressed="true"] .radio-mark {
-  border: 5px solid var(--color-primary);
+  border: 5px solid #f28a2e;
+  background: #fff;
 }
 
 .info-icon {
@@ -1545,6 +1593,11 @@ input:focus-visible {
 
   .destination-card[aria-pressed="true"] {
     padding: 13px;
+  }
+
+  .boarding-stop-option {
+    min-height: 190px;
+    aspect-ratio: 1.5;
   }
 
   .screen-actions {

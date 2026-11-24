@@ -265,9 +265,6 @@ function populateBoardingStops(selectedStopId = "") {
     const thumbnail = document.createElement("span");
     thumbnail.className = "stop-thumbnail";
     thumbnail.setAttribute("aria-hidden", "true");
-    const photoNote = document.createElement("span");
-    photoNote.textContent = text("photoComingSoon");
-    thumbnail.append(photoNote);
     const copy = document.createElement("span");
     copy.className = "stop-copy";
     const romanizedName = document.createElement("strong");
