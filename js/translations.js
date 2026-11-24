@@ -38,7 +38,7 @@ const messages = {
     placeCount: "{count}か所",
     selected: "✓ 選択中",
     choose: "選択する",
-    photoComingSoon: "写真を追加予定",
+    photoComingSoon: "写真準備中",
     noDestinations: "一致する行き先がありません。",
     homeNote: "路線・停留所の情報を読み込んでいます。",
     homeReady: "行き先を選んでバスを探しましょう。",

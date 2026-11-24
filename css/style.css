@@ -455,98 +455,93 @@ button {
 
 .destination-list {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
 
 .destination-card {
   position: relative;
-  display: grid;
-  grid-template-columns: 52px minmax(0, 1fr);
-  align-items: center;
-  gap: 12px;
+  display: flex;
+  min-width: 0;
   width: 100%;
-  min-height: 76px;
-  padding: 10px 14px;
-  border: 1px solid var(--color-border);
-  border-radius: 10px;
-  color: #17243b;
-  background: #fff;
+  min-height: 160px;
+  aspect-ratio: 0.95;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  gap: 8px;
+  overflow: hidden;
+  padding: 12px;
+  border: 1px solid #c8d2dc;
+  border-radius: 12px;
+  color: #fff;
+  background: #486474;
   text-align: left;
-  transition: border-color 120ms ease, background-color 120ms ease;
+  transition: border-color 120ms ease, transform 120ms ease;
 }
 
 .destination-card:hover {
-  border-color: #9dbbd3;
+  border-color: #91b9d1;
+  transform: translateY(-2px);
 }
 
 .destination-card[aria-pressed="true"] {
-  border: 2px solid var(--color-primary);
-  padding: 9px 13px;
-  background: #f5faff;
+  border: 2px solid #f59b37;
+  padding: 11px;
 }
 
-.destination-art {
-  position: relative;
-  display: grid;
-  width: 48px;
-  height: 48px;
-  place-items: center;
-  overflow: hidden;
-  border-radius: 9px;
-  background: #e9f2f9;
-}
-
-.destination-art::before,
-.destination-art::after {
+.destination-image {
   position: absolute;
-  content: "";
+  z-index: 0;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, transparent 30%, rgba(12, 27, 38, 0.82) 100%),
+    linear-gradient(180deg, #91c8e0 0 42%, #76a16a 42% 65%, #536f4c 65% 100%);
 }
 
-.destination-art::before {
-  right: -9px;
-  bottom: -19px;
-  width: 45px;
-  height: 42px;
-  border-radius: 50%;
-  background: #bfd5e6;
+.destination-image.destination-art--ueno-zoo {
+  background:
+    linear-gradient(180deg, transparent 30%, rgba(12, 27, 38, 0.82) 100%),
+    radial-gradient(ellipse at 18% 53%, #315c3f 0 12%, transparent 13%),
+    radial-gradient(ellipse at 82% 48%, #426c4d 0 17%, transparent 18%),
+    linear-gradient(180deg, #91c8e0 0 42%, #76a16a 42% 65%, #536f4c 65% 100%);
 }
 
-.destination-art::after {
-  bottom: -16px;
-  left: -9px;
-  width: 43px;
-  height: 39px;
-  border-radius: 50%;
-  background: #d4e4ef;
+.destination-image.destination-art--ueno-park {
+  background:
+    linear-gradient(180deg, transparent 30%, rgba(12, 27, 38, 0.82) 100%),
+    radial-gradient(circle at 22% 35%, #f6d2dc 0 8%, transparent 9%),
+    radial-gradient(circle at 34% 45%, #e8adbf 0 11%, transparent 12%),
+    radial-gradient(circle at 76% 34%, #f4c3d0 0 10%, transparent 11%),
+    linear-gradient(180deg, #8fc9e3 0 55%, #83a66b 55% 100%);
 }
 
-.destination-art--ueno-zoo {
-  background: #edf3ee;
+.destination-image.destination-art--ueno-station {
+  background:
+    linear-gradient(180deg, transparent 30%, rgba(12, 27, 38, 0.82) 100%),
+    linear-gradient(180deg, transparent 0 40%, #d2cabc 40% 72%, #766f62 72%),
+    repeating-linear-gradient(90deg, transparent 0 24px, rgba(97, 122, 132, 0.9) 24px 29px),
+    linear-gradient(180deg, #86c3df 0 100%);
 }
 
-.destination-art--ueno-park {
-  background: #eaf3f8;
-}
-
-.destination-art--ueno-station {
-  background: #f0f2f5;
-}
-
-.destination-art--ueno-matsuzakaya {
-  background: #f5efea;
-}
-
-.art-subject {
-  position: relative;
-  z-index: 1;
-  font-size: 1.8rem;
+.destination-image.destination-art--ueno-matsuzakaya {
+  background:
+    linear-gradient(180deg, transparent 30%, rgba(12, 27, 38, 0.82) 100%),
+    linear-gradient(180deg, transparent 0 31%, #d8cbb7 31% 73%, #927d69 73%),
+    repeating-linear-gradient(90deg, transparent 0 28px, rgba(118, 100, 82, 0.82) 28px 33px),
+    linear-gradient(180deg, #86c3df 0 100%);
 }
 
 .destination-card-content {
-  display: grid;
+  position: relative;
+  z-index: 1;
+  display: flex;
   min-width: 0;
-  gap: 2px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
 }
 
 .destination-name-ja,
@@ -556,40 +551,51 @@ button {
 }
 
 .destination-name-ja {
-  overflow: hidden;
-  color: var(--color-muted);
-  font-size: 0.82rem;
-  font-weight: 600;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.74rem;
+  font-weight: 650;
+  line-height: 1.35;
 }
 
 .destination-name-en {
+  display: -webkit-box;
   overflow: hidden;
-  color: #17243b;
-  font-size: 1rem;
+  color: #fff;
+  font-size: 0.94rem;
   font-weight: 700;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.25;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
-/* 目的地写真を差し替えるまで、各カードに準備中の案内を添えます。 */
 .destination-photo-note {
-  width: fit-content;
-  margin-top: 3px;
-  color: var(--color-muted);
-  font-size: 0.72rem;
+  position: absolute;
+  z-index: 1;
+  top: 9px;
+  right: 9px;
+  padding: 4px 7px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(20, 39, 51, 0.58);
+  font-size: 0.64rem;
+  line-height: 1.2;
 }
 
 .destination-selection {
   width: fit-content;
   margin-top: 3px;
-  padding: 2px 8px;
+  padding: 4px 9px;
   border-radius: 999px;
-  color: var(--color-primary);
-  background: #e9f2f9;
-  font-size: 0.72rem;
+  color: #294354;
+  background: #fff;
+  font-size: 0.68rem;
   font-weight: 700;
+}
+
+.destination-card[aria-pressed="true"] .destination-selection {
+  color: #fff;
+  background: #f28a2e;
 }
 
 .empty-message,
@@ -1532,12 +1538,13 @@ input:focus-visible {
   }
 
   .destination-card {
-    min-height: 82px;
-    padding: 12px 16px;
+    min-height: 190px;
+    aspect-ratio: 1.5;
+    padding: 14px;
   }
 
   .destination-card[aria-pressed="true"] {
-    padding: 11px 15px;
+    padding: 13px;
   }
 
   .screen-actions {
