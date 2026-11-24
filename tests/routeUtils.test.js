@@ -217,10 +217,14 @@ test("説明用ホームと5段階の案内画面はHTMLに定義する", () => 
   const checkScreenIndex = htmlFile.indexOf('id="screen-check"');
   const aboardScreenIndex = htmlFile.indexOf('id="screen-aboard"');
   const aboardArrivalTimeIndex = htmlFile.indexOf('id="aboard-arrival-time"');
+  const listenNoteIndex = htmlFile.indexOf('class="listen-note"');
+  const aboardHeadingIndex = htmlFile.indexOf('id="aboard-heading"');
   const completeScreenIndex = htmlFile.indexOf('id="screen-complete"');
   const routeStopListIndex = htmlFile.indexOf('id="route-stop-list"');
   assert.ok(arrivalTimeIndex > checkScreenIndex && arrivalTimeIndex < aboardScreenIndex);
   assert.ok(aboardArrivalTimeIndex > aboardScreenIndex && aboardArrivalTimeIndex < completeScreenIndex);
+  assert.ok(listenNoteIndex > htmlFile.indexOf('id="aboard-destination-art"'));
+  assert.ok(listenNoteIndex < aboardHeadingIndex);
   assert.ok(routeStopListIndex > checkScreenIndex && routeStopListIndex < aboardScreenIndex);
   assert.doesNotMatch(htmlFile, /<details class="route-details"|class="trip-endpoints"/);
   assert.doesNotMatch(htmlFile, /id="check-ride-minutes"/);
