@@ -265,13 +265,10 @@ function populateBoardingStops(selectedStopId = "") {
     const thumbnail = document.createElement("span");
     thumbnail.className = "stop-thumbnail";
     thumbnail.setAttribute("aria-hidden", "true");
-    const photoNote = document.createElement("span");
-    photoNote.textContent = text("photoComingSoon");
-    thumbnail.append(photoNote);
     const copy = document.createElement("span");
     copy.className = "stop-copy";
     const romanizedName = document.createElement("strong");
-    romanizedName.textContent = getRomanizedStopName(stop);
+    romanizedName.textContent = `${stop.nameJa} (${getRomanizedStopName(stop)})`;
     const radio = document.createElement("span");
     radio.className = "radio-mark";
     radio.setAttribute("aria-hidden", "true");
