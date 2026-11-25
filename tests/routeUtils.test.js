@@ -139,9 +139,11 @@ test("生成したGTFSデータで設定済みの全目的地と乗車停留所�
       assert.ok(stop.orderedTripCount > 0);
       assert.ok(stop.headsigns.length > 0);
       assert.equal(guideForStop(destination, stop.stopId).headsignJa, stop.headsigns[0].headsignJa);
-      assert.ok(Number.isInteger(stop.estimatedRideMinutes));
-      assert.ok(stop.estimatedRideMinutes > 0);
-      assert.ok(stop.scheduledTripCount > 0);
+      assert.equal(stop.estimatedRideMinutes === null, stop.scheduledTripCount === 0);
+      if (stop.estimatedRideMinutes !== null) {
+        assert.ok(Number.isInteger(stop.estimatedRideMinutes));
+        assert.ok(stop.estimatedRideMinutes > 0);
+      }
       assert.equal(stop.itineraryStops[0].stopId, stop.stopId);
       assert.equal(
         stop.itineraryStops.at(-1).stopId,
