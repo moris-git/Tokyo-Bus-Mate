@@ -715,6 +715,20 @@ button {
   transform: translateY(-2px);
 }
 
+.boarding-stop-option:disabled {
+  border-color: #87939d;
+  cursor: not-allowed;
+}
+
+.boarding-stop-option:disabled:hover {
+  border-color: #87939d;
+  transform: none;
+}
+
+.boarding-stop-option:disabled .stop-thumbnail {
+  filter: grayscale(1) brightness(0.65);
+}
+
 .boarding-stop-option[aria-pressed="true"] {
   border: 2px solid #f59b37;
   padding: 11px;
@@ -781,6 +795,13 @@ button {
   margin-top: 4px;
   color: var(--color-muted);
   font-size: 0.82rem;
+}
+
+.stop-copy .stop-unavailable-note {
+  padding-right: 0;
+  color: #fff;
+  font-size: 0.7rem;
+  line-height: 1.3;
 }
 
 .radio-mark {
