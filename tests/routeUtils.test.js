@@ -2,7 +2,11 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { isAlightingStopAfter } from "../js/routeUtils.js";
-import { getBusGuide, getEstimatedArrivalTime } from "../js/busService.js";
+import {
+  getBoardingStopOptions,
+  getBusGuide,
+  getEstimatedArrivalTime
+} from "../js/busService.js";
 import { getTranslation } from "../js/translations.js";
 
 // 実際に画面が利用する加工済みデータを読み込み、データ更新時の不整合もテストします。
@@ -119,15 +123,27 @@ test("適合便の行き先表示がなければ理由を付けて失敗する",
 test("生成したGTFSデータで設定済みの全目的地と乗車停留所から案内できる", () => {
   assert.equal(generatedData.destinations.length, 4);
 
+  const route = generatedData.routes[0];
+  const allRouteStopIds = new Set();
+  for (const routeDestination of route.destinations) {
+    for (const boardingStop of routeDestination.boardingStops) {
+      for (const stop of boardingStop.itineraryStops) {
+        allRouteStopIds.add(stop.stopId);
+      }
+    }
+  }
+
   for (const destination of generatedData.destinations) {
-    const route = generatedData.routes.find((item) => item.routeId === destination.routeId);
-    const routeDestination = route?.destinations.find(
+    const destinationRoute = generatedData.routes.find(
+      (item) => item.routeId === destination.routeId
+    );
+    const routeDestination = destinationRoute?.destinations.find(
       (item) => item.destinationId === destination.id
     );
 
-    assert.ok(route, `${destination.nameJa}の路線データが必要です`);
+    assert.ok(destinationRoute, `${destination.nameJa}の路線データが必要です`);
     assert.ok(routeDestination, `${destination.nameJa}のGTFS検証結果が必要です`);
-    assert.equal(route.routeShortName, "上23");
+    assert.equal(destinationRoute.routeShortName, "上23");
     assert.equal(routeDestination.alightingStopId, destination.alightingStopId);
     assert.ok(routeDestination.verification.activeServiceTripCount > 0);
     assert.deepEqual(
@@ -135,13 +151,25 @@ test("生成したGTFSデータで設定済みの全目的地と乗車停留所�
       destination.boardingStopIds
     );
 
+    const stopOptions = getBoardingStopOptions(destinationRoute, routeDestination);
+    assert.deepEqual(
+      stopOptions.filter((option) => option.isAvailable).map((option) => option.stop.stopId),
+      destination.boardingStopIds
+    );
+    assert.ok(stopOptions.some((option) => !option.isAvailable));
+    for (const stopId of allRouteStopIds) {
+      assert.ok(stopOptions.some((option) => option.stop.stopId === stopId));
+    }
+
     for (const stop of routeDestination.boardingStops) {
       assert.ok(stop.orderedTripCount > 0);
       assert.ok(stop.headsigns.length > 0);
       assert.equal(guideForStop(destination, stop.stopId).headsignJa, stop.headsigns[0].headsignJa);
-      assert.ok(Number.isInteger(stop.estimatedRideMinutes));
-      assert.ok(stop.estimatedRideMinutes > 0);
-      assert.ok(stop.scheduledTripCount > 0);
+      assert.equal(stop.estimatedRideMinutes === null, stop.scheduledTripCount === 0);
+      if (stop.estimatedRideMinutes !== null) {
+        assert.ok(Number.isInteger(stop.estimatedRideMinutes));
+        assert.ok(stop.estimatedRideMinutes > 0);
+      }
       assert.equal(stop.itineraryStops[0].stopId, stop.stopId);
       assert.equal(
         stop.itineraryStops.at(-1).stopId,
@@ -169,6 +197,14 @@ test("画面文言を日本語と英語で取得できる", () => {
   assert.equal(getTranslation("en", "guideHeading"), "Find Your Bus");
   assert.equal(getTranslation("ja", "arrivalTimeLabel"), "到着予定時刻");
   assert.equal(getTranslation("en", "arrivalTimeLabel"), "Estimated arrival time");
+  assert.equal(
+    getTranslation("ja", "boardingStopUnavailable"),
+    "この停留所からは選択した目的地へ行けません"
+  );
+  assert.equal(
+    getTranslation("en", "boardingStopUnavailable"),
+    "You cannot reach your destination from this stop"
+  );
   assert.equal(getTranslation("ja", "speakAlightingStop"), "停留所名を音声で聞く");
   assert.equal(
     getTranslation("ja", "speechStopUnavailable"),

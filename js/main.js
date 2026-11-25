@@ -1,4 +1,9 @@
-import { getBusGuide, getEstimatedArrivalTime, loadBusData } from "./busService.js";
+import {
+  getBoardingStopOptions,
+  getBusGuide,
+  getEstimatedArrivalTime,
+  loadBusData
+} from "./busService.js";
 import { getTranslation } from "./translations.js";
 
 // HTMLに定義した要素を取得し、画面更新とユーザー操作で共有します。
@@ -27,6 +32,17 @@ const destinationArt = {
   "ueno-park": "🌸",
   "ueno-station": "🚉",
   "ueno-matsuzakaya": "🏬"
+};
+const stopImageById = {
+  "0032-04": "09_asakusa-raimon/A_horizontal_01.jpg",
+  "0038-03": "08_asakusa-1/A_horizontal_02.jpg",
+  "0035-10": "07_asakusa-kotobukicho/A_horizontal_01.jpg",
+  "0396-02": "06_kuramae/A_horizontal_01.jpg",
+  "1268-02": "05_higashi-ueno-6/A_horizontal_01.jpg",
+  "0601-01": "04_shitaya-jinja/A_horizontal_01.jpg",
+  "0131-05": "03_ueno-station/A_horizontal_01.jpg",
+  "0133-09": "02_ueno-koen-yamashita/A_vertical_01.jpg",
+  "2000-10": "01_ueno-matsuzakaya/A_horizontal_01.jpg"
 };
 const actionLabels = {
   boarding: "confirmBoardingStop",
@@ -71,6 +87,9 @@ function updateStaticText(language) {
   });
 
   renderDestinations();
+  if (busData && currentScreen === "boarding") {
+    populateBoardingStops(currentBoardingStopId);
+  }
   renderStatusMessage();
   renderCurrentScreen();
   updateSpeechSupportStatus();
@@ -234,11 +253,11 @@ function getRouteDestination(destination) {
   return { route, routeDestination };
 }
 
-// 選択目的地の停留所候補を表示し、有効な選択があれば維持します。
+// 路線上の全停留所を表示し、選択目的地へ行けない停留所は無効にします。
 function populateBoardingStops(selectedStopId = "") {
   const destination = getSelectedDestination();
-  const { routeDestination } = getRouteDestination(destination);
-  if (!destination || !routeDestination) {
+  const { route, routeDestination } = getRouteDestination(destination);
+  if (!destination || !route || !routeDestination) {
     const error = new Error("destinationRouteMissing");
     error.code = "destinationRouteMissing";
     throw error;
@@ -250,36 +269,55 @@ function populateBoardingStops(selectedStopId = "") {
   destinationArtElement.className = `mini-art destination-art--${destination.id}`;
   destinationArtElement.textContent = destinationArt[destination.id] ?? "📍";
   boardingStopList.replaceChildren();
-  for (const stop of routeDestination.boardingStops) {
+  for (const { stop, isAvailable } of getBoardingStopOptions(route, routeDestination)) {
     const option = document.createElement("button");
     option.type = "button";
     option.className = "boarding-stop-option";
+    option.disabled = !isAvailable;
+    option.dataset.stopId = stop.stopId;
     option.setAttribute("aria-pressed", String(stop.stopId === selectedStopId));
-    option.addEventListener("click", () => {
-      currentBoardingStopId = stop.stopId;
-      currentGuide = null;
-      renderBoardingStops();
-      updateActionState();
-    });
+    if (isAvailable) {
+      option.addEventListener("click", () => {
+        currentBoardingStopId = stop.stopId;
+        currentGuide = null;
+        renderBoardingStops();
+        updateActionState();
+      });
+    }
 
-    // 停留所の実写真を用意するまでは、写真予定を示すプレースホルダーを表示します。
-    const thumbnail = document.createElement("span");
+    const imagePath = stopImageById[stop.stopId];
+    if (!imagePath) {
+      throw new Error(`停留所の画像設定がありません: ${stop.stopId}`);
+    }
+    const thumbnail = document.createElement("img");
     thumbnail.className = "stop-thumbnail";
+    thumbnail.src = `./images/stops/${imagePath}`;
+    thumbnail.alt = "";
+    thumbnail.loading = "lazy";
+    thumbnail.decoding = "async";
     thumbnail.setAttribute("aria-hidden", "true");
     const copy = document.createElement("span");
     copy.className = "stop-copy";
     const romanizedName = document.createElement("strong");
     romanizedName.textContent = `${stop.nameJa} (${getRomanizedStopName(stop)})`;
-    const radio = document.createElement("span");
-    radio.className = "radio-mark";
-    radio.setAttribute("aria-hidden", "true");
     copy.append(romanizedName);
-    option.append(thumbnail, copy, radio);
+    option.append(thumbnail, copy);
+    if (isAvailable) {
+      const radio = document.createElement("span");
+      radio.className = "radio-mark";
+      radio.setAttribute("aria-hidden", "true");
+      option.append(radio);
+    } else {
+      const unavailableNote = document.createElement("small");
+      unavailableNote.className = "stop-unavailable-note";
+      unavailableNote.textContent = text("boardingStopUnavailable");
+      copy.append(unavailableNote);
+    }
     boardingStopList.append(option);
   }
 
-  currentBoardingStopId = routeDestination.boardingStops.some(
-    (stop) => stop.stopId === selectedStopId
+  currentBoardingStopId = routeDestination.boardingStops.some((stop) =>
+    stop.stopId === selectedStopId
   ) ? selectedStopId : "";
   renderBoardingStops();
 }
@@ -287,11 +325,8 @@ function populateBoardingStops(selectedStopId = "") {
 // 停留所候補の選択状態を、現在選ばれているIDに合わせて表示します。
 function renderBoardingStops() {
   const buttons = boardingStopList.querySelectorAll(".boarding-stop-option");
-  buttons.forEach((button, index) => {
-    const destination = getSelectedDestination();
-    const { routeDestination } = getRouteDestination(destination);
-    const stop = routeDestination?.boardingStops[index];
-    button.setAttribute("aria-pressed", String(stop?.stopId === currentBoardingStopId));
+  buttons.forEach((button) => {
+    button.setAttribute("aria-pressed", String(button.dataset.stopId === currentBoardingStopId));
   });
 }
 

@@ -58,6 +58,35 @@ export async function loadBusData() {
 }
 
 /**
+ * 路線データ内の全停留所を停車順に並べ、目的地まで乗車可能かを付けます。
+ *
+ * @param {object} route 選択中の路線
+ * @param {object} routeDestination 選択中の目的地に対応する検証済みデータ
+ * @returns {Array<{stop: object, isAvailable: boolean}>} 路線上の全停留所と乗車可否
+ */
+export function getBoardingStopOptions(route, routeDestination) {
+  const allStops = new Map();
+  for (const destination of route.destinations) {
+    for (const boardingStop of destination.boardingStops) {
+      allStops.set(boardingStop.stopId, allStops.get(boardingStop.stopId) ?? boardingStop);
+      for (const stop of boardingStop.itineraryStops) {
+        allStops.set(stop.stopId, allStops.get(stop.stopId) ?? stop);
+      }
+    }
+  }
+
+  const availableStops = new Map(
+    routeDestination.boardingStops.map((stop) => [stop.stopId, stop])
+  );
+  return [...allStops.values()]
+    .sort((first, second) => first.stopSequence - second.stopSequence)
+    .map((stop) => ({
+      stop: availableStops.get(stop.stopId) ?? stop,
+      isAvailable: availableStops.has(stop.stopId)
+    }));
+}
+
+/**
  * 目的地対応表と、GTFSから作られた路線データを結び付けます。
  *
  * 選択された目的地・路線・乗車停留所がデータに存在することを確かめ、
