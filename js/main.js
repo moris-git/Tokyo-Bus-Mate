@@ -597,7 +597,7 @@ function goBack() {
     boarding: "home",
     check: "boarding",
     aboard: "check",
-    complete: "welcome"
+    complete: "aboard"
   }[currentScreen];
   if (previousScreen) {
     setScreen(previousScreen);
