@@ -43,7 +43,7 @@ button {
   min-height: 100vh;
   min-height: 100svh;
   margin: 0 auto;
-  padding: 24px 0 32px;
+  padding: 24px 0 calc(110px + env(safe-area-inset-bottom));
 }
 
 .page-header {
@@ -1146,12 +1146,11 @@ button {
   font-size: 5rem;
 }
 
-.aboard-screen .centered,
-.complete-screen .centered {
+.aboard-screen .centered {
   text-align: center;
 }
 
-.alighting-japanese {
+.alighting-primary {
   margin: 0;
   color: #17243b;
   font-size: clamp(1.8rem, 6vw, 2.2rem);
@@ -1159,7 +1158,7 @@ button {
   line-height: 1.2;
 }
 
-.alighting-romaji {
+.alighting-secondary-name {
   margin: 4px 0 8px;
   color: var(--color-primary);
   font-size: 1.15rem;
@@ -1296,41 +1295,34 @@ button {
 
 /* 乗車・降車・徒歩の順に旅程をまとめる最終画面です。 */
 .complete-screen {
-  padding-top: 12px;
-}
-
-.complete-mark {
-  display: grid;
-  width: 64px;
-  height: 64px;
-  place-items: center;
-  margin: 0 auto 16px;
-  border: 1px solid #c9dff0;
-  border-radius: 50%;
-  color: var(--color-primary);
-  background: var(--color-primary-light);
-  font-size: 1.8rem;
-  font-weight: 700;
+  padding-top: 0;
 }
 
 .complete-heading {
   max-width: 560px;
   margin: 0 auto 8px;
+  font-size: clamp(1.35rem, 4vw, 1.7rem);
   text-align: center;
 }
 
-.complete-intro {
-  margin: 0 0 18px;
-  color: var(--color-muted);
-  font-size: 0.9rem;
-  text-align: center;
+.page.is-complete {
+  padding-top: 16px;
+  padding-bottom: calc(94px + env(safe-area-inset-bottom));
+}
+
+.page.is-complete .page-header {
+  margin-bottom: 8px;
+}
+
+.page.is-complete #status-message:empty {
+  display: none;
 }
 
 .trip-card {
   display: grid;
-  grid-template-columns: 42px minmax(0, 1fr);
-  gap: 0 12px;
-  padding: 18px;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 0 8px;
+  padding: 12px;
   border: 1px solid var(--color-border);
   border-radius: 10px;
   background: #fff;
@@ -1343,7 +1335,7 @@ button {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  min-height: 164px;
+  min-height: 132px;
   padding: 1px 0;
 }
 
@@ -1384,16 +1376,49 @@ button {
 
 .trip-details {
   display: grid;
-  gap: 10px;
+  gap: 2px;
   padding: 2px 0;
+}
+
+.complete-screen .trip-details > div {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  column-gap: 8px;
+  align-items: baseline;
+}
+
+.complete-screen .trip-details .small-label {
+  grid-column: 1;
+  margin-bottom: 0;
+}
+
+.complete-screen .trip-details strong,
+.complete-screen .trip-details span {
+  grid-column: 2;
+}
+
+.complete-screen #summary-boarding-stop,
+.complete-screen #summary-alighting-stop {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trip-details > div,
+.walk-destination > div {
+  min-width: 0;
 }
 
 .trip-details span,
 .walk-destination span:not(.destination-flag) {
   display: block;
-  margin-top: 4px;
+  margin-top: 0;
+  overflow: hidden;
   color: var(--color-muted);
-  font-size: 0.82rem;
+  font-size: 0.76rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .trip-route {
@@ -1416,16 +1441,40 @@ button {
   grid-column: 1 / -1;
   align-items: center;
   gap: 12px;
-  margin-top: 16px;
-  padding: 10px;
+  margin-top: 6px;
+  padding: 6px;
   border: 1px solid #d9e7f1;
   border-radius: 9px;
   background: #f7fbfe;
 }
 
 .walk-destination .mini-art {
-  width: 52px;
-  height: 52px;
+  width: 42px;
+  height: 42px;
+}
+
+.complete-route-details {
+  grid-column: 1 / -1;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--color-border);
+}
+
+.complete-route-details summary {
+  width: fit-content;
+  color: var(--color-primary);
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.complete-route-details summary:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+.complete-route-details[open] .route-stop-list {
+  margin-top: 8px;
 }
 
 .prototype-note {
@@ -1506,8 +1555,7 @@ button {
 }
 
 .page.is-welcome .page-footer,
-.page.is-home .page-footer,
-.page.is-complete .page-footer {
+.page.is-home .page-footer {
   display: block;
 }
 
@@ -1545,6 +1593,10 @@ input:focus-visible {
   .page {
     padding-top: 32px;
     padding-bottom: 40px;
+  }
+
+  .page.is-complete {
+    padding-bottom: 16px;
   }
 
   .page-header {

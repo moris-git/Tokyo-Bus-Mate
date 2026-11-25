@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="ja">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#1769aa">
-    <title>Tokyo Bus Mate - バス案内</title>
+    <title>Tokyo Bus Mate - Bus Guide</title>
     <link rel="icon" type="image/png" href="./images/logo.png">
     <link rel="stylesheet" href="./css/style.css">
     <script type="module" src="./js/main.js"></script>
@@ -16,8 +16,8 @@
         <div id="home-branding" class="home-branding">
           <img class="brand-logo" src="./images/title-logo.png" alt="Tokyo Bus Mate">
           <div class="language-switch" role="group" aria-label="表示言語" data-i18n-aria-label="languageSelection">
-            <button type="button" class="language-button" data-language="ja" aria-pressed="true" lang="ja">日本語</button>
-            <button type="button" class="language-button" data-language="en" aria-pressed="false" lang="en">EN</button>
+            <button type="button" class="language-button" data-language="ja" aria-pressed="false" lang="ja">日本語</button>
+            <button type="button" class="language-button" data-language="en" aria-pressed="true" lang="en">EN</button>
           </div>
         </div>
 
@@ -33,8 +33,8 @@
             <span data-progress-bar="5"></span>
           </div>
           <div class="flow-language-switch language-switch" role="group" aria-label="表示言語" data-i18n-aria-label="languageSelection">
-            <button type="button" class="language-button" data-language="ja" aria-pressed="true" lang="ja">日本語</button>
-            <button type="button" class="language-button" data-language="en" aria-pressed="false" lang="en">EN</button>
+            <button type="button" class="language-button" data-language="ja" aria-pressed="false" lang="ja">日本語</button>
+            <button type="button" class="language-button" data-language="en" aria-pressed="true" lang="en">EN</button>
           </div>
         </div>
       </header>
@@ -164,8 +164,8 @@
           <div id="aboard-destination-art" class="destination-photo destination-art--ueno-zoo" role="img" aria-label="上野動物園のイメージ"></div>
           <aside class="listen-note"><span class="info-icon">i</span><p><strong data-i18n="listenForName">この停留所名を目印に</strong><small data-i18n="alightingHelp">車内表示やアナウンスと照らし合わせてください。</small></p></aside>
           <p class="eyebrow centered" data-i18n="yourDestinationStop">降車する停留所</p>
-          <h1 id="aboard-heading" class="alighting-japanese screen-heading" tabindex="-1"></h1>
-          <p id="alighting-name-romaji" class="alighting-romaji" lang="en"></p>
+          <h1 id="aboard-heading" class="alighting-primary screen-heading" tabindex="-1" lang="ja"></h1>
+          <p id="alighting-name-secondary" class="alighting-secondary-name" lang="en"></p>
           <!-- 音声マークを操作したときだけ、停留所の日本語名を読み上げます。 -->
           <p id="speech-status" class="speech-status" role="status" aria-live="polite"></p>
           <button id="speak-alighting-soundwave" class="soundwave" type="button" aria-label="停留所名を音声で聞く" data-i18n-aria-label="speakAlightingStop" aria-describedby="speech-status">
@@ -177,10 +177,7 @@
 
         <!-- 乗車から目的地までの旅程をまとめて確認します。 -->
         <section id="screen-complete" class="screen flow-screen complete-screen" aria-labelledby="complete-heading" hidden>
-          <div class="complete-mark" aria-hidden="true">✓</div>
-          <p class="eyebrow centered" data-i18n="allSet">準備完了</p>
           <h1 id="complete-heading" class="complete-heading" tabindex="-1" data-i18n="completeHeading">Your Bus Trip Is Ready!</h1>
-          <p class="complete-intro" data-i18n="completeIntroduction">旅行中はこの画面を確認してください。</p>
           <article class="trip-card">
             <div class="trip-timeline">
               <div class="timeline-icon boarding-icon" aria-hidden="true">⌖</div>
@@ -190,15 +187,18 @@
             <div class="trip-details">
               <div><p class="small-label" data-i18n="boardingStop">乗車停留所</p><strong id="summary-boarding-stop"></strong><span id="summary-boarding-stop-en"></span></div>
               <div class="trip-route"><p class="small-label" data-i18n="routeNumber">都営バス</p><strong id="summary-route"></strong><span id="summary-direction"></span></div>
-              <div><p class="small-label" data-i18n="yourDestinationStop">降車停留所</p><strong id="summary-alighting-stop"></strong><span id="summary-alighting-stop-en"></span></div>
+              <div><p class="small-label" data-i18n="yourDestinationStop">降車停留所</p><strong id="summary-alighting-stop"></strong><span id="summary-alighting-stop-secondary"></span></div>
             </div>
             <div class="walk-destination">
               <div id="summary-destination-art" class="mini-art destination-art--ueno-zoo" aria-hidden="true">🐼</div>
               <div><p class="small-label" data-i18n="thenWalkTo">その後、徒歩で</p><strong id="summary-destination"></strong><span id="summary-destination-ja"></span></div>
               <span class="destination-flag" aria-hidden="true">⚑</span>
             </div>
+            <details class="complete-route-details">
+              <summary data-i18n="showRouteStops">経路を表示</summary>
+              <ol id="complete-route-stop-list" class="route-stop-list" aria-label="乗車停留所から降車停留所まで" data-i18n-aria-label="routeStopsHeading"></ol>
+            </details>
           </article>
-          <p class="prototype-note" data-i18n="prototypeNotice">路線・停留所情報はGTFSに基づく案内です。リアルタイム情報ではありません。</p>
         </section>
       </main>
 

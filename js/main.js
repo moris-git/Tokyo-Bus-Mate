@@ -12,6 +12,7 @@ const destinationList = document.querySelector("#destination-list");
 const destinationCount = document.querySelector("#destination-count");
 const emptyDestinations = document.querySelector("#empty-destinations");
 const boardingStopList = document.querySelector("#boarding-stop-list");
+const completeRouteStopList = document.querySelector("#complete-route-stop-list");
 const statusMessage = document.querySelector("#status-message");
 const homeActionButton = document.querySelector("#home-action-button");
 const flowActionButton = document.querySelector("#flow-action-button");
@@ -36,7 +37,7 @@ const actionLabels = {
 
 // 読み込み済みデータ、選択内容、現在の案内画面を保持します。
 let busData;
-let currentLanguage = "ja";
+let currentLanguage = "en";
 let currentScreen = "welcome";
 let currentDestinationId = "";
 let currentBoardingStopId = "";
@@ -352,9 +353,18 @@ function renderGuide() {
     "aria-label",
     currentLanguage === "en" ? `${destination.nameEn} illustration` : `${destination.nameJa}のイメージ`
   );
-  document.querySelector("#aboard-heading").textContent = alightingStop.nameJa;
-  document.querySelector("#alighting-name-romaji").textContent =
-    alightingStop.nameRomanized || alightingStop.nameEn;
+  const primaryAlightingName = currentLanguage === "en"
+    ? getRomanizedStopName(alightingStop)
+    : alightingStop.nameJa;
+  const secondaryAlightingName = currentLanguage === "en"
+    ? alightingStop.nameJa
+    : getRomanizedStopName(alightingStop);
+  const aboardHeading = document.querySelector("#aboard-heading");
+  aboardHeading.textContent = primaryAlightingName;
+  aboardHeading.lang = currentLanguage;
+  const alightingNameSecondary = document.querySelector("#alighting-name-secondary");
+  alightingNameSecondary.textContent = secondaryAlightingName;
+  alightingNameSecondary.lang = currentLanguage === "en" ? "ja" : "en";
 
   const fare = currentGuide.fare.price.toLocaleString(
     currentLanguage === "ja" ? "ja-JP" : "en-US"
@@ -374,9 +384,9 @@ function renderGuide() {
     currentLanguage === "en" ? boardingStop.nameJa : boardingStop.nameEn || "";
   document.querySelector("#summary-route").textContent = route.routeShortName;
   document.querySelector("#summary-direction").textContent = headsignJa;
-  document.querySelector("#summary-alighting-stop").textContent = alightingStop.nameJa;
-  document.querySelector("#summary-alighting-stop-en").textContent =
-    alightingStop.nameRomanized || alightingStop.nameEn;
+  document.querySelector("#summary-alighting-stop").textContent = primaryAlightingName;
+  document.querySelector("#summary-alighting-stop-secondary").textContent =
+    secondaryAlightingName;
   document.querySelector("#summary-destination").textContent =
     currentLanguage === "en" ? destination.nameEn : destination.nameJa;
   document.querySelector("#summary-destination-ja").textContent =
@@ -392,6 +402,7 @@ function renderGuide() {
 function renderRouteStops() {
   const routeStops = document.querySelector("#route-stop-list");
   routeStops.replaceChildren();
+  completeRouteStopList.replaceChildren();
   currentGuide.boardingStop.itineraryStops.forEach((stop, index, stops) => {
     const item = document.createElement("li");
     const isBoardingStop = index === 0;
@@ -431,6 +442,7 @@ function renderRouteStops() {
 
     item.append(marker, copy);
     routeStops.append(item);
+    completeRouteStopList.append(item.cloneNode(true));
   });
 }
 
@@ -597,7 +609,7 @@ function goBack() {
     boarding: "home",
     check: "boarding",
     aboard: "check",
-    complete: "welcome"
+    complete: "aboard"
   }[currentScreen];
   if (previousScreen) {
     setScreen(previousScreen);
@@ -615,7 +627,7 @@ async function initialize() {
   }
 }
 
-// 初期表示は日本語にし、データ読み込み中は開始ボタンを無効にします。
+// 初期表示は英語にし、データ読み込み中は開始ボタンを無効にします。
 updateStaticText(currentLanguage);
 renderCurrentScreen();
 
