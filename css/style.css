@@ -1380,6 +1380,31 @@ button {
   padding: 2px 0;
 }
 
+.complete-screen .trip-details > div {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  column-gap: 8px;
+  align-items: baseline;
+}
+
+.complete-screen .trip-details .small-label {
+  grid-column: 1;
+  margin-bottom: 0;
+}
+
+.complete-screen .trip-details strong,
+.complete-screen .trip-details span {
+  grid-column: 2;
+}
+
+.complete-screen #summary-boarding-stop,
+.complete-screen #summary-alighting-stop {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .trip-details > div,
 .walk-destination > div {
   min-width: 0;
@@ -1426,6 +1451,30 @@ button {
 .walk-destination .mini-art {
   width: 42px;
   height: 42px;
+}
+
+.complete-route-details {
+  grid-column: 1 / -1;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--color-border);
+}
+
+.complete-route-details summary {
+  width: fit-content;
+  color: var(--color-primary);
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.complete-route-details summary:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+.complete-route-details[open] .route-stop-list {
+  margin-top: 8px;
 }
 
 .prototype-note {

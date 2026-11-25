@@ -12,6 +12,7 @@ const destinationList = document.querySelector("#destination-list");
 const destinationCount = document.querySelector("#destination-count");
 const emptyDestinations = document.querySelector("#empty-destinations");
 const boardingStopList = document.querySelector("#boarding-stop-list");
+const completeRouteStopList = document.querySelector("#complete-route-stop-list");
 const statusMessage = document.querySelector("#status-message");
 const homeActionButton = document.querySelector("#home-action-button");
 const flowActionButton = document.querySelector("#flow-action-button");
@@ -392,6 +393,7 @@ function renderGuide() {
 function renderRouteStops() {
   const routeStops = document.querySelector("#route-stop-list");
   routeStops.replaceChildren();
+  completeRouteStopList.replaceChildren();
   currentGuide.boardingStop.itineraryStops.forEach((stop, index, stops) => {
     const item = document.createElement("li");
     const isBoardingStop = index === 0;
@@ -431,6 +433,7 @@ function renderRouteStops() {
 
     item.append(marker, copy);
     routeStops.append(item);
+    completeRouteStopList.append(item.cloneNode(true));
   });
 }
 
