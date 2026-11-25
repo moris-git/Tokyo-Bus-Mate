@@ -36,7 +36,7 @@ const actionLabels = {
 
 // 読み込み済みデータ、選択内容、現在の案内画面を保持します。
 let busData;
-let currentLanguage = "ja";
+let currentLanguage = "en";
 let currentScreen = "welcome";
 let currentDestinationId = "";
 let currentBoardingStopId = "";
@@ -615,7 +615,7 @@ async function initialize() {
   }
 }
 
-// 初期表示は日本語にし、データ読み込み中は開始ボタンを無効にします。
+// 初期表示は英語にし、データ読み込み中は開始ボタンを無効にします。
 updateStaticText(currentLanguage);
 renderCurrentScreen();
 
