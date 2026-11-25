@@ -33,6 +33,17 @@ const destinationArt = {
   "ueno-station": "🚉",
   "ueno-matsuzakaya": "🏬"
 };
+const stopImageById = {
+  "0032-04": "09_asakusa-raimon/A_horizontal_01.jpg",
+  "0038-03": "08_asakusa-1/A_horizontal_02.jpg",
+  "0035-10": "07_asakusa-kotobukicho/A_horizontal_01.jpg",
+  "0396-02": "06_kuramae/A_horizontal_01.jpg",
+  "1268-02": "05_higashi-ueno-6/A_horizontal_01.jpg",
+  "0601-01": "04_shitaya-jinja/A_horizontal_01.jpg",
+  "0131-05": "03_ueno-station/A_horizontal_01.jpg",
+  "0133-09": "02_ueno-koen-yamashita/A_vertical_01.jpg",
+  "2000-10": "01_ueno-matsuzakaya/A_horizontal_01.jpg"
+};
 const actionLabels = {
   boarding: "confirmBoardingStop",
   check: "foundMyBus",
@@ -274,9 +285,16 @@ function populateBoardingStops(selectedStopId = "") {
       });
     }
 
-    // 停留所の実写真を用意するまでは、写真予定を示すプレースホルダーを表示します。
-    const thumbnail = document.createElement("span");
+    const imagePath = stopImageById[stop.stopId];
+    if (!imagePath) {
+      throw new Error(`停留所の画像設定がありません: ${stop.stopId}`);
+    }
+    const thumbnail = document.createElement("img");
     thumbnail.className = "stop-thumbnail";
+    thumbnail.src = `./images/stops/${imagePath}`;
+    thumbnail.alt = "";
+    thumbnail.loading = "lazy";
+    thumbnail.decoding = "async";
     thumbnail.setAttribute("aria-hidden", "true");
     const copy = document.createElement("span");
     copy.className = "stop-copy";

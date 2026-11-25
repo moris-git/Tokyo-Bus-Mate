@@ -691,6 +691,7 @@ button {
 
 .boarding-stop-option {
   position: relative;
+  isolation: isolate;
   display: flex;
   min-width: 0;
   width: 100%;
@@ -708,6 +709,15 @@ button {
   background: #486474;
   text-align: left;
   transition: border-color 120ms ease, transform 120ms ease;
+}
+
+.boarding-stop-option::before {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 24%, rgba(12, 27, 38, 0.88) 100%);
+  content: "";
+  pointer-events: none;
 }
 
 .boarding-stop-option:hover {
@@ -739,42 +749,17 @@ button {
   z-index: 0;
   inset: 0;
   display: block;
-  width: auto;
-  height: auto;
+  width: 100%;
+  height: 100%;
   border: 0;
   border-radius: 0;
-  background:
-    linear-gradient(180deg, transparent 26%, rgba(12, 27, 38, 0.82) 100%),
-    radial-gradient(ellipse at 18% 55%, #41674d 0 13%, transparent 14%),
-    linear-gradient(180deg, #91c8e0 0 43%, #8ba47c 43% 62%, #777d6b 62% 100%);
-}
-
-.stop-thumbnail::before {
-  position: absolute;
-  top: 27%;
-  right: 14%;
-  width: 25%;
-  height: 23%;
-  border: 2px solid #fff;
-  border-radius: 3px;
-  background: linear-gradient(180deg, #d9e7e8 0 25%, #f4f0e2 25% 80%, #b8c5c6 80%);
-  box-shadow: 0 1px 5px rgba(20, 39, 51, 0.38);
-  content: "";
-}
-
-.stop-thumbnail::after {
-  position: absolute;
-  top: 48%;
-  right: calc(14% + 12.5% - 2px);
-  bottom: 0;
-  width: 4px;
-  background: #54636a;
-  content: "";
+  object-fit: cover;
+  object-position: center;
 }
 
 .stop-copy {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   min-width: 0;
   padding-right: 22px;
 }
@@ -806,6 +791,7 @@ button {
 
 .radio-mark {
   position: absolute;
+  z-index: 2;
   top: 12px;
   right: 12px;
   width: 19px;
