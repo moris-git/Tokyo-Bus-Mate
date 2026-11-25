@@ -43,7 +43,7 @@ button {
   min-height: 100vh;
   min-height: 100svh;
   margin: 0 auto;
-  padding: 24px 0 32px;
+  padding: 24px 0 calc(110px + env(safe-area-inset-bottom));
 }
 
 .page-header {
@@ -1307,7 +1307,7 @@ button {
 
 .page.is-complete {
   padding-top: 16px;
-  padding-bottom: 16px;
+  padding-bottom: calc(94px + env(safe-area-inset-bottom));
 }
 
 .page.is-complete .page-header {
@@ -1544,6 +1544,10 @@ input:focus-visible {
   .page {
     padding-top: 32px;
     padding-bottom: 40px;
+  }
+
+  .page.is-complete {
+    padding-bottom: 16px;
   }
 
   .page-header {
