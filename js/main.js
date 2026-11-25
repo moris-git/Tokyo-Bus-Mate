@@ -353,9 +353,18 @@ function renderGuide() {
     "aria-label",
     currentLanguage === "en" ? `${destination.nameEn} illustration` : `${destination.nameJa}のイメージ`
   );
-  document.querySelector("#aboard-heading").textContent = alightingStop.nameJa;
-  document.querySelector("#alighting-name-romaji").textContent =
-    alightingStop.nameRomanized || alightingStop.nameEn;
+  const primaryAlightingName = currentLanguage === "en"
+    ? getRomanizedStopName(alightingStop)
+    : alightingStop.nameJa;
+  const secondaryAlightingName = currentLanguage === "en"
+    ? alightingStop.nameJa
+    : getRomanizedStopName(alightingStop);
+  const aboardHeading = document.querySelector("#aboard-heading");
+  aboardHeading.textContent = primaryAlightingName;
+  aboardHeading.lang = currentLanguage;
+  const alightingNameSecondary = document.querySelector("#alighting-name-secondary");
+  alightingNameSecondary.textContent = secondaryAlightingName;
+  alightingNameSecondary.lang = currentLanguage === "en" ? "ja" : "en";
 
   const fare = currentGuide.fare.price.toLocaleString(
     currentLanguage === "ja" ? "ja-JP" : "en-US"
@@ -375,9 +384,9 @@ function renderGuide() {
     currentLanguage === "en" ? boardingStop.nameJa : boardingStop.nameEn || "";
   document.querySelector("#summary-route").textContent = route.routeShortName;
   document.querySelector("#summary-direction").textContent = headsignJa;
-  document.querySelector("#summary-alighting-stop").textContent = alightingStop.nameJa;
-  document.querySelector("#summary-alighting-stop-en").textContent =
-    alightingStop.nameRomanized || alightingStop.nameEn;
+  document.querySelector("#summary-alighting-stop").textContent = primaryAlightingName;
+  document.querySelector("#summary-alighting-stop-secondary").textContent =
+    secondaryAlightingName;
   document.querySelector("#summary-destination").textContent =
     currentLanguage === "en" ? destination.nameEn : destination.nameJa;
   document.querySelector("#summary-destination-ja").textContent =
